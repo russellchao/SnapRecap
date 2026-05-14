@@ -1,0 +1,78 @@
+.navbar {
+  background: #13161c;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 80px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.navbar .logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+}
+
+.navbar .logo-mark {
+  background: #e8f04a;
+  color: #0c0e12;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--heading);
+  font-weight: 700;
+  font-size: 24px;
+  letter-spacing: -0.5px;
+  flex-shrink: 0;
+}
+
+.navbar .logo-text {
+  font-family: var(--heading);
+  font-size: 28px;
+  font-weight: 700;
+  color: #f0f2f6;
+  letter-spacing: 0.5px;
+}
+
+.navbar .logo-text span {
+  color: #e8f04a;
+}
+
+.navbar .nav-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navbar .nav-link {
+  font-size: 16px;
+  color: #8a919e;
+  text-decoration: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.navbar .nav-link:hover {
+  color: #f0f2f6;
+  background: #1b1f28;
+}
+
+.navbar .nav-link.active {
+  color: #f0f2f6;
+}
+
+@media (max-width: 600px) {
+  .navbar {
+    padding: 0 1rem;
+  }
+}
