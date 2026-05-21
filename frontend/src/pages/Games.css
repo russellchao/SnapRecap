@@ -12,11 +12,60 @@
 #dropdown {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
     gap: 12px;
 }
 
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.field label {
+    font-weight: 700;
+    color: var(--text-h);
+}
+
 #dropdown p {
-    margin: 0;
+    margin: 0 0 10px;
+    font-weight: 700;
+    color: var(--text-h);
+}
+
+#dropdown select {
+    appearance: none;
+    -webkit-appearance: none;
+    font: inherit;
+    font-weight: 600;
+    color: var(--text-h);
+    background-color: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 40px 10px 16px;
+    min-width: 160px;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+    /* Custom chevron, tinted with the accent color */
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none' stroke='%23aa3bff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M1 1l5 5 5-5'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+}
+
+#dropdown select:hover {
+    border-color: var(--accent-border);
+}
+
+#dropdown select:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-bg);
+}
+
+#dropdown select option {
+    color: var(--text-h);
+    background-color: var(--bg);
 }

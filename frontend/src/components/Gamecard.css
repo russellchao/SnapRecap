@@ -1,0 +1,187 @@
+.gamecard {
+    position: relative;
+    background-color: #0f1117;
+    border: 1px solid #2a2e39;
+    border-radius: 14px;
+    padding: 1.5rem 1.5rem 1rem;
+    color: #e6e6e6;
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+/* Headline badge */
+.gamecard-headline {
+    position: absolute;
+    top: -0.85rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #1a1d26;
+    border: 1px solid #3a3f4d;
+    color: #d8e000;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 0.4rem 1rem;
+    border-radius: 10px;
+    white-space: nowrap;
+}
+
+/* Matchup row */
+.gamecard-matchup {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #2a2e39;
+}
+
+.team {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.team-away {
+    justify-content: flex-start;
+}
+
+.team-home {
+    justify-content: flex-end;
+}
+
+.team-logo {
+    width: 68px;
+    height: 68px;
+    object-fit: contain;
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    color: #8b909c;
+    text-align: center;
+    line-height: 68px;
+}
+
+.team-name {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+}
+
+.team-home .team-name {
+    align-items: center;
+}
+
+.team-city {
+    font-size: 1.1rem;
+    color: #9aa0ac;
+}
+
+.team-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+/* Center score / status */
+.gamecard-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 120px;
+}
+
+.gamecard-score {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.score {
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+/* Winning team's score is lit up; losing team's is dimmed. */
+.score.winner {
+    color: #ffffff;
+}
+
+.score.loser {
+    color: #6b7180;
+}
+
+.score-dash {
+    font-size: 2rem;
+    color: #6b7180;
+}
+
+.gamecard-status {
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #4ade80;
+    border: 1px solid #2f5d43;
+    border-radius: 8px;
+    padding: 0.25rem 0.75rem;
+}
+
+/* Footer */
+.gamecard-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 1rem;
+}
+
+.gamecard-date {
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #9aa0ac;
+    border: 1px solid #2a2e39;
+    border-radius: 8px;
+    padding: 0.4rem 0.75rem;
+}
+
+.espn-button {
+    background-color: transparent;
+    color: #da807c;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 1px solid #392e2a;
+    border-radius: 8px;
+    padding: 0.4rem 0.75rem;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.view-recap-btn {
+    background-color: #f0f035;
+    color: #11131a;
+    font-size: 1.05rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px;
+    padding: 0.65rem 1.5rem;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.view-recap-btn:hover {
+    background-color: #e2e22e;
+}
+
+/* Darkened/disabled state when the game is not Final */
+.view-recap-btn.disabled {
+    background-color: #4a4a1f;
+    color: #8a8a6a;
+    cursor: not-allowed;
+}
+
+.view-recap-btn.disabled:hover {
+    background-color: #4a4a1f;
+}

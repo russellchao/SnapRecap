@@ -69,6 +69,10 @@ export async function fetchGamesByWeekOnly(season, week) {
 
 export async function fetchGamesByTeamOnly(season, team_id) {
     console.log(`Fetching all games with team ID ${team_id} from the ${season} season.`);
+
+    const espn_api_url = `https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/${team_id}/schedule?season=${season}`;
+
+    // NOTE: This API URL only includes regular season games.
 }
 
 

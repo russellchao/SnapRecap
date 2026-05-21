@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import './Games.css'
 import { fetchGamesByTeamOnly, fetchGamesByWeekOnly, fetchGamesByTeamAndWeek } from '../api/fetch_games'
+import Gamecard from '../components/Gamecard'
 
 
 export default function Games() {
@@ -36,17 +37,13 @@ export default function Games() {
       let games;
 
       if (teamId !== "" && week !== "") {
-        // Both a team and a week are selected.
-        games = await fetchGamesByTeamAndWeek(season, week, teamId);
+        games = await fetchGamesByTeamAndWeek(season, week, teamId); // Both a team and a week are selected.
       } else if (teamId !== "") {
-        // Only a team is selected.
-        games = await fetchGamesByTeamOnly(season, teamId);
+        games = await fetchGamesByTeamOnly(season, teamId); // Only a team is selected.
       } else if (week !== "") {
-        // Only a week is selected.
-        games = await fetchGamesByWeekOnly(season, week);
+        games = await fetchGamesByWeekOnly(season, week); // Only a week is selected.
       } else {
-        // A season is selected, but neither a team nor a week is.
-        setGamesList([]);
+        setGamesList([]); // A season is selected, but neither a team nor a week is.
         return;
       }
 
@@ -59,24 +56,30 @@ export default function Games() {
 
   return (
     <>
-      <section id="games">
-          <h1>NFL <span className="highlight">Game List</span></h1>
+      <section id="header">
+          <h1>NFL <span className="highlight">Game Search</span></h1>
           <p>Select a <strong>season</strong>, then <strong>either</strong> a week <strong>or</strong> a team to view games and recaps.</p>
       </section>
 
-      <br />
+      <br /><br />
 
       <section id="dropdown">
-        <select name="seasons" id="season-select" value={season} onChange={(e) => setSeason(e.target.value)}>
-          <option value="">Season</option>
-          <option value="2025">2025</option>
-          <option value="2026">2026</option>
-        </select>
+        <div className="field">
+          <label htmlFor="season-select">Season</label>
+          <select name="seasons" id="season-select" value={season} onChange={(e) => setSeason(e.target.value)}>
+            <option value="">-</option>
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+          </select>
+        </div>
 
-        <p>And</p>
+        <p></p>
 
-        <select name="weeks" id="week-select" value={week} onChange={(e) => setWeek(e.target.value)}>
-          <option value="">Week</option>
+        <div className="field">
+          <label htmlFor="week-select">Week</label>
+          <select name="weeks" id="week-select" value={week} onChange={(e) => setWeek(e.target.value)}>
+            <option value="">-</option>
           <option value="1">1</option>
           <option value="2">2</option>
           <option value="3">3</option>
@@ -98,14 +101,17 @@ export default function Games() {
           <option value="19">Wild Card</option>
           <option value="20">Divisional</option>
           <option value="21">Conference</option>
-          <option value="22">Super Bowl</option>
-        </select>
+            <option value="22">Super Bowl</option>
+          </select>
+        </div>
 
-        <p>Or</p>
+        <p></p>
 
-        <select name="teams" id="team-select" value={teamId} onChange={(e) => setTeamId(e.target.value)}>
-          {/* values for each team are set to their respective ESPN IDs */}
-          <option value="">Team</option>
+        <div className="field">
+          <label htmlFor="team-select">Team</label>
+          <select name="teams" id="team-select" value={teamId} onChange={(e) => setTeamId(e.target.value)}>
+            {/* values for each team are set to their respective ESPN IDs */}
+            <option value="">-</option>
           <option value="22">Arizona Cardinals</option>
           <option value="1">Atlanta Falcons</option>
           <option value="33">Baltimore Ravens</option>
@@ -137,9 +143,29 @@ export default function Games() {
           <option value="26">Seattle Seahawks</option>
           <option value="27">Tampa Bay Buccaneers</option>
           <option value="10">Tennessee Titans</option>
-          <option value="28">Washington Commanders</option>
-        </select>
+            <option value="28">Washington Commanders</option>
+          </select>
+        </div>
       </section>
+
+      <br /><br /><br />
+
+      <section id="games-list">
+        <div>
+          {gamesList.length > 0 ? (
+            gamesList.map((game) => (
+              <div key={game.espn_id}>
+                <Gamecard game={game} />
+                <br />
+              </div>
+            ))
+          ) : (
+            <p>No games to display.</p>
+          )}
+        </div>
+      </section>
+
+      <br /><br /><br /><br /><br /><br />
     </>
   )
 }
