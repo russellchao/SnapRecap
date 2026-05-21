@@ -8,3 +8,15 @@
 .highlight {
     color: #e8f04a;
 }
+
+#dropdown {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+#dropdown p {
+    margin: 0;
+}
