@@ -69,21 +69,19 @@ export default function Gamecard({ game, onViewRecap }) {
             </div>
 
             <div className="gamecard-footer">
-                <span className="gamecard-date">{game.start_date}</span>
                 <button
-                    className={`espn-button${isFinal ? "" : " disabled"}`}
-                    disabled={!isFinal}
+                    className={`espn-btn`}
                     onClick={() => window.open(`https://www.espn.com/nfl/game/_/gameId/${game.espn_id}`, '_blank')}
                 >
-                    ESPN
-
+                    ESPN →
                 </button>
+                <span className="gamecard-date">{game.start_date}</span>
                 <button
                     className={`view-recap-btn${isFinal ? "" : " disabled"}`}
                     disabled={!isFinal}
                     onClick={() => onViewRecap?.(game)}
                 >
-                    View Recap
+                    VIEW RECAP →
                 </button>
             </div>
         </div>
