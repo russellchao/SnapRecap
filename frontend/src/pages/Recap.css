@@ -1,0 +1,211 @@
+.recap {
+    /* Break out of the 1126px #root cap (see index.css) so the header can
+       span nearly the full viewport, like ESPN's. */
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    margin-left: -50vw;
+    color: #e6e6e6;
+    padding: 1rem 3vw;
+    box-sizing: border-box;
+}
+
+/* --- Header / scoreboard --- */
+.recap-header {
+    background: linear-gradient(180deg, #161922 0%, #0f1117 100%);
+    border: 1px solid #2a2e39;
+    border-radius: 16px;
+    padding: 1.25rem 1.75rem 2rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.recap-back {
+    display: inline-block;
+    color: #9aa0ac;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+.recap-back:hover {
+    color: #e8f04a;
+}
+
+/* Meta strip */
+.recap-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 1rem 0 1.75rem;
+}
+
+.recap-headline {
+    background-color: #1a1d26;
+    border: 1px solid #3a3f4d;
+    color: #d8e000;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 0.25rem 1rem;
+    border-radius: 10px;
+    white-space: nowrap;
+}
+
+.recap-date {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #9aa0ac;
+}
+
+/* Scoreboard layout: logos pinned to the outer edges, team names hugging
+   the center score — mirrors ESPN's box-score header. */
+.recap-scoreboard {
+    display: flex;
+    align-items: center;
+    /* Banner stays full-width, but pull the clusters in toward the center
+       so they aren't flung to the screen edges. */
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* Each team block fills its half; logo + name stay grouped together,
+   the away cluster anchored left and the home cluster anchored right. */
+.recap-team {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.recap-team-away {
+    justify-content: flex-start;
+}
+
+.recap-team-home {
+    justify-content: flex-end;
+}
+
+.recap-logo {
+    width: 84px;
+    height: 84px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.recap-team-name {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+    align-items: center;
+    text-align: center;
+}
+
+.recap-team-city {
+    font-size: 1rem;
+    color: #9aa0ac;
+}
+
+.recap-team-nick {
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+/* Center score / status */
+.recap-score {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0 2rem;
+    flex-shrink: 0;
+}
+
+.recap-score-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.recap-score-num {
+    font-size: 3.75rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+/* Winning team's score is lit up; losing team's is dimmed. */
+.recap-score-num.winner {
+    color: #ffffff;
+}
+
+.recap-score-num.loser {
+    color: #6b7180;
+}
+
+.recap-score-dash {
+    font-size: 2rem;
+    color: #6b7180;
+}
+
+.recap-status {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #4ade80;
+    border: 1px solid #2f5d43;
+    border-radius: 8px;
+    padding: 0.25rem 0.75rem;
+}
+
+/* --- Body --- */
+.recap-placeholder {
+    text-align: center;
+    color: #6b7180;
+    margin-top: 2rem;
+}
+
+/* --- Empty state --- */
+.recap-empty {
+    text-align: center;
+    padding-top: 3rem;
+}
+
+.recap-empty .recap-back {
+    margin-top: 1rem;
+}
+
+/* Tighten spacing on narrow screens so all three columns still fit one line. */
+@media (max-width: 560px) {
+    .recap-header {
+        padding: 1rem 0.75rem 1.5rem;
+    }
+
+    .recap-logo {
+        width: 52px;
+        height: 52px;
+    }
+
+    .recap-team-nick {
+        font-size: 1.1rem;
+    }
+
+    .recap-team-city {
+        font-size: 0.8rem;
+    }
+
+    .recap-score {
+        padding: 0 0.75rem;
+    }
+
+    .recap-score-num {
+        font-size: 2.5rem;
+    }
+}

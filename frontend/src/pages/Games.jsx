@@ -14,6 +14,14 @@ export default function Games() {
   const navigate = useNavigate();
 
 
+  // Navigate to the recap page for a game, keyed by its ESPN ID.
+  // The full game object is passed along via router state so the recap
+  // page can render without refetching.
+  const handleViewRecap = (game) => {
+    navigate(`/recap/${game.espn_id}`, { state: { game } });
+  };
+
+
   // If the season is nullified, also nullify the team and week.
   // This effect resets those selections, which in turn empties the games list
   // via the fetching effect below.
@@ -155,7 +163,7 @@ export default function Games() {
           {gamesList.length > 0 ? (
             gamesList.map((game) => (
               <div key={game.espn_id}>
-                <Gamecard game={game} />
+                <Gamecard game={game} onViewRecap={handleViewRecap} />
                 <br />
               </div>
             ))
