@@ -26,8 +26,9 @@ if __name__ == "__main__":
     # Get the PBP Stats for the 2025-26 Bills vs. Jaguars Wild Card Playoff Game and save the stats to a CSV for inspection
     pbp_stats = get_pbp_stats(season=2025, week=19, away_team="BUF", home_team="JAX")
     if isinstance(pbp_stats, pd.DataFrame):
-        pbp_stats.to_csv("pbp_stats.csv", index=False)
-        print("PBP stats saved to pbp_stats.csv")
+        filename = "pbp_stats_buf_jax_wc_2025.csv"
+        pbp_stats.to_csv(filename, index=False)
+        print(f"PBP stats saved to {filename}")
 
     # Try to get the PBP Stats for a game that didn't happen, which should result in an error
     nonexistent_pbp_stats = get_pbp_stats(season=2025, week=19, away_team="BUF", home_team="HOU")
