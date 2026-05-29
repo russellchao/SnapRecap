@@ -1,4 +1,6 @@
+import { useEffect, useState } from 'react'
 import { useLocation, useParams, Link } from 'react-router-dom'
+import { fetchRecap } from '../api/fetch_recap'
 import './Recap.css'
 
 // Eagerly load every team logo. Files are named by full displayName, e.g. "Dallas Cowboys.png",
@@ -25,10 +27,24 @@ export default function Recap() {
     const game = state?.game;
     const status = game?.status || "Unknown";
 
-    // The game object is passed via router state from the games list.
-    // If a user lands here directly (e.g. a refresh or bookmarked URL),
-    // that state is gone, so prompt them back to the games page.
-    if (!game || status !== "Final") {
+    const [recapStatus, setRecapStatus] = useState(null);
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (!game) return;
+        setLoading(true);
+        fetchRecap(game.season, game.week, game.away_team, game.home_team)
+            .then(({ status }) => setRecapStatus(status))
+            .finally(() => setLoading(false));
+    }, [game]);
+
+    /*
+        The game object is passed via router state from the games list.
+
+        If a user lands here directly (e.g. a refresh or bookmarked URL),
+        that state is gone, so prompt them back to the games page.
+    */
+    if (!game) {
         return (
             <div className="recap recap-empty">
                 <p>No recap data available for this game.</p>
@@ -71,11 +87,13 @@ export default function Recap() {
 
                     <div className="recap-score">
                         <span className="recap-status">{status}</span>
-                        <div className="recap-score-row">
-                            <span className={`recap-score-num ${awayWon ? "winner" : "loser"}`}>{game.away_score}</span>
-                            <span className="recap-score-dash">–</span>
-                            <span className={`recap-score-num ${homeWon ? "winner" : "loser"}`}>{game.home_score}</span>
-                        </div>
+                        {status === "Final" && (
+                            <div className="recap-score-row">
+                                <span className={`recap-score-num ${awayWon ? "winner" : "loser"}`}>{game.away_score}</span>
+                                <span className="recap-score-dash">–</span>
+                                <span className={`recap-score-num ${homeWon ? "winner" : "loser"}`}>{game.home_score}</span>
+                            </div>
+                        )}
                     </div>
 
                     <div className="recap-team recap-team-home">
@@ -89,7 +107,18 @@ export default function Recap() {
             </header>
 
             {/* Additional recap details can be added here */}
-            <p className="recap-placeholder">Placeholder for recap.</p>
+            {loading ? (
+                <div className="recap-loading" role="status" aria-live="polite">
+                    <span className="recap-spinner" aria-hidden="true" />
+                    <span>Loading recap…</span>
+                </div>
+            ) : (
+                <p className="recap-placeholder">
+                    {recapStatus === 200
+                        ? "PBP Data exists for this game. Placeholder for Recap."
+                        : "Recap not available for this game yet."}
+                </p>
+            )}
         </div>
     );
 }

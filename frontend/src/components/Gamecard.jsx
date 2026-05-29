@@ -77,8 +77,7 @@ export default function Gamecard({ game, onViewRecap }) {
                 </button>
                 <span className="gamecard-date">{game.start_date}</span>
                 <button
-                    className={`view-recap-btn${isFinal ? "" : " disabled"}`}
-                    disabled={!isFinal}
+                    className={`view-recap-btn`}
                     onClick={() => onViewRecap?.(game)}
                 >
                     VIEW RECAP →

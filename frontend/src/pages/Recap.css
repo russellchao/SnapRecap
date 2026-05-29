@@ -172,6 +172,29 @@
     margin-top: 2rem;
 }
 
+.recap-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    color: #9aa0ac;
+    margin-top: 2rem;
+    font-size: 0.95rem;
+}
+
+.recap-spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #2a2e39;
+    border-top-color: #e8f04a;
+    border-radius: 50%;
+    animation: recap-spin 0.8s linear infinite;
+}
+
+@keyframes recap-spin {
+    to { transform: rotate(360deg); }
+}
+
 /* --- Empty state --- */
 .recap-empty {
     text-align: center;
