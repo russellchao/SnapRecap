@@ -145,7 +145,7 @@ if __name__ == "__main__":
     participation_df = pd.read_csv(participation_csv_filename)
     merged_df = clean_and_merge(pbp_df, participation_df)
 
-    # Save the cleaned and merged dataframe to a CSV for inspection
-    merged_csv_filename = "cleaned_merged_data_buf_jax_wc_2025.csv"
+    # Save the preprocessed dataframe to a CSV for inspection
+    merged_csv_filename = "preprocessed_data_buf_jax_wc_2025.csv"
     merged_df.to_csv(merged_csv_filename, index=False)
-    print(f"Cleaned and merged data saved to {merged_csv_filename}")
+    print(f"Preprocessed data saved to {merged_csv_filename}")

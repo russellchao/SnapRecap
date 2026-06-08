@@ -1,0 +1,233 @@
+"""Play record schema for Snap Recap.
+
+One `Play` instance per play in a merged PBP + participation game file.
+Records hold *raw contextual values only* — situational labels
+(high-leverage, percentile bands, "explosive", etc.) are derived
+downstream so the records stay reusable.
+
+Aggregate signals are reductions over a collection of these, e.g.:
+    third_downs = [p for p in plays if p.down == 3]
+    conv_rate   = mean(p.third_down_converted for p in third_downs)
+"""
+
+from __future__ import annotations
+
+import math
+from dataclasses import dataclass
+from typing import Optional
+import pandas as pd
+
+
+# --- NaN-safe coercion helpers (pandas leaves missing values as float NaN) ---
+
+def _na(v) -> bool:
+    return v is None or (isinstance(v, float) and math.isnan(v))
+
+
+def _int(v) -> Optional[int]:
+    return None if _na(v) else int(v)
+
+
+def _float(v) -> Optional[float]:
+    return None if _na(v) else float(v)
+
+
+def _bool(v) -> Optional[bool]:
+    return None if _na(v) else bool(v)
+
+
+def _str(v) -> Optional[str]:
+    return None if _na(v) else str(v)
+
+
+@dataclass
+class Play:
+    # --- Identity / sequencing ---
+    play_id: Optional[int]
+    posteam: Optional[str]              # offense
+    defteam: Optional[str]              # defense
+
+    # --- Game state (the leverage context) ---
+    qtr: Optional[int]
+    game_seconds_remaining: Optional[int]
+    down: Optional[int]                 # None on kickoffs / no-down plays
+    ydstogo: Optional[int]
+    yardline_100: Optional[int]         # distance to opponent end zone
+    goal_to_go: Optional[bool]
+    score_differential: Optional[int]   # posteam perspective
+    posteam_timeouts_remaining: Optional[int]
+    defteam_timeouts_remaining: Optional[int]
+    drive: Optional[int]
+    fixed_drive_result: Optional[str]
+
+    # --- Play classification ---
+    play_type: Optional[str]
+    is_pass: Optional[bool]
+    is_rush: Optional[bool]
+    is_special: Optional[bool]
+    shotgun: Optional[bool]
+    no_huddle: Optional[bool]
+    qb_dropback: Optional[bool]
+    qb_scramble: Optional[bool]
+
+    # --- Personnel & scheme (participation) ---
+    offense_personnel_package: Optional[str]   # normalized 11 / 12 / 21 ...
+    offense_formation: Optional[str]
+    defenders_in_box: Optional[int]
+    number_of_pass_rushers: Optional[int]
+    defense_coverage_type: Optional[str]
+    defense_man_zone_type: Optional[str]
+
+    # --- Execution detail ---
+    pass_location: Optional[str]
+    pass_length: Optional[str]
+    air_yards: Optional[float]
+    yards_after_catch: Optional[float]
+    run_location: Optional[str]
+    run_gap: Optional[str]
+    route: Optional[str]
+    time_to_throw: Optional[float]
+    was_pressure: Optional[bool]
+
+    # --- Outcome ---
+    yards_gained: Optional[int]
+    epa: Optional[float]
+    qb_epa: Optional[float]
+    success: Optional[bool]
+    cpoe: Optional[float]
+    first_down: Optional[bool]
+    third_down_converted: Optional[bool]
+    third_down_failed: Optional[bool]
+    fourth_down_converted: Optional[bool]
+    fourth_down_failed: Optional[bool]
+    complete_pass: Optional[bool]
+    touchdown: Optional[bool]
+    sack: Optional[bool]
+    qb_hit: Optional[bool]
+    interception: Optional[bool]
+    fumble_lost: Optional[bool]
+    penalty: Optional[bool]
+
+    # --- Players + raw text (for narrative / fallback) ---
+    passer: Optional[str]
+    rusher: Optional[str]
+    receiver: Optional[str]
+    desc: Optional[str]
+
+    @classmethod
+    def from_row(cls, row) -> "Play":
+        """Build a Play from one row (pandas Series) of the merged frame."""
+        g = row.get  # Series.get(key, default=None)
+        return cls(
+            play_id=_int(g("play_id")),
+            posteam=_str(g("posteam")),
+            defteam=_str(g("defteam")),
+
+            qtr=_int(g("qtr")),
+            game_seconds_remaining=_int(g("game_seconds_remaining")),
+            down=_int(g("down")),
+            ydstogo=_int(g("ydstogo")),
+            yardline_100=_int(g("yardline_100")),
+            goal_to_go=_bool(g("goal_to_go")),
+            score_differential=_int(g("score_differential")),
+            posteam_timeouts_remaining=_int(g("posteam_timeouts_remaining")),
+            defteam_timeouts_remaining=_int(g("defteam_timeouts_remaining")),
+            drive=_int(g("drive")),
+            fixed_drive_result=_str(g("fixed_drive_result")),
+
+            play_type=_str(g("play_type")),
+            is_pass=_bool(g("pass")),
+            is_rush=_bool(g("rush")),
+            is_special=_bool(g("special")),
+            shotgun=_bool(g("shotgun")),
+            no_huddle=_bool(g("no_huddle")),
+            qb_dropback=_bool(g("qb_dropback")),
+            qb_scramble=_bool(g("qb_scramble")),
+
+            offense_personnel_package=_str(g("offense_personnel_package")),
+            offense_formation=_str(g("offense_formation")),
+            defenders_in_box=_int(g("defenders_in_box")),
+            number_of_pass_rushers=_int(g("number_of_pass_rushers")),
+            defense_coverage_type=_str(g("defense_coverage_type")),
+            defense_man_zone_type=_str(g("defense_man_zone_type")),
+
+            pass_location=_str(g("pass_location")),
+            pass_length=_str(g("pass_length")),
+            air_yards=_float(g("air_yards")),
+            yards_after_catch=_float(g("yards_after_catch")),
+            run_location=_str(g("run_location")),
+            run_gap=_str(g("run_gap")),
+            route=_str(g("route")),
+            time_to_throw=_float(g("time_to_throw")),
+            was_pressure=_bool(g("was_pressure")),
+
+            yards_gained=_int(g("yards_gained")),
+            epa=_float(g("epa")),
+            qb_epa=_float(g("qb_epa")),
+            success=_bool(g("success")),
+            cpoe=_float(g("cpoe")),
+            first_down=_bool(g("first_down")),
+            third_down_converted=_bool(g("third_down_converted")),
+            third_down_failed=_bool(g("third_down_failed")),
+            fourth_down_converted=_bool(g("fourth_down_converted")),
+            fourth_down_failed=_bool(g("fourth_down_failed")),
+            complete_pass=_bool(g("complete_pass")),
+            touchdown=_bool(g("touchdown")),
+            sack=_bool(g("sack")),
+            qb_hit=_bool(g("qb_hit")),
+            interception=_bool(g("interception")),
+            fumble_lost=_bool(g("fumble_lost")),
+            penalty=_bool(g("penalty")),
+
+            passer=_str(g("passer")),
+            rusher=_str(g("rusher")),
+            receiver=_str(g("receiver")),
+            desc=_str(g("desc")),
+        )
+
+
+def plays_from_frame(df) -> list["Play"]:
+    """Build all Play records from a merged, game-filtered DataFrame."""
+    return [Play.from_row(row) for _, row in df.iterrows()]
+
+
+def teams_in(plays: list["Play"]) -> set[str]:
+    """Returns a set of distinct offensive teams in a single-game play list (exactly two)."""
+    teams = {p.posteam for p in plays if p.posteam}
+    assert len(teams) == 2, f"expected 2 teams, got {teams}"
+    return teams
+
+
+def _summarize(p: "Play") -> str:
+    """One compact, readable line per play for verification."""
+    dd = f"{p.down}&{p.ydstogo}" if p.down is not None else "-"
+    clock = f"Q{p.qtr}" if p.qtr is not None else "?"
+    return (
+        f"[{p.play_id}] {clock} {p.posteam or '?'} vs {p.defteam or '?'} "
+        f"{dd:>5} @{p.yardline_100 if p.yardline_100 is not None else '?'} "
+        f"{(p.play_type or '?'):<10} {p.yards_gained if p.yards_gained is not None else '?':>3} yds "
+        f"| {p.desc or ''}"
+    )
+
+
+
+
+
+
+
+if __name__ == "__main__":
+    #NOTE: For testing purposes only.
+    # Test building the Play records on the sample preprocessed CSV file (BUF-JAX 2025 Wild Card Game)
+
+    csv_file = "preprocessed_data_buf_jax_wc_2025.csv"
+    df = pd.read_csv(csv_file)
+    plays = plays_from_frame(df)
+
+    teams = teams_in(plays)
+    print(f"Teams in game: {teams}\n")
+
+    for p in plays:
+        print(_summarize(p))
+
+    print(f"\nBuilt {len(plays)} Play records from {csv_file} "
+          f"({len(df)} rows in CSV)")
