@@ -219,7 +219,7 @@ if __name__ == "__main__":
     #NOTE: For testing purposes only.
     # Test building the Play records on the sample preprocessed CSV file (BUF-JAX 2025 Wild Card Game)
 
-    csv_file = "../test_data_csvs/preprocessed_data_buf_jax_wc_2025.csv"
+    csv_file = "../test_data_docs/preprocessed_data_buf_jax_wc_2025.csv"
     df = pd.read_csv(csv_file)
     plays = plays_from_frame(df)
 
