@@ -73,8 +73,18 @@ def _by_drive(plays: List[Play]) -> Dict[int, List[Play]]:
             drives.setdefault(p.drive, []).append(p)
     return drives
 
+def _distribution(keys: Iterable[Optional[str]]) -> Dict[str, float]:
+    vals = [k for k in keys if k]
+    total = len(vals)
+    if not total:
+        return {}
+    counts: Dict[str, int] = {}
+    for k in vals:
+        counts[k] = counts.get(k, 0) + 1
+    return dict(sorted(((k, n / total) for k, n in counts.items()), key=lambda kv: -kv[1]))
 
-# --- reductions ---
+
+# --- offensive signals ---
 
 def third_down_conversion(plays: List[Play]) -> RateSignal:
     """Third-down conversion rate."""
@@ -82,13 +92,11 @@ def third_down_conversion(plays: List[Play]) -> RateSignal:
     successes = sum(1 for p in attempts if p.third_down_converted)
     return RateSignal.from_counts(successes, len(attempts))
 
-
 def fourth_down_conversion(plays: List[Play]) -> RateSignal:
     """Fourth-down conversion rate."""
     attempts = [p for p in plays if p.fourth_down_converted or p.fourth_down_failed]
     successes = sum(1 for p in attempts if p.fourth_down_converted)
     return RateSignal.from_counts(successes, len(attempts))
-
 
 def red_zone_touchdowns(plays: List[Play]) -> RateSignal:
     """Red-zone TD rate: drives reaching the 20 that ended in an offensive TD."""
@@ -101,13 +109,11 @@ def red_zone_touchdowns(plays: List[Play]) -> RateSignal:
             tds += 1
     return RateSignal.from_counts(tds, trips)
 
-
 def success_rate(plays: List[Play]) -> RateSignal:
     """Success rate over scrimmage plays (EPA-positive by down/distance)."""
     scr = [p for p in plays if p.success is not None]
     successes = sum(1 for p in scr if p.success)
     return RateSignal.from_counts(successes, len(scr))
-
 
 def explosive_play_rate(plays: List[Play]) -> RateSignal:
     """Explosive-play rate (rush >= 10, pass >= 20 yards)."""
@@ -118,43 +124,62 @@ def explosive_play_rate(plays: List[Play]) -> RateSignal:
     )
     return RateSignal.from_counts(successes, len(scr))
 
-
 def sack_rate(plays: List[Play]) -> RateSignal:
-    """Sacks taken per dropback (pass-protection signal)."""
+    """Sacks per dropback (protection on offense / pass rush on defense)."""
     dropbacks = [p for p in plays if p.qb_dropback]
     sacks = sum(1 for p in dropbacks if p.sack)
     return RateSignal.from_counts(sacks, len(dropbacks))
-
 
 def epa_per_play(plays: List[Play]) -> MeanSignal:
     """Mean EPA over plays where EPA is defined."""
     return MeanSignal.of(p.epa for p in plays if p.epa is not None)
 
-
 def yards_per_play(plays: List[Play]) -> MeanSignal:
     """Mean yards gained over the given view (pass scrimmage/rush subsets in)."""
     return MeanSignal.of(p.yards_gained for p in plays if p.yards_gained is not None)
-
 
 def cpoe(plays: List[Play]) -> MeanSignal:
     """Mean completion % over expected (pass attempts only)."""
     return MeanSignal.of(p.cpoe for p in plays if p.cpoe is not None)
 
-
 def personnel_distribution(plays: List[Play]) -> Dict[str, float]:
     """Share of scrimmage snaps by offensive personnel package."""
-    pkgs = [
-        p.offense_personnel_package for p in plays
-        if (p.is_pass or p.is_rush) and p.offense_personnel_package
-    ]
-    total = len(pkgs)
-    if not total:
-        return {}
-    counts: Dict[str, int] = {}
-    for k in pkgs:
-        counts[k] = counts.get(k, 0) + 1
-    return dict(sorted(((k, n / total) for k, n in counts.items()), key=lambda kv: -kv[1]))
+    return _distribution(
+        p.offense_personnel_package for p in plays if p.is_pass or p.is_rush
+    )
 
+
+# --- defensive signals ---
+
+def pressure_rate(plays: List[Play]) -> RateSignal:
+    """Pressures generated per charted dropback."""
+    dropbacks = [p for p in plays if p.qb_dropback and p.was_pressure is not None]
+    successes = sum(1 for p in dropbacks if p.was_pressure)
+    return RateSignal.from_counts(successes, len(dropbacks))
+
+def blitz_rate(plays: List[Play]) -> RateSignal:
+    """Dropbacks rushed with 5+ pass rushers."""
+    dropbacks = [p for p in plays if p.qb_dropback and p.number_of_pass_rushers is not None]
+    successes = sum(1 for p in dropbacks if p.number_of_pass_rushers >= 5)
+    return RateSignal.from_counts(successes, len(dropbacks))
+
+def avg_box_defenders(plays: List[Play]) -> MeanSignal:
+    """Mean defenders in the box on opponent rush plays."""
+    return MeanSignal.of(
+        p.defenders_in_box for p in plays
+        if p.is_rush and p.defenders_in_box is not None
+    )
+
+def coverage_distribution(plays: List[Play]) -> Dict[str, float]:
+    """Share of charted dropbacks by coverage shell."""
+    return _distribution(p.defense_coverage_type for p in plays if p.is_pass)
+
+def man_zone_distribution(plays: List[Play]) -> Dict[str, float]:
+    """Share of charted dropbacks by man vs zone."""
+    return _distribution(p.defense_man_zone_type for p in plays if p.is_pass)
+
+
+# --- main signal functions ---
 
 def offensive_signals(plays: List[Play], team: str) -> Dict[str, object]:
     """Per-team offensive signal record — the locked output shape.
@@ -183,6 +208,46 @@ def offensive_signals(plays: List[Play], team: str) -> Dict[str, object]:
         "personnel": personnel_distribution(scrimmage),
     }
 
+def defensive_signals(plays: List[Play], team: str) -> Dict[str, object]:
+    """Per-team defensive signal record — the locked output shape.
+
+    'Allowed' metrics reuse the offensive reductions on the defteam
+    filter (opponent offense vs this defense); the rest are defense-only
+    reductions over the participation columns.
+    """
+    dfp = [p for p in plays if p.defteam == team]
+    scrimmage = [p for p in dfp if p.is_pass or p.is_rush]
+    passes = [p for p in dfp if p.is_pass]
+    rushes = [p for p in dfp if p.is_rush]
+    return {
+        "third_down_allowed": third_down_conversion(dfp),
+        "red_zone_td_allowed": red_zone_touchdowns(dfp),
+        "success_rate_allowed": success_rate(scrimmage),
+        "explosive_rate_allowed": explosive_play_rate(scrimmage),
+        "epa_per_play_allowed": epa_per_play(scrimmage),
+        "epa_per_pass_allowed": epa_per_play(passes),
+        "epa_per_rush_allowed": epa_per_play(rushes),
+        "yards_per_play_allowed": yards_per_play(scrimmage),
+        "yards_per_rush_allowed": yards_per_play(rushes),
+        "pressure_rate": pressure_rate(dfp),
+        "sacks": sack_rate(dfp),
+        "blitz_rate": blitz_rate(dfp),
+        "avg_box_defenders": avg_box_defenders(dfp),
+        "coverage": coverage_distribution(dfp),
+        "man_zone": man_zone_distribution(dfp),
+    }
+
+def _print_record(title: str, record: Dict[str, object]) -> None:
+    """Pretty-print a signal record (test helper)."""
+    print(title)
+    for name, value in record.items():
+        if isinstance(value, dict):
+            value = {k: f"{v:.1%}" for k, v in value.items()}
+        print(f"  {name}: {value}")
+    print()
+
+
+
 
 
 
@@ -190,8 +255,9 @@ def offensive_signals(plays: List[Play], team: str) -> Dict[str, object]:
 
 
 if __name__ == "__main__":
-    #NOTE: For testing purposes only. 
-    # Test the offensive and defensive signals on the sample preprocessed CSV file (BUF-JAX 2025 Wild Card Game)
+    # NOTE: For testing purposes only.
+    # Test offensive and defensive signals on the sample preprocessed CSV
+    # (BUF-JAX 2025 Wild Card game).
 
     csv_file = "preprocessed_data_buf_jax_wc_2025.csv"
     df = pd.read_csv(csv_file)
@@ -200,12 +266,5 @@ if __name__ == "__main__":
     teams = teams_in(plays)
 
     for team in teams:
-        # Test offensive signals for each team and print the results
-        signals = offensive_signals(plays, team)
-        print(f"Offensive signals for {team}:")
-        for signal_name, signal_value in signals.items():
-            print(f"  {signal_name}: {signal_value}")
-        print()
-
-        # Test defensive signals for each team and print the results
-        #NOTE: Not implemented yet
+        _print_record(f"Offensive signals for {team}:", offensive_signals(plays, team))
+        _print_record(f"Defensive signals for {team}:", defensive_signals(plays, team))
