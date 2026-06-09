@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
 import os
 from dotenv import load_dotenv
-from get_raw_data import get_pbp_data, get_participation_data
+from backend.get_data.get_raw_data import get_pbp_data, get_participation_data
 
 
 load_dotenv()

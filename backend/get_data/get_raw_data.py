@@ -67,12 +67,12 @@ if __name__ == "__main__":
     participation_data = get_participation_data(season=2025, game_id="2025_19_BUF_JAX")
 
     if isinstance(pbp_data, pd.DataFrame):
-        filename = "pbp_data_buf_jax_wc_2025.csv"
+        filename = "../test_data_csvs/pbp_data_buf_jax_wc_2025.csv"
         pbp_data.to_csv(filename, index=False)
         print(f"PBP data saved to {filename}")
 
     if isinstance(participation_data, pd.DataFrame):
-        filename = "participation_data_buf_jax_wc_2025.csv"
+        filename = "../test_data_csvs/participation_data_buf_jax_wc_2025.csv"
         participation_data.to_csv(filename, index=False)
         print(f"Participation data saved to {filename}")
     

@@ -259,7 +259,7 @@ if __name__ == "__main__":
     # Test offensive and defensive signals on the sample preprocessed CSV
     # (BUF-JAX 2025 Wild Card game).
 
-    csv_file = "preprocessed_data_buf_jax_wc_2025.csv"
+    csv_file = "../test_data_csvs/preprocessed_data_buf_jax_wc_2025.csv"
     df = pd.read_csv(csv_file)
 
     plays = plays_from_frame(df)
