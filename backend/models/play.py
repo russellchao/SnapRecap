@@ -55,6 +55,7 @@ class Play:
     yardline_100: Optional[int]         # distance to opponent end zone
     goal_to_go: Optional[bool]
     score_differential: Optional[int]   # posteam perspective
+    wp: Optional[float]                 # posteam pre-play win probability
     posteam_timeouts_remaining: Optional[int]
     defteam_timeouts_remaining: Optional[int]
     drive: Optional[int]
@@ -93,6 +94,7 @@ class Play:
     yards_gained: Optional[int]
     epa: Optional[float]
     qb_epa: Optional[float]
+    wpa: Optional[float]                # win probability added (posteam perspective)
     success: Optional[bool]
     cpoe: Optional[float]
     first_down: Optional[bool]
@@ -130,6 +132,7 @@ class Play:
             yardline_100=_int(g("yardline_100")),
             goal_to_go=_bool(g("goal_to_go")),
             score_differential=_int(g("score_differential")),
+            wp=_float(g("wp")),
             posteam_timeouts_remaining=_int(g("posteam_timeouts_remaining")),
             defteam_timeouts_remaining=_int(g("defteam_timeouts_remaining")),
             drive=_int(g("drive")),
@@ -164,6 +167,7 @@ class Play:
             yards_gained=_int(g("yards_gained")),
             epa=_float(g("epa")),
             qb_epa=_float(g("qb_epa")),
+            wpa=_float(g("wpa")),
             success=_bool(g("success")),
             cpoe=_float(g("cpoe")),
             first_down=_bool(g("first_down")),
