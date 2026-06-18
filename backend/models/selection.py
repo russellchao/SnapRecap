@@ -75,10 +75,16 @@ class RecapSelection:
     def build(cls, document: GameDocument, thresholds: dict[str, float] | None = None) -> "RecapSelection":
         """Project a GameDocument into a selection using per-signal divergence thresholds."""
         thresholds = thresholds or DEFAULT_THRESHOLDS
+
+        # step 1: identify sections where the team's performance diverges significantly from the opponent (gap >= threshold)
         sections = _diverging_sections(document, thresholds)
+
         # step 2: pull exemplar plays per fired section (relevance views below + importance ranking)
+
         # step 3: anchors (top WPA) + always-include (scores, turnovers)
+
         # step 4: merge, dedupe, tag
+
         return cls(header=document.header, sections=sections)
 
     def to_dict(self) -> dict:
