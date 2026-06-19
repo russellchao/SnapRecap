@@ -76,16 +76,19 @@ class RecapSelection:
         """Project a GameDocument into a selection using per-signal divergence thresholds."""
         thresholds = thresholds or DEFAULT_THRESHOLDS
 
-        # step 1: identify sections where the team's performance diverges significantly from the opponent (gap >= threshold)
+        # step 1: sections where one offense diverges from the other (gap >= threshold)
         sections = _diverging_sections(document, thresholds)
 
-        # step 2: pull exemplar plays per fired section (relevance views below + importance ranking)
+        # step 3: rank each fired section's step-2 candidates, keep its top-k exemplars
+        for section in sections:
+            section.plays = _select_exemplars(section, document)
 
-        # step 3: anchors (top WPA) + always-include (scores, turnovers)
+        # step 3 (cont.): anchors — dramatic high-WPA swings, the opposite role from exemplars
+        anchors = _select_anchors(document)
 
         # step 4: merge, dedupe, tag
 
-        return cls(header=document.header, sections=sections)
+        return cls(header=document.header, sections=sections, anchors=anchors)
 
     def to_dict(self) -> dict:
         """JSON-serializable form for the prompt step and cache."""
@@ -132,38 +135,38 @@ def _diverging_sections(document: GameDocument, thresholds: dict[str, float]) ->
 # Each view takes one team's offensive plays and returns that signal's
 # candidate exemplars, mirroring what the reduction actually counted.
 
-def _scrimmage(off: list[Play]) -> list[Play]:
-    return [p for p in off if p.is_pass or p.is_rush]
+def _scrimmage(offense: list[Play]) -> list[Play]:
+    return [p for p in offense if p.is_pass or p.is_rush]
 
-def _passes(off: list[Play]) -> list[Play]:
-    return [p for p in off if p.is_pass]
+def _passes(offense: list[Play]) -> list[Play]:
+    return [p for p in offense if p.is_pass]
 
-def _rushes(off: list[Play]) -> list[Play]:
-    return [p for p in off if p.is_rush]
+def _rushes(offense: list[Play]) -> list[Play]:
+    return [p for p in offense if p.is_rush]
 
-def _converted_third(off: list[Play]) -> list[Play]:
-    return [p for p in off if p.third_down_converted]
+def _converted_third(offense: list[Play]) -> list[Play]:
+    return [p for p in offense if p.third_down_converted]
 
-def _converted_fourth(off: list[Play]) -> list[Play]:
-    return [p for p in off if p.fourth_down_converted]
+def _converted_fourth(offense: list[Play]) -> list[Play]:
+    return [p for p in offense if p.fourth_down_converted]
 
-def _successful(off: list[Play]) -> list[Play]:
-    return [p for p in _scrimmage(off) if p.success]
+def _successful(offense: list[Play]) -> list[Play]:
+    return [p for p in _scrimmage(offense) if p.success]
 
-def _explosive(off: list[Play]) -> list[Play]:
+def _explosive(offense: list[Play]) -> list[Play]:
     return [
-        p for p in _scrimmage(off)
+        p for p in _scrimmage(offense)
         if p.yards_gained is not None
         and ((p.is_pass and p.yards_gained >= 20) or (p.is_rush and p.yards_gained >= 10))
     ]
 
-def _sacks(off: list[Play]) -> list[Play]:
-    return [p for p in off if p.qb_dropback and p.sack]
+def _sacks(offense: list[Play]) -> list[Play]:
+    return [p for p in offense if p.qb_dropback and p.sack]
 
-def _red_zone_trip_plays(off: list[Play]) -> list[Play]:
+def _red_zone_trip_plays(offense: list[Play]) -> list[Play]:
     """Plays inside red-zone trips (drives that reached the 20)."""
     drives: dict[int, list[Play]] = defaultdict(list)
-    for p in off:
+    for p in offense:
         if p.drive is not None:
             drives[p.drive].append(p)
     candidates = []
@@ -188,6 +191,42 @@ SIGNAL_VIEWS = {
     "sack_rate": _sacks,
     "red_zone_td": _red_zone_trip_plays,
 }
+
+
+# --- step 3: importance ranking ---
+
+EXEMPLARS_PER_SECTION = 3
+ANCHOR_COUNT = 3
+
+# Contested-game band on pre-play win probability; candidates outside it are garbage time.
+CONTESTED_WP = (0.05, 0.95)
+
+# Signals where lower is better: exemplars rank by most-negative EPA (the damage), not most-positive.
+NEGATIVE_SIGNALS = {"sack_rate"}
+
+
+def _select_exemplars(section: Section, document: GameDocument,
+                      k: int = EXEMPLARS_PER_SECTION,
+                      wp_band: tuple[float, float] = CONTESTED_WP) -> list[SelectedPlay]:
+    """Rank a fired section's candidate plays by EPA, gate garbage time, keep the top k."""
+    team = max(section.team_values, key=section.team_values.get)
+    offense = [p for p in document.plays if p.posteam == team]
+    candidates = SIGNAL_VIEWS[section.signal](offense)
+
+    lo, hi = wp_band
+    live = [p for p in candidates if p.wp is not None and lo <= p.wp <= hi]
+
+    descending = section.signal not in NEGATIVE_SIGNALS
+    live.sort(key=lambda p: p.epa if p.epa is not None else 0.0, reverse=descending)
+
+    return [SelectedPlay(play=p, reason=section.signal, value=p.epa) for p in live[:k]]
+
+
+def _select_anchors(document: GameDocument, k: int = ANCHOR_COUNT) -> list[SelectedPlay]:
+    """The dramatic plays: top win-probability swings by |WPA|, ungated by design."""
+    swings = [p for p in document.plays if p.wpa is not None]
+    swings.sort(key=lambda p: abs(p.wpa), reverse=True)
+    return [SelectedPlay(play=p, reason="anchor", value=p.wpa) for p in swings[:k]]
 
 
 # --- test-only: GameDocument reconstruction from its to_dict()/JSON form ---
@@ -241,6 +280,7 @@ if __name__ == "__main__":
     offense_a = [p for p in document.plays if p.posteam == team_a]
     offense_b = [p for p in document.plays if p.posteam == team_b]
 
+
     # Step 1: sections that fired during selection
     sections = _diverging_sections(document, DEFAULT_THRESHOLDS)
     print(f"\n{len(sections)} section(s) fired (gap >= threshold), most decisive first:\n")
@@ -250,8 +290,25 @@ if __name__ == "__main__":
               f"{team_a} {s.team_values[team_a]:.3f} vs {team_b} {s.team_values[team_b]:.3f}  "
               f"| gap {s.gap:.3f} (>= {DEFAULT_THRESHOLDS[s.signal]}, {ratio:.1f}x)")
 
+
     # Step 2 (relevance): candidate exemplars each fired section's view returns, per team
     print("\nCandidate exemplars per fired section (relevance views):\n")
     for s in sections:
         view = SIGNAL_VIEWS[s.signal]
         print(f"  {s.signal:<16} {team_a}: {len(view(offense_a)):>3}   {team_b}: {len(view(offense_b)):>3}   candidate play(s)")
+
+
+    # Step 3: ranked exemplars per fired section, plus dramatic anchors
+    print("\nTop exemplars per fired section (EPA-ranked, garbage time gated):\n")
+    for s in sections:
+        s.plays = _select_exemplars(s, document)
+        team = max(s.team_values, key=s.team_values.get)
+        print(f"  {s.signal} ({team}):")
+        for sp in s.plays:
+            p = sp.play
+            print(f"      EPA {sp.value:+.2f}  q{p.qtr} {p.desc[:90]}")
+
+    print("\nAnchors (top |WPA| swings):\n")
+    for sp in _select_anchors(document):
+        p = sp.play
+        print(f"  WPA {sp.value:+.3f}  q{p.qtr} {p.desc[:90]}")
