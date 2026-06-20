@@ -305,9 +305,9 @@ if __name__ == "__main__":
         print(f"  {s.signal} ({team}):")
         for sp in s.plays:
             p = sp.play
-            print(f"      EPA {sp.value:+.2f}  q{p.qtr} {p.desc[:90]}")
+            print(f"      EPA {sp.reasons[s.signal]:+.2f}  q{p.qtr} {(p.desc or '')[:90]}")
 
     print("\nAnchors (top |WPA| swings):\n")
     for sp in _select_anchors(document):
         p = sp.play
-        print(f"  WPA {sp.value:+.3f}  q{p.qtr} {p.desc[:90]}")
+        print(f"  WPA {sp.reasons['anchor']:+.3f}  q{p.qtr} {(p.desc or '')[:90]}")
