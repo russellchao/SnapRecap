@@ -48,10 +48,9 @@ DEFAULT_THRESHOLDS = {
 
 @dataclass
 class SelectedPlay:
-    """A play chosen for the prompt, tagged with why it was selected."""
+    """A play chosen for the prompt, tagged with every reason it was selected."""
     play: Play
-    reason: str          # signal name (exemplar), "anchor", or "turnover"/"touchdown" (always-include)
-    value: float         # the EPA or WPA that justified selection; meaning depends on reason
+    reasons: dict[str, float | None]   # reason -> justifying metric (EPA for signals, WPA for anchors; None for scores/turnovers)
 
 
 @dataclass
@@ -219,14 +218,14 @@ def _select_exemplars(section: Section, document: GameDocument,
     descending = section.signal not in NEGATIVE_SIGNALS
     live.sort(key=lambda p: p.epa if p.epa is not None else 0.0, reverse=descending)
 
-    return [SelectedPlay(play=p, reason=section.signal, value=p.epa) for p in live[:k]]
+    return [SelectedPlay(play=p, reasons={section.signal: p.epa}) for p in live[:k]]
 
 
 def _select_anchors(document: GameDocument, k: int = ANCHOR_COUNT) -> list[SelectedPlay]:
     """The dramatic plays: top win-probability swings by |WPA|, ungated by design."""
     swings = [p for p in document.plays if p.wpa is not None]
     swings.sort(key=lambda p: abs(p.wpa), reverse=True)
-    return [SelectedPlay(play=p, reason="anchor", value=p.wpa) for p in swings[:k]]
+    return [SelectedPlay(play=p, reasons={"anchor": p.wpa}) for p in swings[:k]]
 
 
 # --- test-only: GameDocument reconstruction from its to_dict()/JSON form ---
