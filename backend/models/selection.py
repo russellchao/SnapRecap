@@ -9,7 +9,57 @@ from play import Play
 from game_document import GameDocument, GameHeader, TeamSignals
 
 
-# --- configuration ---
+# ------- Output Dataclasses -------
+
+@dataclass
+class SelectedPlay:
+    """A play chosen for the prompt, tagged with every reason it was selected."""
+    play: Play
+    reasons: dict[str, float | None]   # reason -> justifying metric (EPA for signals, WPA for anchors; None for scores/turnovers)
+
+@dataclass
+class Section:
+    """A fired efficiency signal and the plays that exemplify it."""
+    signal: str
+    team_values: dict[str, float]   # team abbr -> the signal's value for that team
+    gap: float                      # opponent-relative divergence magnitude
+    plays: list[SelectedPlay] = field(default_factory=list)
+
+@dataclass
+class RecapSelection:
+    """Selected, prompt-ready projection of a GameDocument."""
+    header: GameHeader
+    sections: list[Section] = field(default_factory=list)
+    anchors: list[SelectedPlay] = field(default_factory=list)
+    always_include: list[SelectedPlay] = field(default_factory=list)
+
+    @classmethod
+    def build(cls, document: GameDocument, thresholds: dict[str, float] | None = None) -> "RecapSelection":
+        """Project a GameDocument into a selection using per-signal divergence thresholds."""
+        thresholds = thresholds or DEFAULT_THRESHOLDS
+
+        # Step 1: sections where one offense diverges from the other (gap >= threshold)
+        sections = _diverging_sections(document, thresholds)
+
+        # Step 2: rank each fired section's candidates, keep its top-k exemplars
+        for section in sections:
+            section.plays = _select_exemplars(section, document)
+
+        # Step 2 (cont.): anchors — dramatic high-WPA swings, the opposite role from exemplars
+        anchors = _select_anchors(document)
+        always_include = _always_include(document)
+
+        # Step 3: dedupe across sources by play_id, accumulating reasons; section is home
+        sections, anchors, always_include = _merge_selection(sections, anchors, always_include)
+
+        return cls(header=document.header, sections=sections, anchors=anchors, always_include=always_include)
+
+    def to_dict(self) -> dict:
+        """JSON-serializable form for the prompt step and cache."""
+        return asdict(self)
+    
+
+# ------- Configuration -------
 
 # Offensive efficiency signals eligible to fire a section. `personnel` is excluded (schematic distribution).
 EFFICIENCY_SIGNALS = [
@@ -44,57 +94,7 @@ DEFAULT_THRESHOLDS = {
 }
 
 
-# --- output dataclasses ---
-
-@dataclass
-class SelectedPlay:
-    """A play chosen for the prompt, tagged with every reason it was selected."""
-    play: Play
-    reasons: dict[str, float | None]   # reason -> justifying metric (EPA for signals, WPA for anchors; None for scores/turnovers)
-
-
-@dataclass
-class Section:
-    """A fired efficiency signal and the plays that exemplify it."""
-    signal: str
-    team_values: dict[str, float]   # team abbr -> the signal's value for that team
-    gap: float                      # opponent-relative divergence magnitude
-    plays: list[SelectedPlay] = field(default_factory=list)
-
-
-@dataclass
-class RecapSelection:
-    """Selected, prompt-ready projection of a GameDocument."""
-    header: GameHeader
-    sections: list[Section] = field(default_factory=list)
-    anchors: list[SelectedPlay] = field(default_factory=list)
-    always_include: list[SelectedPlay] = field(default_factory=list)
-
-    @classmethod
-    def build(cls, document: GameDocument, thresholds: dict[str, float] | None = None) -> "RecapSelection":
-        """Project a GameDocument into a selection using per-signal divergence thresholds."""
-        thresholds = thresholds or DEFAULT_THRESHOLDS
-
-        # step 1: sections where one offense diverges from the other (gap >= threshold)
-        sections = _diverging_sections(document, thresholds)
-
-        # step 3: rank each fired section's step-2 candidates, keep its top-k exemplars
-        for section in sections:
-            section.plays = _select_exemplars(section, document)
-
-        # step 3 (cont.): anchors — dramatic high-WPA swings, the opposite role from exemplars
-        anchors = _select_anchors(document)
-
-        # step 4: merge, dedupe, tag
-
-        return cls(header=document.header, sections=sections, anchors=anchors)
-
-    def to_dict(self) -> dict:
-        """JSON-serializable form for the prompt step and cache."""
-        return asdict(self)
-
-
-# --- step 1: opponent-relative divergence ---
+# ------- Step 1: opponent-relative divergence -------
 
 def _signal_value(record: dict, name: str) -> float | None:
     """Pull the comparable scalar for `name` from a signals dict; None if undefined."""
@@ -104,7 +104,6 @@ def _signal_value(record: dict, name: str) -> float | None:
     if isinstance(signal, MeanSignal):
         return signal.mean
     return None
-
 
 def _diverging_sections(document: GameDocument, thresholds: dict[str, float]) -> list[Section]:
     """Fire a section per efficiency signal whose opponent-relative offensive gap clears its threshold."""
@@ -130,7 +129,10 @@ def _diverging_sections(document: GameDocument, thresholds: dict[str, float]) ->
     return sections
 
 
-# --- step 2 (relevance): per-signal exemplar views ---
+# ------- Step 2: importance ranking per exemplar -------
+
+# Per-signal exemplar views
+#
 # Each view takes one team's offensive plays and returns that signal's
 # candidate exemplars, mirroring what the reduction actually counted.
 
@@ -175,7 +177,6 @@ def _red_zone_trip_plays(offense: list[Play]) -> list[Play]:
             candidates.extend(in_rz)
     return candidates
 
-
 SIGNAL_VIEWS = {
     "epa_per_play": _scrimmage,
     "epa_per_pass": _passes,
@@ -191,9 +192,6 @@ SIGNAL_VIEWS = {
     "red_zone_td": _red_zone_trip_plays,
 }
 
-
-# --- step 3: importance ranking ---
-
 EXEMPLARS_PER_SECTION = 3
 ANCHOR_COUNT = 3
 
@@ -203,10 +201,10 @@ CONTESTED_WP = (0.05, 0.95)
 # Signals where lower is better: exemplars rank by most-negative EPA (the damage), not most-positive.
 NEGATIVE_SIGNALS = {"sack_rate"}
 
-
-def _select_exemplars(section: Section, document: GameDocument,
-                      k: int = EXEMPLARS_PER_SECTION,
-                      wp_band: tuple[float, float] = CONTESTED_WP) -> list[SelectedPlay]:
+def _select_exemplars(
+        section: Section, document: GameDocument, k: int = EXEMPLARS_PER_SECTION, wp_band: tuple[float, float] = CONTESTED_WP
+    ) -> list[SelectedPlay]:
+    
     """Rank a fired section's candidate plays by EPA, gate garbage time, keep the top k."""
     team = max(section.team_values, key=section.team_values.get)
     offense = [p for p in document.plays if p.posteam == team]
@@ -220,53 +218,109 @@ def _select_exemplars(section: Section, document: GameDocument,
 
     return [SelectedPlay(play=p, reasons={section.signal: p.epa}) for p in live[:k]]
 
-
 def _select_anchors(document: GameDocument, k: int = ANCHOR_COUNT) -> list[SelectedPlay]:
     """The dramatic plays: top win-probability swings by |WPA|, ungated by design."""
     swings = [p for p in document.plays if p.wpa is not None]
     swings.sort(key=lambda p: abs(p.wpa), reverse=True)
     return [SelectedPlay(play=p, reasons={"anchor": p.wpa}) for p in swings[:k]]
 
+def _always_include(document: GameDocument) -> list[SelectedPlay]:
+    """Scores and turnovers — categorical must-includes, carried with a None metric."""
+    selected = []
+    for p in document.plays:
+        reasons: dict[str, float | None] = {}
+        if p.interception or p.fumble_lost:
+            reasons["turnover"] = None
+        elif p.touchdown:                   # elif: defensive-return TDs stay tagged as turnovers, not posteam scores         
+            reasons["touchdown"] = None
+        if reasons:
+            selected.append(SelectedPlay(play=p, reasons=reasons))
+    return selected
 
-# --- test-only: GameDocument reconstruction from its to_dict()/JSON form ---
-# `asdict` flattens every nested dataclass into a plain dict, so loading a
-# saved document means rebuilding those types from the dicts.
 
-def _signal_from_dict(value: dict):
-    """Rebuild one signal value, recovering the type `asdict` erased.
+# ------- Step 3: merge, dedupe, tag -------
 
-    RateSignal, MeanSignal, and distribution dicts (personnel/coverage/
-    man_zone, already plain str -> float) are told apart by their keys.
+def _merge_selection(
+    sections: list[Section], anchors: list[SelectedPlay], always_include: list[SelectedPlay],
+) -> tuple[list[Section], list[SelectedPlay], list[SelectedPlay]]:
+    
+    """Dedupe plays across sources by play_id, accumulating reasons.
+
+    Home precedence is section > anchor > always-include: a play homed in a
+    section keeps its anchor/score status as extra reasons instead of appearing
+    twice. A play may live in multiple sections (evidence-both) — those sections
+    share one SelectedPlay, so its reasons are the union.
     """
-    keys = set(value.keys())
-    if keys == {"attempts", "successes", "rate"}:
-        return RateSignal(**value)
-    if keys == {"n", "mean"}:
-        return MeanSignal(**value)
-    return value  # distribution dict (or empty {})
+    registry: dict[int, SelectedPlay] = {}
+
+    def absorb(sp: SelectedPlay) -> SelectedPlay:
+        """Fold sp's reasons into the canonical play for its play_id; return the canonical."""
+        canonical = registry.get(sp.play.play_id)
+        if canonical is None:
+            registry[sp.play.play_id] = sp
+            return sp
+        canonical.reasons.update(sp.reasons)
+        return canonical
+
+    # sections first (highest precedence): rewrite each to reference the canonical play
+    for section in sections:
+        section.plays = [absorb(sp) for sp in section.plays]
+
+    # a non-section source survives in its own list only if it wasn't already homed
+    kept_anchors = []
+    for sp in anchors:
+        if absorb(sp) is sp:
+            kept_anchors.append(sp)
+
+    kept_always = []
+    for sp in always_include:
+        if absorb(sp) is sp:
+            kept_always.append(sp)
+
+    return sections, kept_anchors, kept_always
 
 
-def _team_signals_from_dict(value: dict) -> TeamSignals:
-    return TeamSignals(
-        offense={name: _signal_from_dict(v) for name, v in value["offense"].items()},
-        defense={name: _signal_from_dict(v) for name, v in value["defense"].items()},
-    )
 
-
-def document_from_dict(raw: dict) -> GameDocument:
-    """Rebuild a GameDocument from its `to_dict()` / JSON form."""
-    return GameDocument(
-        header=GameHeader(**raw["header"]),
-        signals={team: _team_signals_from_dict(ts) for team, ts in raw["signals"].items()},
-        plays=[Play(**p) for p in raw["plays"]],
-    )
 
 
 if __name__ == "__main__":
     # NOTE: For testing purposes only
     # Test the selection layer on the BUF-JAX 2025 Wild Card Game
 
-    # Load the saved game document JSON and rebuild it into a GameDocument
+    # ------- Test Helper Functions -------
+    # GameDocument reconstruction from its to_dict()/JSON form 
+    # `asdict` flattens every nested dataclass into a plain dict, so loading a
+    # saved document means rebuilding those types from the dicts.
+
+    def _signal_from_dict(value: dict):
+        """Rebuild one signal value, recovering the type `asdict` erased.
+
+        RateSignal, MeanSignal, and distribution dicts (personnel/coverage/
+        man_zone, already plain str -> float) are told apart by their keys.
+        """
+        keys = set(value.keys())
+        if keys == {"attempts", "successes", "rate"}:
+            return RateSignal(**value)
+        if keys == {"n", "mean"}:
+            return MeanSignal(**value)
+        return value  # distribution dict (or empty {})
+
+    def _team_signals_from_dict(value: dict) -> TeamSignals:
+        return TeamSignals(
+            offense={name: _signal_from_dict(v) for name, v in value["offense"].items()},
+            defense={name: _signal_from_dict(v) for name, v in value["defense"].items()},
+        )
+
+    def document_from_dict(raw: dict) -> GameDocument:
+        """Rebuild a GameDocument from its `to_dict()` / JSON form."""
+        return GameDocument(
+            header=GameHeader(**raw["header"]),
+            signals={team: _team_signals_from_dict(ts) for team, ts in raw["signals"].items()},
+            plays=[Play(**p) for p in raw["plays"]],
+        )
+
+
+    # ------- Step 0: Load the saved game document JSON and rebuild it into a GameDocument -------
     game_doc_json = "../test_data_docs/game_document_buf_jax_wc_2025.json"
     with open(game_doc_json) as f:
         raw = json.load(f)
@@ -280,7 +334,7 @@ if __name__ == "__main__":
     offense_b = [p for p in document.plays if p.posteam == team_b]
 
 
-    # Step 1: sections that fired during selection
+    # ------- Step 1: Sections that fired during selection -------
     sections = _diverging_sections(document, DEFAULT_THRESHOLDS)
     print(f"\n{len(sections)} section(s) fired (gap >= threshold), most decisive first:\n")
     for s in sections:
@@ -290,14 +344,12 @@ if __name__ == "__main__":
               f"| gap {s.gap:.3f} (>= {DEFAULT_THRESHOLDS[s.signal]}, {ratio:.1f}x)")
 
 
-    # Step 2 (relevance): candidate exemplars each fired section's view returns, per team
+    # ------- Step 2: Ranked candidate exemplars per fired section, plus dramatic anchors -------
     print("\nCandidate exemplars per fired section (relevance views):\n")
     for s in sections:
         view = SIGNAL_VIEWS[s.signal]
         print(f"  {s.signal:<16} {team_a}: {len(view(offense_a)):>3}   {team_b}: {len(view(offense_b)):>3}   candidate play(s)")
 
-
-    # Step 3: ranked exemplars per fired section, plus dramatic anchors
     print("\nTop exemplars per fired section (EPA-ranked, garbage time gated):\n")
     for s in sections:
         s.plays = _select_exemplars(s, document)
@@ -311,3 +363,12 @@ if __name__ == "__main__":
     for sp in _select_anchors(document):
         p = sp.play
         print(f"  WPA {sp.reasons['anchor']:+.3f}  q{p.qtr} {(p.desc or '')[:90]}")
+
+
+    # ------- Step 3: Full build — merge/dedupe/tag across all sources and save to a JSON-serializable dict for inspection -------
+    selection = RecapSelection.build(document)
+    selection_dict = selection.to_dict()
+    selection_json_filename = "../test_data_docs/selection_buf_jax_wc_2025.json"
+    with open(selection_json_filename, "w") as f:
+        json.dump(selection_dict, f, indent=2)
+    print(f"\nSelection layer saved to {selection_json_filename}")
