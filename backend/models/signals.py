@@ -16,6 +16,8 @@ import pandas as pd
 from play import Play, plays_from_frame, teams_in
 
 
+# --- Output Dataclasses ---
+
 @dataclass
 class RateSignal:
     """Return shape shared by every conversion-rate signal
@@ -42,7 +44,6 @@ class RateSignal:
             return f"n/a ({self.successes}/{self.attempts})"
         return f"{self.rate:.1%} ({self.successes}/{self.attempts})"
 
-
 @dataclass
 class MeanSignal:
     """Return shape for continuous per-play signals (EPA/play, YPC, CPOE).
@@ -64,7 +65,7 @@ class MeanSignal:
         return f"{self.mean:.3f} (n={self.n})"
 
 
-# --- helpers ---
+# --- Helpers ---
 
 def _by_drive(plays: List[Play]) -> Dict[int, List[Play]]:
     drives: Dict[int, List[Play]] = {}
@@ -84,7 +85,7 @@ def _distribution(keys: Iterable[Optional[str]]) -> Dict[str, float]:
     return dict(sorted(((k, n / total) for k, n in counts.items()), key=lambda kv: -kv[1]))
 
 
-# --- offensive signals ---
+# --- Offensive Signals ---
 
 def third_down_conversion(plays: List[Play]) -> RateSignal:
     """Third-down conversion rate."""
@@ -149,7 +150,7 @@ def personnel_distribution(plays: List[Play]) -> Dict[str, float]:
     )
 
 
-# --- defensive signals ---
+# --- Defensive Signals ---
 
 def pressure_rate(plays: List[Play]) -> RateSignal:
     """Pressures generated per charted dropback."""
@@ -179,7 +180,7 @@ def man_zone_distribution(plays: List[Play]) -> Dict[str, float]:
     return _distribution(p.defense_man_zone_type for p in plays if p.is_pass)
 
 
-# --- main signal functions ---
+# --- Main Signal Functions ---
 
 def offensive_signals(plays: List[Play], team: str) -> Dict[str, object]:
     """Per-team offensive signal record — the locked output shape.
@@ -237,15 +238,6 @@ def defensive_signals(plays: List[Play], team: str) -> Dict[str, object]:
         "man_zone": man_zone_distribution(dfp),
     }
 
-def _print_record(title: str, record: Dict[str, object]) -> None:
-    """Pretty-print a signal record (test helper)."""
-    print(title)
-    for name, value in record.items():
-        if isinstance(value, dict):
-            value = {k: f"{v:.1%}" for k, v in value.items()}
-        print(f"  {name}: {value}")
-    print()
-
 
 
 
@@ -259,7 +251,16 @@ if __name__ == "__main__":
     # Test offensive and defensive signals on the sample preprocessed CSV
     # (BUF-JAX 2025 Wild Card game).
 
-    csv_file = "../test_data_docs/preprocessed_data_buf_jax_wc_2025.csv"
+    def _print_record(title: str, record: Dict[str, object]) -> None:
+        """Pretty-print a signal record (test helper)."""
+        print(title)
+        for name, value in record.items():
+            if isinstance(value, dict):
+                value = {k: f"{v:.1%}" for k, v in value.items()}
+            print(f"  {name}: {value}")
+        print()
+
+    csv_file = "../test_data/preprocessed_data_buf_jax_wc_2025.csv"
     df = pd.read_csv(csv_file)
 
     plays = plays_from_frame(df)

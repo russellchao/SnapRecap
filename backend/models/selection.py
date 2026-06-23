@@ -41,11 +41,12 @@ class RecapSelection:
         # Step 1: sections where one offense diverges from the other (gap >= threshold)
         sections = _diverging_sections(document, thresholds)
 
-        # Step 2: rank each fired section's candidates, keep its top-k exemplars
+        # Step 2: 
+        # - rank each fired section's candidates, keep its top-k exemplars
+        # - select anchors based on high-WPA swings, the opposite role from exemplars
+        # - determine the always-include plays (TDs/TOs) that should be included regardless of section or anchor status
         for section in sections:
             section.plays = _select_exemplars(section, document)
-
-        # Step 2 (cont.): anchors — dramatic high-WPA swings, the opposite role from exemplars
         anchors = _select_anchors(document)
         always_include = _always_include(document)
 
@@ -321,7 +322,7 @@ if __name__ == "__main__":
 
 
     # ------- Step 0: Load the saved game document JSON and rebuild it into a GameDocument -------
-    game_doc_json = "../test_data_docs/game_document_buf_jax_wc_2025.json"
+    game_doc_json = "../test_data/game_document_buf_jax_wc_2025.json"
     with open(game_doc_json) as f:
         raw = json.load(f)
 
@@ -368,7 +369,7 @@ if __name__ == "__main__":
     # ------- Step 3: Full build — merge/dedupe/tag across all sources and save to a JSON-serializable dict for inspection -------
     selection = RecapSelection.build(document)
     selection_dict = selection.to_dict()
-    selection_json_filename = "../test_data_docs/selection_buf_jax_wc_2025.json"
+    selection_json_filename = "../test_data/selection_buf_jax_wc_2025.json"
     with open(selection_json_filename, "w") as f:
         json.dump(selection_dict, f, indent=2)
     print(f"\nSelection layer saved to {selection_json_filename}")

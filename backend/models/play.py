@@ -202,17 +202,6 @@ def teams_in(plays: list["Play"]) -> set[str]:
     return teams
 
 
-def _summarize(p: "Play") -> str:
-    """One compact, readable line per play for verification."""
-    dd = f"{p.down}&{p.ydstogo}" if p.down is not None else "-"
-    clock = f"Q{p.qtr}" if p.qtr is not None else "?"
-    return (
-        f"[{p.play_id}] {clock} {p.posteam or '?'} vs {p.defteam or '?'} "
-        f"{dd:>5} @{p.yardline_100 if p.yardline_100 is not None else '?'} "
-        f"{(p.play_type or '?'):<10} {p.yards_gained if p.yards_gained is not None else '?':>3} yds "
-        f"| {p.desc or ''}"
-    )
-
 
 
 
@@ -223,7 +212,18 @@ if __name__ == "__main__":
     #NOTE: For testing purposes only.
     # Test building the Play records on the sample preprocessed CSV file (BUF-JAX 2025 Wild Card Game)
 
-    csv_file = "../test_data_docs/preprocessed_data_buf_jax_wc_2025.csv"
+    def _summarize(p: "Play") -> str:
+        """One compact, readable line per play for verification. (Test Helper)"""
+        dd = f"{p.down}&{p.ydstogo}" if p.down is not None else "-"
+        clock = f"Q{p.qtr}" if p.qtr is not None else "?"
+        return (
+            f"[{p.play_id}] {clock} {p.posteam or '?'} vs {p.defteam or '?'} "
+            f"{dd:>5} @{p.yardline_100 if p.yardline_100 is not None else '?'} "
+            f"{(p.play_type or '?'):<10} {p.yards_gained if p.yards_gained is not None else '?':>3} yds "
+            f"| {p.desc or ''}"
+        )
+
+    csv_file = "../test_data/preprocessed_data_buf_jax_wc_2025.csv"
     df = pd.read_csv(csv_file)
     plays = plays_from_frame(df)
 
