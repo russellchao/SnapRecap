@@ -17,9 +17,16 @@ from dataclasses import asdict, dataclass
 from typing import Dict, List, Optional
 import pandas as pd
 import json
+import sys
+import os
 
-from play import Play, plays_from_frame, teams_in
-from signals import defensive_signals, offensive_signals
+try: 
+    from .play import Play, plays_from_frame, teams_in
+    from .signals import defensive_signals, offensive_signals
+except ImportError:
+    sys.path.insert(0, os.path.dirname(__file__))
+    from play import Play, plays_from_frame, teams_in
+    from signals import defensive_signals, offensive_signals
 
 
 @dataclass
