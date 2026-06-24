@@ -286,7 +286,7 @@ def _merge_selection(
 
 if __name__ == "__main__":
     # NOTE: For testing purposes only
-    # Test the selection layer on the BUF-JAX 2025 Wild Card Game
+    # Test building the Selection Layer using the Game Document JSON file in the test data
 
     # ------- Test Helper Functions -------
     # GameDocument reconstruction from its to_dict()/JSON form 
@@ -322,7 +322,7 @@ if __name__ == "__main__":
 
 
     # ------- Step 0: Load the saved game document JSON and rebuild it into a GameDocument -------
-    game_doc_json = "../test_data/game_document_buf_jax_wc_2025.json"
+    game_doc_json = "../test_data/game_document.json"
     with open(game_doc_json) as f:
         raw = json.load(f)
 
@@ -369,7 +369,7 @@ if __name__ == "__main__":
     # ------- Step 3: Full build — merge/dedupe/tag across all sources and save to a JSON-serializable dict for inspection -------
     selection = RecapSelection.build(document)
     selection_dict = selection.to_dict()
-    selection_json_filename = "../test_data/selection_buf_jax_wc_2025.json"
+    selection_json_filename = "../test_data/selection.json"
     with open(selection_json_filename, "w") as f:
         json.dump(selection_dict, f, indent=2)
     print(f"\nSelection layer saved to {selection_json_filename}")

@@ -93,22 +93,21 @@ class GameDocument:
 
 if __name__ == "__main__":
     # NOTE: For testing purposes only
-    # Test building the game document on the BUF-JAX 2025 Wild Card Game
+    # Test building the Game Document object from the Preprocessed Data CSV in the test data
 
-    # Game header 
-    # (sourced from ESPN metadata for the same game, but hardcoded here for testing)
+    # Game header (all 'None' placeholders for test data)
     buf_jax_header = GameHeader(
-        game_id = "2025_19_BUF_JAX",
-        season = 2025,
-        week = 19,
-        away_team = "BUF",
-        home_team = "JAX",
-        away_score = 27,
-        home_score = 24,
+        game_id = None,
+        season = None,
+        week = None,
+        away_team = None,
+        home_team = None,
+        away_score = None,
+        home_score = None,
     )
 
     # All plays (computed from the preprocessed CSV)
-    csv_file = "../test_data/preprocessed_data_buf_jax_wc_2025.csv"    
+    csv_file = "../test_data/preprocessed_data.csv"    
     df = pd.read_csv(csv_file)
     plays = plays_from_frame(df)
     teams = teams_in(plays)
@@ -126,7 +125,7 @@ if __name__ == "__main__":
     # Build the game document and save it as a JSON-serializable dict for inspection
     game_doc = GameDocument(header=buf_jax_header, signals=signals, plays=plays)
     game_doc_dict = game_doc.to_dict()
-    game_doc_json_filename = "../test_data/game_document_buf_jax_wc_2025.json"
+    game_doc_json_filename = "../test_data/game_document.json"
     with open(game_doc_json_filename, "w") as f:
         json.dump(game_doc_dict, f, indent=2)
     print(f"Game document saved to {game_doc_json_filename}")

@@ -1,12 +1,12 @@
 {
   "header": {
-    "game_id": "2025_19_BUF_JAX",
-    "season": 2025,
-    "week": 19,
-    "away_team": "BUF",
-    "home_team": "JAX",
-    "away_score": 27,
-    "home_score": 24
+    "game_id": null,
+    "season": null,
+    "week": null,
+    "away_team": null,
+    "home_team": null,
+    "away_score": null,
+    "home_score": null
   },
   "signals": {
     "BUF": {

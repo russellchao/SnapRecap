@@ -135,17 +135,15 @@ def clean_and_merge(pbp_df: pd.DataFrame, participation_df: pd.DataFrame) -> pd.
 
 if __name__ == "__main__":
     #NOTE: For testing purposes only
+    # Clean and merge the PBP and Participation Data CSVs in the test data
 
-    # Test the cleaning and merging on the PBP and Participation CSVs generated 
-    # from running the if __name__ == "__main__" block in 'get_raw_data.py'
-
-    pbp_csv_filename = "../test_data/pbp_data_buf_jax_wc_2025.csv"
-    participation_csv_filename = "../test_data/participation_data_buf_jax_wc_2025.csv"
+    pbp_csv_filename = "../test_data/pbp_data.csv"
+    participation_csv_filename = "../test_data/participation_data.csv"
     pbp_df = pd.read_csv(pbp_csv_filename)
     participation_df = pd.read_csv(participation_csv_filename)
     merged_df = clean_and_merge(pbp_df, participation_df)
 
     # Save the preprocessed dataframe to a CSV for inspection
-    merged_csv_filename = "../test_data/preprocessed_data_buf_jax_wc_2025.csv"
+    merged_csv_filename = "../test_data/preprocessed_data.csv"
     merged_df.to_csv(merged_csv_filename, index=False)
     print(f"Preprocessed data saved to {merged_csv_filename}")

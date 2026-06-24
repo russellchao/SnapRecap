@@ -248,8 +248,7 @@ def defensive_signals(plays: List[Play], team: str) -> Dict[str, object]:
 
 if __name__ == "__main__":
     # NOTE: For testing purposes only.
-    # Test offensive and defensive signals on the sample preprocessed CSV
-    # (BUF-JAX 2025 Wild Card game).
+    # Test building the offensive and defensive signals on the Preprocessed CSV in the test data
 
     def _print_record(title: str, record: Dict[str, object]) -> None:
         """Pretty-print a signal record (test helper)."""
@@ -260,7 +259,7 @@ if __name__ == "__main__":
             print(f"  {name}: {value}")
         print()
 
-    csv_file = "../test_data/preprocessed_data_buf_jax_wc_2025.csv"
+    csv_file = "../test_data/preprocessed_data.csv"
     df = pd.read_csv(csv_file)
 
     plays = plays_from_frame(df)

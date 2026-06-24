@@ -210,7 +210,7 @@ def teams_in(plays: list["Play"]) -> set[str]:
 
 if __name__ == "__main__":
     #NOTE: For testing purposes only.
-    # Test building the Play records on the sample preprocessed CSV file (BUF-JAX 2025 Wild Card Game)
+    # Test building the Play records on the Preprocessed CSV file in the test data
 
     def _summarize(p: "Play") -> str:
         """One compact, readable line per play for verification. (Test Helper)"""
@@ -223,7 +223,7 @@ if __name__ == "__main__":
             f"| {p.desc or ''}"
         )
 
-    csv_file = "../test_data/preprocessed_data_buf_jax_wc_2025.csv"
+    csv_file = "../test_data/preprocessed_data.csv"
     df = pd.read_csv(csv_file)
     plays = plays_from_frame(df)
 

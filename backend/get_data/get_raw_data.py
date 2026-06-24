@@ -9,6 +9,7 @@ If either data is not available, return an error.
 
 import nflreadpy as nfl
 import pandas as pd
+import sys
 
 
 def get_pbp_data(season, week, away_team, home_team):
@@ -60,25 +61,26 @@ def get_participation_data(season, game_id):
 
 if __name__ == "__main__":
     #NOTE: For testing purposes only
+    # Get the PBP and Participation Data for the game requested in the command line arguments and save the data to a CSV for inspection
 
-    # Get the PBP and Participation Data for the 2025-26 Bills vs. Jaguars Wild Card Playoff Game 
-    # and save the data to a CSV for inspection
-    pbp_data = get_pbp_data(season=2025, week=19, away_team="BUF", home_team="JAX")
-    participation_data = get_participation_data(season=2025, game_id="2025_19_BUF_JAX")
+    season, week, away_team, home_team = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
+    season, week = int(season), int(week)
+    
+    game_id = f"{season}_{week < 10 and '0' + str(week) or str(week)}_{away_team}_{home_team}"
+
+    pbp_data = get_pbp_data(season, week, away_team, home_team)
+    participation_data = get_participation_data(season, game_id)
 
     if isinstance(pbp_data, pd.DataFrame):
-        filename = "../test_data/pbp_data_buf_jax_wc_2025.csv"
+        filename = "../test_data/pbp_data.csv"
         pbp_data.to_csv(filename, index=False)
-        print(f"PBP data saved to {filename}")
+        print(f"PBP data successfully saved to {filename}")
+    else:
+        print(pbp_data) # Prints out the error message
 
     if isinstance(participation_data, pd.DataFrame):
-        filename = "../test_data/participation_data_buf_jax_wc_2025.csv"
+        filename = "../test_data/participation_data.csv"
         participation_data.to_csv(filename, index=False)
-        print(f"Participation data saved to {filename}")
-    
-
-    # Try to get the PBP and Participation Data for a game that didn't happen, which should result in an error
-    nonexistent_pbp_data = get_pbp_data(season=2025, week=19, away_team="BUF", home_team="HOU")
-    print(nonexistent_pbp_data)
-    nonexistent_participation_data = get_participation_data(season=2025, game_id="2025_19_BUF_HOU")
-    print(nonexistent_participation_data)
+        print(f"Participation data successfully saved to {filename}")
+    else:
+        print(participation_data) # Prints out the error message
