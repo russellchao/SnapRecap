@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from selection import SelectedPlay
+from selection import SelectedPlay, Section, NEGATIVE_SIGNALS
 
 # --- Descriptive fields (pre-snap + in-play) ---
 # Descriptive only; the prompt forbids evaluating them (no league baseline).
@@ -75,3 +75,37 @@ def render_play(selected: SelectedPlay) -> dict:
     if tier is not None:
         record["selection"]["tier"] = tier
     return record
+
+
+# --- Divergence significance tiers, on the gap/threshold ratio (cross-signal comparable). ---
+# Placeholder cuts pending real divergence-distribution analysis, as with DEFAULT_THRESHOLDS.
+DIVERGENCE_TIER_CUTS = ((2.5, "decisive"), (1.6, "major"))
+DIVERGENCE_TIER_FLOOR = "notable"
+
+
+def _divergence_tier(gap: float, threshold: float) -> str:
+    """Coarsen a section's gap (as multiples of its firing threshold) into a tier."""
+    ratio = gap / threshold
+    for cut, label in DIVERGENCE_TIER_CUTS:
+        if ratio >= cut:
+            return label
+    return DIVERGENCE_TIER_FLOOR
+
+
+def _favored(section: Section) -> str:
+    """The team that comes out better on this signal (min for lower-is-better signals)."""
+    chooser = min if section.signal in NEGATIVE_SIGNALS else max
+    return chooser(section.team_values, key=section.team_values.get)
+
+
+def render_section(section: Section, thresholds: dict[str, float]) -> dict:
+    """Project a fired Section: signal identity, divergence significance, ranked exemplar records."""
+    return {
+        "signal": section.signal,
+        "divergence": {
+            "team_values": section.team_values,
+            "favored": _favored(section),
+            "tier": _divergence_tier(section.gap, thresholds[section.signal]),
+        },
+        "plays": [render_play(sp) for sp in section.plays],
+    }
