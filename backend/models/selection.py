@@ -29,6 +29,7 @@ class Section:
 class RecapSelection:
     """Selected, prompt-ready projection of a GameDocument."""
     header: GameHeader
+    thresholds: dict[str, float] = field(default_factory=dict)   # the per-signal thresholds this selection was built with
     sections: list[Section] = field(default_factory=list)
     anchors: list[SelectedPlay] = field(default_factory=list)
     always_include: list[SelectedPlay] = field(default_factory=list)
@@ -53,7 +54,7 @@ class RecapSelection:
         # Step 3: dedupe across sources by play_id, accumulating reasons; section is home
         sections, anchors, always_include = _merge_selection(sections, anchors, always_include)
 
-        return cls(header=document.header, sections=sections, anchors=anchors, always_include=always_include)
+        return cls(header=document.header, thresholds=thresholds, sections=sections, anchors=anchors, always_include=always_include)
 
     def to_dict(self) -> dict:
         """JSON-serializable form for the prompt step and cache."""

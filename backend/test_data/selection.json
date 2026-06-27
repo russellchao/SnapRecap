@@ -1,12 +1,26 @@
 {
   "header": {
-    "game_id": null,
-    "season": null,
-    "week": null,
-    "away_team": null,
-    "home_team": null,
-    "away_score": null,
-    "home_score": null
+    "game_id": "2025_19_BUF_JAX",
+    "season": 2025,
+    "week": 19,
+    "away_team": "BUF",
+    "home_team": "JAX",
+    "away_score": 27,
+    "home_score": 24
+  },
+  "thresholds": {
+    "epa_per_play": 0.1,
+    "epa_per_pass": 0.15,
+    "epa_per_rush": 0.12,
+    "success_rate": 0.08,
+    "explosive_rate": 0.05,
+    "yards_per_play": 1.0,
+    "yards_per_rush": 1.0,
+    "third_down": 0.15,
+    "fourth_down": 0.25,
+    "red_zone_td": 0.25,
+    "sack_rate": 0.05,
+    "cpoe": 0.04
   },
   "sections": [
     {
