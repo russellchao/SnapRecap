@@ -12,10 +12,10 @@ Selection (surfacing high-leverage plays, baseline annotation) happens
 """
 
 from __future__ import annotations
-
 from dataclasses import asdict, dataclass
 from typing import Dict, List, Optional
 import pandas as pd
+import numpy as np
 import json
 import sys
 import os
@@ -95,20 +95,38 @@ if __name__ == "__main__":
     # NOTE: For testing purposes only
     # Test building the Game Document object from the Preprocessed Data CSV in the test data
 
-    # Game header (all 'None' placeholders for test data)
-    buf_jax_header = GameHeader(
-        game_id = None,
-        season = None,
-        week = None,
-        away_team = None,
-        home_team = None,
-        away_score = None,
-        home_score = None,
-    )
+    def _json_default(obj):
+        """(Test Helper Function) Coerce numpy scalars/arrays (from pandas) into JSON-native types."""
+        if isinstance(obj, np.integer):
+            return int(obj)
+        if isinstance(obj, np.floating):
+            return float(obj)
+        if isinstance(obj, np.bool_):
+            return bool(obj)
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
 
-    # All plays (computed from the preprocessed CSV)
+    # Read the preprocessed CSV into a DataFrame
     csv_file = "../test_data/preprocessed_data.csv"    
     df = pd.read_csv(csv_file)
+
+    # Obtain the GameHeader attributes obtained from the preprocessed CSV
+    header_attrs = {f: df[f][0] for f in ("season", "week", "away_team", "home_team", "away_score", "home_score")}
+    buf_jax_header = GameHeader(
+        game_id = f"{
+            header_attrs['season']}_{header_attrs['week'] < 10 and '0' + str(header_attrs['week']) or 
+            str(header_attrs['week'])}_{header_attrs['away_team']}_{header_attrs['home_team']
+        }",
+        season = header_attrs['season'],
+        week = header_attrs['week'],
+        away_team = header_attrs['away_team'],
+        home_team = header_attrs['home_team'],
+        away_score = header_attrs['away_score'],
+        home_score = header_attrs['home_score'],
+    )
+
+    # All plays computed from the preprocessed CSV
     plays = plays_from_frame(df)
     teams = teams_in(plays)
     print(f"Teams in game: {teams}\n")
@@ -127,5 +145,5 @@ if __name__ == "__main__":
     game_doc_dict = game_doc.to_dict()
     game_doc_json_filename = "../test_data/game_document.json"
     with open(game_doc_json_filename, "w") as f:
-        json.dump(game_doc_dict, f, indent=2)
+        json.dump(game_doc_dict, f, indent=2, default=_json_default)
     print(f"Game document saved to {game_doc_json_filename}")
