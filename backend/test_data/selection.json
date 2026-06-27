@@ -20,7 +20,7 @@
     "fourth_down": 0.25,
     "red_zone_td": 0.25,
     "sack_rate": 0.05,
-    "cpoe": 0.04
+    "cpoe": 4.0
   },
   "sections": [
     {

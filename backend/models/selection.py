@@ -80,6 +80,8 @@ EFFICIENCY_SIGNALS = [
 ]
 
 # Per-signal notable-gap thresholds, in each metric's native units. Eyeball values — tune these.
+# NOTE: most signals are 0-1 rates or EPA/yards; cpoe is the exception — it's in
+# percentage points (e.g. +11.3, -5.1), so its threshold lives on that scale, not 0-1.
 DEFAULT_THRESHOLDS = {
     "epa_per_play": 0.10,
     "epa_per_pass": 0.15,
@@ -92,7 +94,7 @@ DEFAULT_THRESHOLDS = {
     "fourth_down": 0.25,
     "red_zone_td": 0.25,
     "sack_rate": 0.05,
-    "cpoe": 0.04,
+    "cpoe": 4.0,        # percentage points, not a 0-1 fraction
 }
 
 
