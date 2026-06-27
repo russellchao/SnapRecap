@@ -1,7 +1,9 @@
 from dataclasses import dataclass
+import json
 
-from selection import SelectedPlay, Section, NEGATIVE_SIGNALS
+from selection import SelectedPlay, Section, RecapSelection, NEGATIVE_SIGNALS
 from game_document import GameHeader
+from play import Play
 
 # --- Descriptive fields (pre-snap + in-play) ---
 # Descriptive only; the prompt forbids evaluating them (no league baseline).
@@ -80,6 +82,7 @@ def render_play(selected: SelectedPlay) -> dict:
 DIVERGENCE_TIER_CUTS = ((2.5, "decisive"), (1.6, "major"))
 DIVERGENCE_TIER_FLOOR = "notable"
 
+
 def _divergence_tier(gap: float, threshold: float) -> str:
     """Coarsen a section's gap (as multiples of its firing threshold) into a tier."""
     ratio = gap / threshold
@@ -127,3 +130,70 @@ def render_context(header: GameHeader) -> dict:
     if outcome is not None:
         record["outcome"] = outcome
     return record
+
+
+# ------- Assembly -------
+
+def render_selection(selection: RecapSelection) -> dict:
+    """Project a full RecapSelection into the LLM-ready record, preserving each bucket's order."""
+    return {
+        "context": render_context(selection.header),
+        "sections": [render_section(s, selection.thresholds) for s in selection.sections],
+        "anchors": [render_play(sp) for sp in selection.anchors],
+        "scores_and_turnovers": [render_play(sp) for sp in selection.always_include],
+    }
+
+
+
+
+
+if __name__ == "__main__":
+    #NOTE: For testing purposes only
+    # Test projecting a full RecapSelection into the LLM-ready record
+
+
+    # ------- Test Helper Functions -------
+    # RecapSelection reconstruction from its to_dict()/JSON form.
+    # `asdict` flattens every nested dataclass into a plain dict, so loading a
+    # saved selection means rebuilding those types from the dicts.
+
+    def _selected_play_from_dict(raw: dict) -> SelectedPlay:
+        return SelectedPlay(play=Play(**raw["play"]), reasons=raw["reasons"])
+
+    def _section_from_dict(raw: dict) -> Section:
+        return Section(
+            signal=raw["signal"],
+            team_values=raw["team_values"],
+            gap=raw["gap"],
+            plays=[_selected_play_from_dict(sp) for sp in raw["plays"]],
+        )
+
+    def selection_from_dict(raw: dict) -> RecapSelection:
+        """Rebuild a RecapSelection from its `to_dict()` / JSON form."""
+        return RecapSelection(
+            header=GameHeader(**raw["header"]),
+            thresholds=raw["thresholds"],
+            sections=[_section_from_dict(s) for s in raw["sections"]],
+            anchors=[_selected_play_from_dict(sp) for sp in raw["anchors"]],
+            always_include=[_selected_play_from_dict(sp) for sp in raw["always_include"]],
+        )
+
+
+    # ------- Load the saved selection JSON and rebuild it into a RecapSelection -------
+    selection_json = "../test_data/selection.json"
+    with open(selection_json) as f:
+        raw = json.load(f)
+
+    selection = selection_from_dict(raw)
+    print(f"Rebuilt RecapSelection for {selection.header.game_id}: "
+          f"{len(selection.sections)} section(s), {len(selection.anchors)} anchor(s), "
+          f"{len(selection.always_include)} score(s)/turnover(s)")
+
+
+    # ------- Project the selection into the LLM-ready record and save it to JSON -------
+    projected = render_selection(selection)
+    projected_json_filename = "../test_data/projected_selection.json"
+    with open(projected_json_filename, "w") as f:
+        json.dump(projected, f, indent=2)
+    print(f"Projected selection saved to {projected_json_filename}")
+    

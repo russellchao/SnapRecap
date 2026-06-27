@@ -1,0 +1,1216 @@
+{
+  "context": {
+    "facts": {
+      "season": 2025,
+      "week": 19,
+      "away_team": "BUF",
+      "home_team": "JAX",
+      "away_score": 27,
+      "home_score": 24
+    },
+    "outcome": {
+      "winner": "BUF",
+      "margin": 3
+    }
+  },
+  "sections": [
+    {
+      "signal": "cpoe",
+      "divergence": {
+        "team_values": {
+          "BUF": 11.296945469720024,
+          "JAX": -5.053668220837912
+        },
+        "favored": "BUF",
+        "tier": "decisive"
+      },
+      "plays": [
+        {
+          "facts": {
+            "qtr": 2,
+            "game_seconds_remaining": 2267,
+            "down": 2,
+            "ydstogo": 10,
+            "yardline_100": 44,
+            "goal_to_go": false,
+            "score_differential": -4,
+            "wp": 0.4364252388477325,
+            "posteam": "BUF",
+            "defteam": "JAX",
+            "play_type": "pass",
+            "yards_gained": 36,
+            "first_down": true,
+            "passer": "J.Allen",
+            "receiver": "K.Coleman",
+            "desc": "(7:47) (Shotgun) 17-J.Allen pass deep right to 0-K.Coleman pushed ob at JAX 8 for 36 yards (0-D.Lloyd)."
+          },
+          "selection": {
+            "reasons": {
+              "cpoe": 2.7652594838291407,
+              "epa_per_play": 2.7652594838291407,
+              "epa_per_pass": 2.7652594838291407
+            }
+          },
+          "annotations": {
+            "offense_personnel_package": "11 Personnel",
+            "offense_formation": "SHOTGUN",
+            "defenders_in_box": 5,
+            "number_of_pass_rushers": 4,
+            "defense_coverage_type": "COVER_2",
+            "defense_man_zone_type": "ZONE_COVERAGE",
+            "shotgun": true,
+            "no_huddle": false,
+            "pass_location": "right",
+            "pass_length": "deep",
+            "air_yards": 18.0,
+            "yards_after_catch": 18.0,
+            "route": "GO",
+            "time_to_throw": 2.2,
+            "was_pressure": false
+          }
+        },
+        {
+          "facts": {
+            "qtr": 4,
+            "game_seconds_remaining": 147,
+            "down": 1,
+            "ydstogo": 10,
+            "yardline_100": 56,
+            "goal_to_go": false,
+            "score_differential": -4,
+            "wp": 0.2874065637588501,
+            "posteam": "BUF",
+            "defteam": "JAX",
+            "play_type": "pass",
+            "yards_gained": 36,
+            "first_down": true,
+            "passer": "J.Allen",
+            "receiver": "B.Cooks",
+            "desc": "(2:27) (Shotgun) 17-J.Allen pass deep left to 18-B.Cooks to JAX 20 for 36 yards (26-An.Johnson)."
+          },
+          "selection": {
+            "reasons": {
+              "cpoe": 2.3264310076483525,
+              "epa_per_play": 2.3264310076483525,
+              "epa_per_pass": 2.3264310076483525,
+              "anchor": 0.2053885161876678
+            },
+            "tier": "decisive"
+          },
+          "annotations": {
+            "offense_personnel_package": "11 Personnel",
+            "offense_formation": "SHOTGUN",
+            "defenders_in_box": 6,
+            "number_of_pass_rushers": 4,
+            "defense_coverage_type": "COVER_2",
+            "defense_man_zone_type": "ZONE_COVERAGE",
+            "shotgun": true,
+            "no_huddle": false,
+            "pass_location": "left",
+            "pass_length": "deep",
+            "air_yards": 33.0,
+            "yards_after_catch": 3.0,
+            "route": "GO",
+            "time_to_throw": 2.1,
+            "was_pressure": true
+          }
+        },
+        {
+          "facts": {
+            "qtr": 4,
+            "game_seconds_remaining": 541,
+            "down": 1,
+            "ydstogo": 10,
+            "yardline_100": 15,
+            "goal_to_go": false,
+            "score_differential": -4,
+            "wp": 0.47705739736557,
+            "posteam": "BUF",
+            "defteam": "JAX",
+            "play_type": "pass",
+            "yards_gained": 15,
+            "first_down": true,
+            "touchdown": true,
+            "passer": "J.Allen",
+            "receiver": "D.Kincaid",
+            "desc": "(9:01) (Shotgun) 17-J.Allen pass short left to 86-D.Kincaid for 15 yards, TOUCHDOWN."
+          },
+          "selection": {
+            "reasons": {
+              "cpoe": 2.2118633134523407,
+              "epa_per_pass": 2.2118633134523407,
+              "red_zone_td": 2.2118633134523407,
+              "touchdown": null
+            }
+          },
+          "annotations": {
+            "offense_personnel_package": "11 Personnel",
+            "offense_formation": "SHOTGUN",
+            "defenders_in_box": 6,
+            "number_of_pass_rushers": 4,
+            "defense_coverage_type": "COVER_3",
+            "defense_man_zone_type": "ZONE_COVERAGE",
+            "shotgun": true,
+            "no_huddle": false,
+            "pass_location": "left",
+            "pass_length": "short",
+            "air_yards": 11.0,
+            "yards_after_catch": 4.0,
+            "route": "GO",
+            "time_to_throw": 2.2,
+            "was_pressure": false
+          }
+        }
+      ]
+    },
+    {
+      "signal": "fourth_down",
+      "divergence": {
+        "team_values": {
+          "BUF": 1.0,
+          "JAX": 0.0
+        },
+        "favored": "BUF",
+        "tier": "decisive"
+      },
+      "plays": [
+        {
+          "facts": {
+            "qtr": 4,
+            "game_seconds_remaining": 70,
+            "down": 4,
+            "ydstogo": 1,
+            "yardline_100": 11,
+            "goal_to_go": false,
+            "score_differential": -4,
+            "wp": 0.4368517994880676,
+            "posteam": "BUF",
+            "defteam": "JAX",
+            "play_type": "run",
+            "yards_gained": 10,
+            "first_down": true,
+            "fourth_down_converted": true,
+            "rusher": "J.Allen",
+            "desc": "(1:10) 70-A.Anderson reported in as eligible. 17-J.Allen up the middle for 11 yards, TOUCHDOWN. The Replay Official reviewed the runner broke the plane ruling, and the play was REVERSED. 70-A.Anderson reported in as eligible. 17-J.Allen up the middle to JAX 1 for 10 yards (26-An.Johnson; 91-A.Armstead)."
+          },
+          "selection": {
+            "reasons": {
+              "fourth_down": 2.648053052573232,
+              "epa_per_play": 2.648053052573232,
+              "epa_per_rush": 2.648053052573232,
+              "red_zone_td": 2.648053052573232,
+              "anchor": 0.2392522096633911
+            },
+            "tier": "decisive"
+          },
+          "annotations": {
+            "offense_personnel_package": "11 Personnel",
+            "offense_formation": "UNDER CENTER",
+            "defenders_in_box": 8,
+            "number_of_pass_rushers": 0,
+            "shotgun": false,
+            "no_huddle": false,
+            "run_location": "middle",
+            "was_pressure": false
+          }
+        },
+        {
+          "facts": {
+            "qtr": 4,
+            "game_seconds_remaining": 582,
+            "down": 4,
+            "ydstogo": 1,
+            "yardline_100": 19,
+            "goal_to_go": false,
+            "score_differential": -4,
+            "wp": 0.408452421426773,
+            "posteam": "BUF",
+            "defteam": "JAX",
+            "play_type": "run",
+            "yards_gained": 4,
+            "first_down": true,
+            "fourth_down_converted": true,
+            "rusher": "J.Allen",
+            "desc": "(9:42) 70-A.Anderson reported in as eligible. 17-J.Allen left guard to JAX 15 for 4 yards (47-D.Gardeck)."
+          },
+          "selection": {
+            "reasons": {
+              "fourth_down": 1.763551693991758,
+              "epa_per_rush": 1.763551693991758
+            }
+          },
+          "annotations": {
+            "offense_personnel_package": "11 Personnel",
+            "offense_formation": "UNDER CENTER",
+            "defenders_in_box": 7,
+            "number_of_pass_rushers": 0,
+            "shotgun": false,
+            "no_huddle": false,
+            "run_location": "left",
+            "run_gap": "guard",
+            "was_pressure": false
+          }
+        }
+      ]
+    },
+    {
+      "signal": "yards_per_rush",
+      "divergence": {
+        "team_values": {
+          "BUF": 3.0,
+          "JAX": 6.0
+        },
+        "favored": "JAX",
+        "tier": "decisive"
+      },
+      "plays": [
+        {
+          "facts": {
+            "qtr": 3,
+            "game_seconds_remaining": 1354,
+            "down": 1,
+            "ydstogo": 10,
+            "yardline_100": 52,
+            "goal_to_go": false,
+            "score_differential": -6,
+            "wp": 0.3491066396236419,
+            "posteam": "JAX",
+            "defteam": "BUF",
+            "play_type": "run",
+            "yards_gained": 26,
+            "first_down": true,
+            "rusher": "T.Etienne",
+            "desc": "(7:34) 1-T.Etienne right tackle to BUF 26 for 26 yards (27-T.White)."
+          },
+          "selection": {
+            "reasons": {
+              "yards_per_rush": 1.592858724296093
+            }
+          },
+          "annotations": {
+            "offense_personnel_package": "11 Personnel",
+            "offense_formation": "UNDER CENTER",
+            "defenders_in_box": 6,
+            "number_of_pass_rushers": 0,
+            "shotgun": false,
+            "no_huddle": false,
+            "run_location": "right",
+            "run_gap": "tackle",
+            "was_pressure": false
+          }
+        },
+        {
+          "facts": {
+            "qtr": 1,
+            "game_seconds_remaining": 3060,
+            "down": 3,
+            "ydstogo": 2,
+            "yardline_100": 72,
+            "goal_to_go": false,
+            "score_differential": 0,
+            "wp": 0.5387725830078125,
+            "posteam": "JAX",
+            "defteam": "BUF",
+            "play_type": "run",
+            "yards_gained": 12,
+            "first_down": true,
+            "third_down_converted": true,
+            "rusher": "T.Etienne",
+            "desc": "(6:00) (Shotgun) 1-T.Etienne up the middle to JAX 40 for 12 yards (21-J.Poyer)."
+          },
+          "selection": {
+            "reasons": {
+              "yards_per_rush": 1.4746561478823423
+            }
+          },
+          "annotations": {
+            "offense_personnel_package": "11 Personnel",
+            "offense_formation": "SHOTGUN",
+            "defenders_in_box": 6,
+            "number_of_pass_rushers": 0,
+            "shotgun": true,
+            "no_huddle": false,
+            "run_location": "middle",
+            "was_pressure": false
+          }
+        },
+        {
+          "facts": {
+            "qtr": 1,
+            "game_seconds_remaining": 2710,
+            "down": 1,
+            "ydstogo": 10,
+            "yardline_100": 16,
+            "goal_to_go": false,
+            "score_differential": -3,
+            "wp": 0.5584474802017212,
+            "posteam": "JAX",
+            "defteam": "BUF",
+            "play_type": "run",
+            "yards_gained": 13,
+            "first_down": true,
+            "rusher": "B.Tuten",
+            "desc": "(:10) 33-B.Tuten left end pushed ob at BUF 3 for 13 yards (27-T.White)."
+          },
+          "selection": {
+            "reasons": {
+              "yards_per_rush": 1.2363129366422072
+            }
+          },
+          "annotations": {
+            "offense_personnel_package": "11 Personnel",
+            "offense_formation": "UNDER CENTER",
+            "defenders_in_box": 6,
+            "number_of_pass_rushers": 0,
+            "shotgun": false,
+            "no_huddle": false,
+            "run_location": "left",
+            "run_gap": "end",
+            "was_pressure": false
+          }
+        }
+      ]
+    },
+    {
+      "signal": "epa_per_play",
+      "divergence": {
+        "team_values": {
+          "BUF": 0.22406136035159033,
+          "JAX": 0.05391762596680858
+        },
+        "favored": "BUF",
+        "tier": "major"
+      },
+      "plays": [
+        {
+          "facts": {
+            "qtr": 2,
+            "game_seconds_remaining": 2267,
+            "down": 2,
+            "ydstogo": 10,
+            "yardline_100": 44,
+            "goal_to_go": false,
+            "score_differential": -4,
+            "wp": 0.4364252388477325,
+            "posteam": "BUF",
+            "defteam": "JAX",
+            "play_type": "pass",
+            "yards_gained": 36,
+            "first_down": true,
+            "passer": "J.Allen",
+            "receiver": "K.Coleman",
+            "desc": "(7:47) (Shotgun) 17-J.Allen pass deep right to 0-K.Coleman pushed ob at JAX 8 for 36 yards (0-D.Lloyd)."
+          },
+          "selection": {
+            "reasons": {
+              "cpoe": 2.7652594838291407,
+              "epa_per_play": 2.7652594838291407,
+              "epa_per_pass": 2.7652594838291407
+            }
+          },
+          "annotations": {
+            "offense_personnel_package": "11 Personnel",
+            "offense_formation": "SHOTGUN",
+            "defenders_in_box": 5,
+            "number_of_pass_rushers": 4,
+            "defense_coverage_type": "COVER_2",
+            "defense_man_zone_type": "ZONE_COVERAGE",
+            "shotgun": true,
+            "no_huddle": false,
+            "pass_location": "right",
+            "pass_length": "deep",
+            "air_yards": 18.0,
+            "yards_after_catch": 18.0,
+            "route": "GO",
+            "time_to_throw": 2.2,
+            "was_pressure": false
+          }
+        },
+        {
+          "facts": {
+            "qtr": 4,
+            "game_seconds_remaining": 70,
+            "down": 4,
+            "ydstogo": 1,
+            "yardline_100": 11,
+            "goal_to_go": false,
+            "score_differential": -4,
+            "wp": 0.4368517994880676,
+            "posteam": "BUF",
+            "defteam": "JAX",
+            "play_type": "run",
+            "yards_gained": 10,
+            "first_down": true,
+            "fourth_down_converted": true,
+            "rusher": "J.Allen",
+            "desc": "(1:10) 70-A.Anderson reported in as eligible. 17-J.Allen up the middle for 11 yards, TOUCHDOWN. The Replay Official reviewed the runner broke the plane ruling, and the play was REVERSED. 70-A.Anderson reported in as eligible. 17-J.Allen up the middle to JAX 1 for 10 yards (26-An.Johnson; 91-A.Armstead)."
+          },
+          "selection": {
+            "reasons": {
+              "fourth_down": 2.648053052573232,
+              "epa_per_play": 2.648053052573232,
+              "epa_per_rush": 2.648053052573232,
+              "red_zone_td": 2.648053052573232,
+              "anchor": 0.2392522096633911
+            },
+            "tier": "decisive"
+          },
+          "annotations": {
+            "offense_personnel_package": "11 Personnel",
+            "offense_formation": "UNDER CENTER",
+            "defenders_in_box": 8,
+            "number_of_pass_rushers": 0,
+            "shotgun": false,
+            "no_huddle": false,
+            "run_location": "middle",
+            "was_pressure": false
+          }
+        },
+        {
+          "facts": {
+            "qtr": 4,
+            "game_seconds_remaining": 147,
+            "down": 1,
+            "ydstogo": 10,
+            "yardline_100": 56,
+            "goal_to_go": false,
+            "score_differential": -4,
+            "wp": 0.2874065637588501,
+            "posteam": "BUF",
+            "defteam": "JAX",
+            "play_type": "pass",
+            "yards_gained": 36,
+            "first_down": true,
+            "passer": "J.Allen",
+            "receiver": "B.Cooks",
+            "desc": "(2:27) (Shotgun) 17-J.Allen pass deep left to 18-B.Cooks to JAX 20 for 36 yards (26-An.Johnson)."
+          },
+          "selection": {
+            "reasons": {
+              "cpoe": 2.3264310076483525,
+              "epa_per_play": 2.3264310076483525,
+              "epa_per_pass": 2.3264310076483525,
+              "anchor": 0.2053885161876678
+            },
+            "tier": "decisive"
+          },
+          "annotations": {
+            "offense_personnel_package": "11 Personnel",
+            "offense_formation": "SHOTGUN",
+            "defenders_in_box": 6,
+            "number_of_pass_rushers": 4,
+            "defense_coverage_type": "COVER_2",
+            "defense_man_zone_type": "ZONE_COVERAGE",
+            "shotgun": true,
+            "no_huddle": false,
+            "pass_location": "left",
+            "pass_length": "deep",
+            "air_yards": 33.0,
+            "yards_after_catch": 3.0,
+            "route": "GO",
+            "time_to_throw": 2.1,
+            "was_pressure": true
+          }
+        }
+      ]
+    },
+    {
+      "signal": "epa_per_rush",
+      "divergence": {
+        "team_values": {
+          "BUF": 0.19437134474918077,
+          "JAX": 0.03972936588494728
+        },
+        "favored": "BUF",
+        "tier": "notable"
+      },
+      "plays": [
+        {
+          "facts": {
+            "qtr": 4,
+            "game_seconds_remaining": 70,
+            "down": 4,
+            "ydstogo": 1,
+            "yardline_100": 11,
+            "goal_to_go": false,
+            "score_differential": -4,
+            "wp": 0.4368517994880676,
+            "posteam": "BUF",
+            "defteam": "JAX",
+            "play_type": "run",
+            "yards_gained": 10,
+            "first_down": true,
+            "fourth_down_converted": true,
+            "rusher": "J.Allen",
+            "desc": "(1:10) 70-A.Anderson reported in as eligible. 17-J.Allen up the middle for 11 yards, TOUCHDOWN. The Replay Official reviewed the runner broke the plane ruling, and the play was REVERSED. 70-A.Anderson reported in as eligible. 17-J.Allen up the middle to JAX 1 for 10 yards (26-An.Johnson; 91-A.Armstead)."
+          },
+          "selection": {
+            "reasons": {
+              "fourth_down": 2.648053052573232,
+              "epa_per_play": 2.648053052573232,
+              "epa_per_rush": 2.648053052573232,
+              "red_zone_td": 2.648053052573232,
+              "anchor": 0.2392522096633911
+            },
+            "tier": "decisive"
+          },
+          "annotations": {
+            "offense_personnel_package": "11 Personnel",
+            "offense_formation": "UNDER CENTER",
+            "defenders_in_box": 8,
+            "number_of_pass_rushers": 0,
+            "shotgun": false,
+            "no_huddle": false,
+            "run_location": "middle",
+            "was_pressure": false
+          }
+        },
+        {
+          "facts": {
+            "qtr": 2,
+            "game_seconds_remaining": 2142,
+            "down": 3,
+            "ydstogo": 2,
+            "yardline_100": 2,
+            "goal_to_go": true,
+            "score_differential": -4,
+            "wp": 0.5034798383712769,
+            "posteam": "BUF",
+            "defteam": "JAX",
+            "play_type": "run",
+            "yards_gained": 2,
+            "first_down": true,
+            "third_down_converted": true,
+            "touchdown": true,
+            "rusher": "J.Allen",
+            "desc": "(5:42) (Shotgun) 17-J.Allen right tackle for 2 yards, TOUCHDOWN."
+          },
+          "selection": {
+            "reasons": {
+              "epa_per_rush": 2.096246760804206,
+              "red_zone_td": 2.096246760804206,
+              "touchdown": null
+            }
+          },
+          "annotations": {
+            "offense_personnel_package": "11 Personnel",
+            "offense_formation": "SHOTGUN",
+            "defenders_in_box": 6,
+            "number_of_pass_rushers": 0,
+            "shotgun": true,
+            "no_huddle": false,
+            "run_location": "right",
+            "run_gap": "tackle",
+            "was_pressure": false
+          }
+        },
+        {
+          "facts": {
+            "qtr": 4,
+            "game_seconds_remaining": 582,
+            "down": 4,
+            "ydstogo": 1,
+            "yardline_100": 19,
+            "goal_to_go": false,
+            "score_differential": -4,
+            "wp": 0.408452421426773,
+            "posteam": "BUF",
+            "defteam": "JAX",
+            "play_type": "run",
+            "yards_gained": 4,
+            "first_down": true,
+            "fourth_down_converted": true,
+            "rusher": "J.Allen",
+            "desc": "(9:42) 70-A.Anderson reported in as eligible. 17-J.Allen left guard to JAX 15 for 4 yards (47-D.Gardeck)."
+          },
+          "selection": {
+            "reasons": {
+              "fourth_down": 1.763551693991758,
+              "epa_per_rush": 1.763551693991758
+            }
+          },
+          "annotations": {
+            "offense_personnel_package": "11 Personnel",
+            "offense_formation": "UNDER CENTER",
+            "defenders_in_box": 7,
+            "number_of_pass_rushers": 0,
+            "shotgun": false,
+            "no_huddle": false,
+            "run_location": "left",
+            "run_gap": "guard",
+            "was_pressure": false
+          }
+        }
+      ]
+    },
+    {
+      "signal": "epa_per_pass",
+      "divergence": {
+        "team_values": {
+          "BUF": 0.24080957428115468,
+          "JAX": 0.0626809630761935
+        },
+        "favored": "BUF",
+        "tier": "notable"
+      },
+      "plays": [
+        {
+          "facts": {
+            "qtr": 2,
+            "game_seconds_remaining": 2267,
+            "down": 2,
+            "ydstogo": 10,
+            "yardline_100": 44,
+            "goal_to_go": false,
+            "score_differential": -4,
+            "wp": 0.4364252388477325,
+            "posteam": "BUF",
+            "defteam": "JAX",
+            "play_type": "pass",
+            "yards_gained": 36,
+            "first_down": true,
+            "passer": "J.Allen",
+            "receiver": "K.Coleman",
+            "desc": "(7:47) (Shotgun) 17-J.Allen pass deep right to 0-K.Coleman pushed ob at JAX 8 for 36 yards (0-D.Lloyd)."
+          },
+          "selection": {
+            "reasons": {
+              "cpoe": 2.7652594838291407,
+              "epa_per_play": 2.7652594838291407,
+              "epa_per_pass": 2.7652594838291407
+            }
+          },
+          "annotations": {
+            "offense_personnel_package": "11 Personnel",
+            "offense_formation": "SHOTGUN",
+            "defenders_in_box": 5,
+            "number_of_pass_rushers": 4,
+            "defense_coverage_type": "COVER_2",
+            "defense_man_zone_type": "ZONE_COVERAGE",
+            "shotgun": true,
+            "no_huddle": false,
+            "pass_location": "right",
+            "pass_length": "deep",
+            "air_yards": 18.0,
+            "yards_after_catch": 18.0,
+            "route": "GO",
+            "time_to_throw": 2.2,
+            "was_pressure": false
+          }
+        },
+        {
+          "facts": {
+            "qtr": 4,
+            "game_seconds_remaining": 147,
+            "down": 1,
+            "ydstogo": 10,
+            "yardline_100": 56,
+            "goal_to_go": false,
+            "score_differential": -4,
+            "wp": 0.2874065637588501,
+            "posteam": "BUF",
+            "defteam": "JAX",
+            "play_type": "pass",
+            "yards_gained": 36,
+            "first_down": true,
+            "passer": "J.Allen",
+            "receiver": "B.Cooks",
+            "desc": "(2:27) (Shotgun) 17-J.Allen pass deep left to 18-B.Cooks to JAX 20 for 36 yards (26-An.Johnson)."
+          },
+          "selection": {
+            "reasons": {
+              "cpoe": 2.3264310076483525,
+              "epa_per_play": 2.3264310076483525,
+              "epa_per_pass": 2.3264310076483525,
+              "anchor": 0.2053885161876678
+            },
+            "tier": "decisive"
+          },
+          "annotations": {
+            "offense_personnel_package": "11 Personnel",
+            "offense_formation": "SHOTGUN",
+            "defenders_in_box": 6,
+            "number_of_pass_rushers": 4,
+            "defense_coverage_type": "COVER_2",
+            "defense_man_zone_type": "ZONE_COVERAGE",
+            "shotgun": true,
+            "no_huddle": false,
+            "pass_location": "left",
+            "pass_length": "deep",
+            "air_yards": 33.0,
+            "yards_after_catch": 3.0,
+            "route": "GO",
+            "time_to_throw": 2.1,
+            "was_pressure": true
+          }
+        },
+        {
+          "facts": {
+            "qtr": 4,
+            "game_seconds_remaining": 541,
+            "down": 1,
+            "ydstogo": 10,
+            "yardline_100": 15,
+            "goal_to_go": false,
+            "score_differential": -4,
+            "wp": 0.47705739736557,
+            "posteam": "BUF",
+            "defteam": "JAX",
+            "play_type": "pass",
+            "yards_gained": 15,
+            "first_down": true,
+            "touchdown": true,
+            "passer": "J.Allen",
+            "receiver": "D.Kincaid",
+            "desc": "(9:01) (Shotgun) 17-J.Allen pass short left to 86-D.Kincaid for 15 yards, TOUCHDOWN."
+          },
+          "selection": {
+            "reasons": {
+              "cpoe": 2.2118633134523407,
+              "epa_per_pass": 2.2118633134523407,
+              "red_zone_td": 2.2118633134523407,
+              "touchdown": null
+            }
+          },
+          "annotations": {
+            "offense_personnel_package": "11 Personnel",
+            "offense_formation": "SHOTGUN",
+            "defenders_in_box": 6,
+            "number_of_pass_rushers": 4,
+            "defense_coverage_type": "COVER_3",
+            "defense_man_zone_type": "ZONE_COVERAGE",
+            "shotgun": true,
+            "no_huddle": false,
+            "pass_location": "left",
+            "pass_length": "short",
+            "air_yards": 11.0,
+            "yards_after_catch": 4.0,
+            "route": "GO",
+            "time_to_throw": 2.2,
+            "was_pressure": false
+          }
+        }
+      ]
+    },
+    {
+      "signal": "red_zone_td",
+      "divergence": {
+        "team_values": {
+          "BUF": 1.0,
+          "JAX": 0.75
+        },
+        "favored": "BUF",
+        "tier": "notable"
+      },
+      "plays": [
+        {
+          "facts": {
+            "qtr": 4,
+            "game_seconds_remaining": 70,
+            "down": 4,
+            "ydstogo": 1,
+            "yardline_100": 11,
+            "goal_to_go": false,
+            "score_differential": -4,
+            "wp": 0.4368517994880676,
+            "posteam": "BUF",
+            "defteam": "JAX",
+            "play_type": "run",
+            "yards_gained": 10,
+            "first_down": true,
+            "fourth_down_converted": true,
+            "rusher": "J.Allen",
+            "desc": "(1:10) 70-A.Anderson reported in as eligible. 17-J.Allen up the middle for 11 yards, TOUCHDOWN. The Replay Official reviewed the runner broke the plane ruling, and the play was REVERSED. 70-A.Anderson reported in as eligible. 17-J.Allen up the middle to JAX 1 for 10 yards (26-An.Johnson; 91-A.Armstead)."
+          },
+          "selection": {
+            "reasons": {
+              "fourth_down": 2.648053052573232,
+              "epa_per_play": 2.648053052573232,
+              "epa_per_rush": 2.648053052573232,
+              "red_zone_td": 2.648053052573232,
+              "anchor": 0.2392522096633911
+            },
+            "tier": "decisive"
+          },
+          "annotations": {
+            "offense_personnel_package": "11 Personnel",
+            "offense_formation": "UNDER CENTER",
+            "defenders_in_box": 8,
+            "number_of_pass_rushers": 0,
+            "shotgun": false,
+            "no_huddle": false,
+            "run_location": "middle",
+            "was_pressure": false
+          }
+        },
+        {
+          "facts": {
+            "qtr": 4,
+            "game_seconds_remaining": 541,
+            "down": 1,
+            "ydstogo": 10,
+            "yardline_100": 15,
+            "goal_to_go": false,
+            "score_differential": -4,
+            "wp": 0.47705739736557,
+            "posteam": "BUF",
+            "defteam": "JAX",
+            "play_type": "pass",
+            "yards_gained": 15,
+            "first_down": true,
+            "touchdown": true,
+            "passer": "J.Allen",
+            "receiver": "D.Kincaid",
+            "desc": "(9:01) (Shotgun) 17-J.Allen pass short left to 86-D.Kincaid for 15 yards, TOUCHDOWN."
+          },
+          "selection": {
+            "reasons": {
+              "cpoe": 2.2118633134523407,
+              "epa_per_pass": 2.2118633134523407,
+              "red_zone_td": 2.2118633134523407,
+              "touchdown": null
+            }
+          },
+          "annotations": {
+            "offense_personnel_package": "11 Personnel",
+            "offense_formation": "SHOTGUN",
+            "defenders_in_box": 6,
+            "number_of_pass_rushers": 4,
+            "defense_coverage_type": "COVER_3",
+            "defense_man_zone_type": "ZONE_COVERAGE",
+            "shotgun": true,
+            "no_huddle": false,
+            "pass_location": "left",
+            "pass_length": "short",
+            "air_yards": 11.0,
+            "yards_after_catch": 4.0,
+            "route": "GO",
+            "time_to_throw": 2.2,
+            "was_pressure": false
+          }
+        },
+        {
+          "facts": {
+            "qtr": 2,
+            "game_seconds_remaining": 2142,
+            "down": 3,
+            "ydstogo": 2,
+            "yardline_100": 2,
+            "goal_to_go": true,
+            "score_differential": -4,
+            "wp": 0.5034798383712769,
+            "posteam": "BUF",
+            "defteam": "JAX",
+            "play_type": "run",
+            "yards_gained": 2,
+            "first_down": true,
+            "third_down_converted": true,
+            "touchdown": true,
+            "rusher": "J.Allen",
+            "desc": "(5:42) (Shotgun) 17-J.Allen right tackle for 2 yards, TOUCHDOWN."
+          },
+          "selection": {
+            "reasons": {
+              "epa_per_rush": 2.096246760804206,
+              "red_zone_td": 2.096246760804206,
+              "touchdown": null
+            }
+          },
+          "annotations": {
+            "offense_personnel_package": "11 Personnel",
+            "offense_formation": "SHOTGUN",
+            "defenders_in_box": 6,
+            "number_of_pass_rushers": 0,
+            "shotgun": true,
+            "no_huddle": false,
+            "run_location": "right",
+            "run_gap": "tackle",
+            "was_pressure": false
+          }
+        }
+      ]
+    }
+  ],
+  "anchors": [
+    {
+      "facts": {
+        "qtr": 4,
+        "game_seconds_remaining": 59,
+        "down": 1,
+        "ydstogo": 10,
+        "yardline_100": 77,
+        "goal_to_go": false,
+        "score_differential": -3,
+        "wp": 0.2276298999786377,
+        "posteam": "JAX",
+        "defteam": "BUF",
+        "play_type": "pass",
+        "yards_gained": 0,
+        "interception": true,
+        "passer": "T.Lawrence",
+        "receiver": "J.Meyers",
+        "desc": "(:59) (Shotgun) 16-T.Lawrence pass short middle intended for 3-J.Meyers INTERCEPTED by 24-C.Bishop (27-T.White) at JAX 37. 24-C.Bishop to JAX 35 for 2 yards."
+      },
+      "selection": {
+        "reasons": {
+          "anchor": -0.1928483247756958,
+          "turnover": null
+        },
+        "tier": "major"
+      },
+      "annotations": {
+        "offense_personnel_package": "11 Personnel",
+        "offense_formation": "SHOTGUN",
+        "defenders_in_box": 5,
+        "number_of_pass_rushers": 3,
+        "defense_coverage_type": "COVER_2",
+        "defense_man_zone_type": "ZONE_COVERAGE",
+        "shotgun": true,
+        "no_huddle": false,
+        "pass_location": "middle",
+        "pass_length": "short",
+        "air_yards": 14.0,
+        "route": "IN/DIG",
+        "time_to_throw": 2.6,
+        "was_pressure": false
+      }
+    }
+  ],
+  "scores_and_turnovers": [
+    {
+      "facts": {
+        "qtr": 1,
+        "game_seconds_remaining": 3025,
+        "down": 2,
+        "ydstogo": 10,
+        "yardline_100": 60,
+        "goal_to_go": false,
+        "score_differential": 0,
+        "wp": 0.5573586821556091,
+        "posteam": "JAX",
+        "defteam": "BUF",
+        "play_type": "pass",
+        "yards_gained": 0,
+        "interception": true,
+        "passer": "T.Lawrence",
+        "receiver": "P.Washington",
+        "desc": "(5:25) (Shotgun) 16-T.Lawrence pass short middle intended for 11-P.Washington INTERCEPTED by 45-S.Thompson at BUF 48. 45-S.Thompson to JAX 33 for 19 yards (16-T.Lawrence)."
+      },
+      "selection": {
+        "reasons": {
+          "turnover": null
+        }
+      },
+      "annotations": {
+        "offense_personnel_package": "11 Personnel",
+        "offense_formation": "SHOTGUN",
+        "defenders_in_box": 6,
+        "number_of_pass_rushers": 4,
+        "defense_coverage_type": "COVER_2",
+        "defense_man_zone_type": "ZONE_COVERAGE",
+        "shotgun": true,
+        "no_huddle": false,
+        "pass_location": "middle",
+        "pass_length": "short",
+        "air_yards": 12.0,
+        "route": "POST",
+        "time_to_throw": 2.5,
+        "was_pressure": false
+      }
+    },
+    {
+      "facts": {
+        "qtr": 2,
+        "game_seconds_remaining": 2658,
+        "down": 2,
+        "ydstogo": 3,
+        "yardline_100": 3,
+        "goal_to_go": true,
+        "score_differential": -3,
+        "wp": 0.5975154638290405,
+        "posteam": "JAX",
+        "defteam": "BUF",
+        "play_type": "pass",
+        "yards_gained": 3,
+        "first_down": true,
+        "touchdown": true,
+        "passer": "T.Lawrence",
+        "receiver": "B.Thomas",
+        "desc": "(14:18) (Shotgun) 16-T.Lawrence pass short left to 7-B.Thomas for 3 yards, TOUCHDOWN."
+      },
+      "selection": {
+        "reasons": {
+          "touchdown": null
+        }
+      },
+      "annotations": {
+        "offense_personnel_package": "11 Personnel",
+        "offense_formation": "SHOTGUN",
+        "defenders_in_box": 5,
+        "number_of_pass_rushers": 4,
+        "defense_coverage_type": "COVER_4",
+        "defense_man_zone_type": "ZONE_COVERAGE",
+        "shotgun": true,
+        "no_huddle": false,
+        "pass_location": "left",
+        "pass_length": "short",
+        "air_yards": 3.0,
+        "yards_after_catch": 0.0,
+        "route": "HITCH/CURL",
+        "time_to_throw": 2.1,
+        "was_pressure": false
+      }
+    },
+    {
+      "facts": {
+        "qtr": 2,
+        "game_seconds_remaining": 2654,
+        "ydstogo": 0,
+        "yardline_100": 35,
+        "goal_to_go": false,
+        "score_differential": -4,
+        "wp": 0.3788372278213501,
+        "posteam": "BUF",
+        "defteam": "JAX",
+        "play_type": "kickoff",
+        "yards_gained": 0,
+        "fumble_lost": true,
+        "desc": "39-C.Little kicks 65 yards from JAX 35 to BUF 0. 22-R.Davis to BUF 34 for 34 yards (36-L.Allen; 30-M.Brown). FUMBLES (36-L.Allen), RECOVERED by JAX-0-D.Lloyd at BUF 36. BUF-22-R.Davis was injured during the play."
+      },
+      "selection": {
+        "reasons": {
+          "turnover": null
+        }
+      },
+      "annotations": {
+        "defenders_in_box": 0,
+        "number_of_pass_rushers": 0,
+        "shotgun": false,
+        "no_huddle": false,
+        "was_pressure": false
+      }
+    },
+    {
+      "facts": {
+        "qtr": 4,
+        "game_seconds_remaining": 781,
+        "down": 2,
+        "ydstogo": 6,
+        "yardline_100": 6,
+        "goal_to_go": true,
+        "score_differential": -3,
+        "wp": 0.6009427309036255,
+        "posteam": "JAX",
+        "defteam": "BUF",
+        "play_type": "pass",
+        "yards_gained": 6,
+        "first_down": true,
+        "touchdown": true,
+        "passer": "T.Lawrence",
+        "receiver": "P.Washington",
+        "desc": "(13:01) (Shotgun) 16-T.Lawrence pass short middle to 11-P.Washington for 6 yards, TOUCHDOWN. JAX-77-A.Harrison was injured during the play."
+      },
+      "selection": {
+        "reasons": {
+          "touchdown": null
+        }
+      },
+      "annotations": {
+        "offense_personnel_package": "11 Personnel",
+        "offense_formation": "SHOTGUN",
+        "defenders_in_box": 5,
+        "number_of_pass_rushers": 4,
+        "defense_coverage_type": "COVER_1",
+        "defense_man_zone_type": "MAN_COVERAGE",
+        "shotgun": true,
+        "no_huddle": false,
+        "pass_location": "middle",
+        "pass_length": "short",
+        "air_yards": 6.0,
+        "yards_after_catch": 0.0,
+        "route": "IN/DIG",
+        "time_to_throw": 3.3,
+        "was_pressure": true
+      }
+    },
+    {
+      "facts": {
+        "qtr": 4,
+        "game_seconds_remaining": 250,
+        "down": 1,
+        "ydstogo": 10,
+        "yardline_100": 14,
+        "goal_to_go": false,
+        "score_differential": -3,
+        "wp": 0.6201930046081543,
+        "posteam": "JAX",
+        "defteam": "BUF",
+        "play_type": "pass",
+        "yards_gained": 14,
+        "first_down": true,
+        "touchdown": true,
+        "passer": "T.Lawrence",
+        "receiver": "T.Etienne",
+        "desc": "(4:10) 16-T.Lawrence pass short right to 1-T.Etienne for 14 yards, TOUCHDOWN."
+      },
+      "selection": {
+        "reasons": {
+          "touchdown": null
+        }
+      },
+      "annotations": {
+        "offense_personnel_package": "11 Personnel",
+        "offense_formation": "UNDER CENTER",
+        "defenders_in_box": 7,
+        "number_of_pass_rushers": 5,
+        "defense_coverage_type": "COVER_1",
+        "defense_man_zone_type": "MAN_COVERAGE",
+        "shotgun": false,
+        "no_huddle": false,
+        "pass_location": "right",
+        "pass_length": "short",
+        "air_yards": 3.0,
+        "yards_after_catch": 11.0,
+        "route": "SWING",
+        "time_to_throw": 3.0,
+        "was_pressure": false
+      }
+    },
+    {
+      "facts": {
+        "qtr": 4,
+        "game_seconds_remaining": 65,
+        "down": 1,
+        "ydstogo": 1,
+        "yardline_100": 1,
+        "goal_to_go": true,
+        "score_differential": -4,
+        "wp": 0.6761040091514587,
+        "posteam": "BUF",
+        "defteam": "JAX",
+        "play_type": "run",
+        "yards_gained": 1,
+        "first_down": true,
+        "touchdown": true,
+        "rusher": "J.Allen",
+        "desc": "(1:05) 70-A.Anderson reported in as eligible. 17-J.Allen left guard for 1 yard, TOUCHDOWN."
+      },
+      "selection": {
+        "reasons": {
+          "touchdown": null
+        }
+      },
+      "annotations": {
+        "offense_personnel_package": "11 Personnel",
+        "offense_formation": "UNDER CENTER",
+        "defenders_in_box": 8,
+        "number_of_pass_rushers": 0,
+        "shotgun": false,
+        "no_huddle": false,
+        "run_location": "left",
+        "run_gap": "guard",
+        "was_pressure": false
+      }
+    }
+  ]
+}
