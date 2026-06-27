@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 from selection import SelectedPlay, Section, NEGATIVE_SIGNALS
+from game_document import GameHeader
 
 # --- Descriptive fields (pre-snap + in-play) ---
 # Descriptive only; the prompt forbids evaluating them (no league baseline).
@@ -39,7 +40,6 @@ ANCHOR_REASON = "anchor"          # reasons-dict key holding an anchor's WPA
 ANCHOR_TIER_CUTS = ((0.20, "decisive"), (0.10, "major"))
 ANCHOR_TIER_FLOOR = "notable"
 
-
 def _present(play, fields) -> dict:
     """Pull `fields` off a Play, dropping None (and falsy positive-only flags)."""
     out = {}
@@ -49,7 +49,6 @@ def _present(play, fields) -> dict:
             continue
         out[f] = v
     return out
-
 
 def _anchor_tier(reasons: dict) -> str | None:
     """Coarsen an anchor's WPA magnitude into a significance tier."""
@@ -61,7 +60,6 @@ def _anchor_tier(reasons: dict) -> str | None:
         if swing >= cut:
             return label
     return ANCHOR_TIER_FLOOR
-
 
 def render_play(selected: SelectedPlay) -> dict:
     """Project one SelectedPlay into a role-separated record for the LLM."""
@@ -82,7 +80,6 @@ def render_play(selected: SelectedPlay) -> dict:
 DIVERGENCE_TIER_CUTS = ((2.5, "decisive"), (1.6, "major"))
 DIVERGENCE_TIER_FLOOR = "notable"
 
-
 def _divergence_tier(gap: float, threshold: float) -> str:
     """Coarsen a section's gap (as multiples of its firing threshold) into a tier."""
     ratio = gap / threshold
@@ -91,12 +88,10 @@ def _divergence_tier(gap: float, threshold: float) -> str:
             return label
     return DIVERGENCE_TIER_FLOOR
 
-
 def _favored(section: Section) -> str:
     """The team that comes out better on this signal (min for lower-is-better signals)."""
     chooser = min if section.signal in NEGATIVE_SIGNALS else max
     return chooser(section.team_values, key=section.team_values.get)
-
 
 def render_section(section: Section, thresholds: dict[str, float]) -> dict:
     """Project a fired Section: signal identity, divergence significance, ranked exemplar records."""
@@ -109,3 +104,26 @@ def render_section(section: Section, thresholds: dict[str, float]) -> dict:
         },
         "plays": [render_play(sp) for sp in section.plays],
     }
+
+
+# ------- Game context -------
+
+_HEADER_FACTS = ("season", "week", "away_team", "home_team", "away_score", "home_score")
+
+def _outcome(header: GameHeader) -> dict | None:
+    """Winner and margin from final scores; None until scores are sourced."""
+    away, home = header.away_score, header.home_score
+    if away is None or home is None:
+        return None
+    if away == home:
+        return {"result": "tie", "margin": 0}
+    winner = header.home_team if home > away else header.away_team
+    return {"winner": winner, "margin": abs(home - away)}
+
+def render_context(header: GameHeader) -> dict:
+    """Project the game header: identity, final score, and derived outcome."""
+    record = {"facts": {f: getattr(header, f) for f in _HEADER_FACTS if getattr(header, f) is not None}}
+    outcome = _outcome(header)
+    if outcome is not None:
+        record["outcome"] = outcome
+    return record
