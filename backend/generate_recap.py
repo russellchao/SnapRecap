@@ -6,14 +6,15 @@ Steps in generating a recap for a game:
     2. Clean and merge the two aforementioned datasets
     3. Create a GameDocument object with the preprocessed data
     4. Create a RecapSelection object using the created GameDocument object
-    5. (Text Serialization TBD)
+    5. Project the RecapSelection into the LLM-ready record format
+    6. (Prompt Architecture TBD)
 """
 
 import sys
 import pandas as pd
 
 from get_data import get_raw_data, preprocess_data
-from models import game_document, selection
+from models import game_document, selection, projection
 
 
 def generate_recap(season, week, away_team, home_team):
@@ -64,10 +65,9 @@ def generate_recap(season, week, away_team, home_team):
     print("Step 4 Complete: Successfully built RecapSelection")
 
 
-
-
-
-
+    # Step 5
+    projected_selection = projection.render_selection(recap_selection)
+    print("Step 5 Complete: Successfully projected RecapSelection")
 
 
 
