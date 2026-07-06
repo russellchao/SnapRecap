@@ -2,8 +2,8 @@
 
 The backend turns [nflverse](https://github.com/nflverse) play-by-play data into a structured,
 prompt-ready selection of a game's most narratively important plays. It is the heart of SnapRecap:
-the LLM-written recap is generated from the output of this pipeline (the prompt step itself is not
-implemented yet).
+the LLM-written recap is generated from the output of this pipeline (the final LLM generation call
+itself is not implemented yet).
 
 There are two entry points:
 
@@ -25,7 +25,9 @@ backend/
 │   ├── signals.py           # reductions over plays (rates/means/distributions)
 │   ├── game_document.py     # GameDocument: header + per-team signals + plays
 │   ├── selection.py         # RecapSelection: pick prompt-relevant plays
-│   └── projection.py        # render_selection(): flatten to LLM-ready record
+│   ├── projection.py        # render_selection(): flatten to LLM-ready record
+│   ├── serialization.py     # serialize_projection(): render the record as the prompt body
+│   └── prompt.py            # SYSTEM_PROMPT + build_messages(): assemble the message pair
 ├── test_data/               # per-layer input/output artifacts (see Testing)
 └── .env                     # FRONTEND_URL
 ```
@@ -63,7 +65,17 @@ shape, so a downstream stage only ever depends on the previous stage's dataclass
    into `facts` / `selection` / `annotations` roles and coarsening magnitudes into significance
    tiers. EPA/WPA/`success` are deliberately excluded from the descriptive fields the prompt is
    allowed to narrate.
-6. **Prompt step** — TBD (not yet built).
+6. **Serialize to the prompt body** — [models/serialization.py](models/serialization.py)'s
+   `serialize_projection()` renders the projected record (a plain dict) into the plain-text body of
+   the user prompt. It enforces the model-facing boundary by construction: selection machinery
+   (raw `reasons`, `signal` keys, divergence `team_values`) is dropped, leaving only the coarsened
+   emphasis tier; each signal is translated into a plain-language theme so metric jargon like
+   `cpoe`/`epa_per_pass` never reaches the model; and attached context renders nested under the one
+   play it belongs to (the only causal license the prompt is granted).
+7. **Assemble the messages** — [models/prompt.py](models/prompt.py) owns the durable, cacheable
+   `SYSTEM_PROMPT` (role + boundary rules, identical across every game) and `build_messages()`,
+   which pairs it with the serialized body into the system/user message pair for the generation
+   call. The final LLM generation call that consumes these messages is TBD (not yet built).
 
 `asdict` flattens the nested dataclasses for JSON serialization, so reloading a saved
 `GameDocument`/`RecapSelection` requires rebuilding the dataclass types from dicts — see the
@@ -122,7 +134,10 @@ be run from inside their own directory:**
   python game_document.py   # → game_document.json
   python selection.py       # → selection.json
   python projection.py      # → projected_selection.json
+  python serialization.py   # → serialized_projection.txt
   ```
+
+  (`prompt.py` is imported for message assembly and has no standalone `__main__` block.)
 
 Each stage consumes the artifact the previous one wrote, so regenerate them in order after changing
 an upstream layer. The model modules use a dual-import pattern (relative import when imported as a
