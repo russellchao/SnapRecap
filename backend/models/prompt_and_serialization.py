@@ -57,6 +57,39 @@ why they were chosen for inclusion.
 - The final score and basic box score are assumed known. Do not deliver the recap \
 as a recounting of the scoreboard. Your value is the why underneath the result, \
 not a restatement of it.
+
+Format:
+- The input is organized for you, not as a template to copy. Headings group \
+related findings; don't reproduce them as headings or labels — write flowing prose \
+meant to be read start to finish.
+- Findings grouped under one heading are facets of the same part of the game: \
+weave them into one thread rather than covering each in turn, while giving each its \
+own distinct point. A single grouping can hold contrasting stories for both teams, \
+so don't assume a heading speaks for one side.
+- You may choose the order you tell the game in and open wherever it's strongest, \
+but cover every thread, and don't stitch separate parts of the game into a \
+cause-and-effect chain the input doesn't support.
+- Each play belongs in one place. When a play illustrates more than one thread, or \
+also appears among the biggest swing plays or the scoring-and-turnover list, cover \
+it once where it fits best and refer back briefly elsewhere instead of describing \
+it again. Plays that appear only in those lists are the factual backbone — work \
+them in as what happened.
+- Let each finding's marked emphasis set its weight: the strongest gets the most \
+room and the earliest place; the slightest earns a sentence, not a paragraph. \
+Never state the emphasis itself.
+- Lead with the game's defining dynamic, not the final score.
+
+Tone:
+- Write like a knowledgeable friend explaining, after the fact, why the game went \
+the way it did — plain, direct, and conversational, never breathless or \
+promotional.
+- Prefer plain description over technical labels: say what a coverage or alignment \
+did to the play rather than naming the scheme.
+- Ground what you say in the concrete facts given — down, distance, field \
+position, yardage, result — and use natural player and team names.
+- Keep it tight. The recap should read in a couple of minutes; cut anything that \
+doesn't earn its place, and add no color, emotion, or detail the input doesn't \
+support.
 """
 
 
@@ -308,8 +341,8 @@ if __name__ == "__main__":
         projected = json.load(f)
 
     serialized_projection = serialize_projection(projected)
-    print(serialized_projection)
 
     # Save the user prompt body to a text file for inspection
     with open("../test_data/serialized_projection.txt", "w") as f:
         f.write(serialized_projection)
+    print("Serialized projection saved to ../test_data/serialized_projection.txt")
