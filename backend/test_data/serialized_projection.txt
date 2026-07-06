@@ -2,6 +2,8 @@ game: BUF at JAX — Week 19, 2025 season
 Final: BUF 27, JAX 24 (BUF won by 3)
 (Score and box score are assumed known; explain the why, don't restate them.)
 
+# Passing game
+
 ## passing accuracy above expectation
 edge: BUF
 emphasis: decisive
@@ -59,166 +61,6 @@ emphasis: decisive
     context — yards after catch: 4.0
     context — route: GO
     context — time to throw: 2.2
-    context — was pressure: no
-
-## fourth-down conversions
-edge: BUF
-emphasis: decisive
-
-- Q4, 4th & 1, 11 yds from end zone, BUF down 4
-    play: (1:10) 70-A.Anderson reported in as eligible. 17-J.Allen up the middle for 11 yards, TOUCHDOWN. The Replay Official reviewed the runner broke the plane ruling, and the play was REVERSED. 70-A.Anderson reported in as eligible. 17-J.Allen up the middle to JAX 1 for 10 yards (26-An.Johnson; 91-A.Armstead).
-    context — offense personnel package: 11 Personnel
-    context — offense formation: UNDER CENTER
-    context — defenders in box: 8
-    context — number of pass rushers: 0
-    context — shotgun: no
-    context — no huddle: no
-    context — run location: middle
-    context — was pressure: no
-    emphasis: decisive
-
-- Q4, 4th & 1, 19 yds from end zone, BUF down 4
-    play: (9:42) 70-A.Anderson reported in as eligible. 17-J.Allen left guard to JAX 15 for 4 yards (47-D.Gardeck).
-    context — offense personnel package: 11 Personnel
-    context — offense formation: UNDER CENTER
-    context — defenders in box: 7
-    context — number of pass rushers: 0
-    context — shotgun: no
-    context — no huddle: no
-    context — run location: left
-    context — run gap: guard
-    context — was pressure: no
-
-## yards per carry on the ground
-edge: JAX
-emphasis: decisive
-
-- Q3, 1st & 10, 52 yds from end zone, JAX down 6
-    play: (7:34) 1-T.Etienne right tackle to BUF 26 for 26 yards (27-T.White).
-    context — offense personnel package: 11 Personnel
-    context — offense formation: UNDER CENTER
-    context — defenders in box: 6
-    context — number of pass rushers: 0
-    context — shotgun: no
-    context — no huddle: no
-    context — run location: right
-    context — run gap: tackle
-    context — was pressure: no
-
-- Q1, 3rd & 2, 72 yds from end zone, tied
-    play: (6:00) (Shotgun) 1-T.Etienne up the middle to JAX 40 for 12 yards (21-J.Poyer).
-    context — offense personnel package: 11 Personnel
-    context — offense formation: SHOTGUN
-    context — defenders in box: 6
-    context — number of pass rushers: 0
-    context — shotgun: yes
-    context — no huddle: no
-    context — run location: middle
-    context — was pressure: no
-
-- Q1, 1st & 10, 16 yds from end zone, JAX down 3
-    play: (:10) 33-B.Tuten left end pushed ob at BUF 3 for 13 yards (27-T.White).
-    context — offense personnel package: 11 Personnel
-    context — offense formation: UNDER CENTER
-    context — defenders in box: 6
-    context — number of pass rushers: 0
-    context — shotgun: no
-    context — no huddle: no
-    context — run location: left
-    context — run gap: end
-    context — was pressure: no
-
-## overall offensive efficiency
-edge: BUF
-emphasis: major
-
-- Q2, 2nd & 10, 44 yds from end zone, BUF down 4
-    play: (7:47) (Shotgun) 17-J.Allen pass deep right to 0-K.Coleman pushed ob at JAX 8 for 36 yards (0-D.Lloyd).
-    context — offense personnel package: 11 Personnel
-    context — offense formation: SHOTGUN
-    context — defenders in box: 5
-    context — number of pass rushers: 4
-    context — defense coverage type: COVER_2
-    context — defense man zone type: ZONE_COVERAGE
-    context — shotgun: yes
-    context — no huddle: no
-    context — pass location: right
-    context — pass length: deep
-    context — air yards: 18.0
-    context — yards after catch: 18.0
-    context — route: GO
-    context — time to throw: 2.2
-    context — was pressure: no
-
-- Q4, 4th & 1, 11 yds from end zone, BUF down 4
-    play: (1:10) 70-A.Anderson reported in as eligible. 17-J.Allen up the middle for 11 yards, TOUCHDOWN. The Replay Official reviewed the runner broke the plane ruling, and the play was REVERSED. 70-A.Anderson reported in as eligible. 17-J.Allen up the middle to JAX 1 for 10 yards (26-An.Johnson; 91-A.Armstead).
-    context — offense personnel package: 11 Personnel
-    context — offense formation: UNDER CENTER
-    context — defenders in box: 8
-    context — number of pass rushers: 0
-    context — shotgun: no
-    context — no huddle: no
-    context — run location: middle
-    context — was pressure: no
-    emphasis: decisive
-
-- Q4, 1st & 10, 56 yds from end zone, BUF down 4
-    play: (2:27) (Shotgun) 17-J.Allen pass deep left to 18-B.Cooks to JAX 20 for 36 yards (26-An.Johnson).
-    context — offense personnel package: 11 Personnel
-    context — offense formation: SHOTGUN
-    context — defenders in box: 6
-    context — number of pass rushers: 4
-    context — defense coverage type: COVER_2
-    context — defense man zone type: ZONE_COVERAGE
-    context — shotgun: yes
-    context — no huddle: no
-    context — pass location: left
-    context — pass length: deep
-    context — air yards: 33.0
-    context — yards after catch: 3.0
-    context — route: GO
-    context — time to throw: 2.1
-    context — was pressure: yes
-    emphasis: decisive
-
-## running-game efficiency
-edge: BUF
-emphasis: notable
-
-- Q4, 4th & 1, 11 yds from end zone, BUF down 4
-    play: (1:10) 70-A.Anderson reported in as eligible. 17-J.Allen up the middle for 11 yards, TOUCHDOWN. The Replay Official reviewed the runner broke the plane ruling, and the play was REVERSED. 70-A.Anderson reported in as eligible. 17-J.Allen up the middle to JAX 1 for 10 yards (26-An.Johnson; 91-A.Armstead).
-    context — offense personnel package: 11 Personnel
-    context — offense formation: UNDER CENTER
-    context — defenders in box: 8
-    context — number of pass rushers: 0
-    context — shotgun: no
-    context — no huddle: no
-    context — run location: middle
-    context — was pressure: no
-    emphasis: decisive
-
-- Q2, 3rd & 2 (goal-to-go), 2 yds from end zone, BUF down 4
-    play: (5:42) (Shotgun) 17-J.Allen right tackle for 2 yards, TOUCHDOWN.
-    context — offense personnel package: 11 Personnel
-    context — offense formation: SHOTGUN
-    context — defenders in box: 6
-    context — number of pass rushers: 0
-    context — shotgun: yes
-    context — no huddle: no
-    context — run location: right
-    context — run gap: tackle
-    context — was pressure: no
-
-- Q4, 4th & 1, 19 yds from end zone, BUF down 4
-    play: (9:42) 70-A.Anderson reported in as eligible. 17-J.Allen left guard to JAX 15 for 4 yards (47-D.Gardeck).
-    context — offense personnel package: 11 Personnel
-    context — offense formation: UNDER CENTER
-    context — defenders in box: 7
-    context — number of pass rushers: 0
-    context — shotgun: no
-    context — no huddle: no
-    context — run location: left
-    context — run gap: guard
     context — was pressure: no
 
 ## passing-game efficiency
@@ -280,6 +122,117 @@ emphasis: notable
     context — time to throw: 2.2
     context — was pressure: no
 
+# Running game
+
+## yards per carry on the ground
+edge: JAX
+emphasis: decisive
+
+- Q3, 1st & 10, 52 yds from end zone, JAX down 6
+    play: (7:34) 1-T.Etienne right tackle to BUF 26 for 26 yards (27-T.White).
+    context — offense personnel package: 11 Personnel
+    context — offense formation: UNDER CENTER
+    context — defenders in box: 6
+    context — number of pass rushers: 0
+    context — shotgun: no
+    context — no huddle: no
+    context — run location: right
+    context — run gap: tackle
+    context — was pressure: no
+
+- Q1, 3rd & 2, 72 yds from end zone, tied
+    play: (6:00) (Shotgun) 1-T.Etienne up the middle to JAX 40 for 12 yards (21-J.Poyer).
+    context — offense personnel package: 11 Personnel
+    context — offense formation: SHOTGUN
+    context — defenders in box: 6
+    context — number of pass rushers: 0
+    context — shotgun: yes
+    context — no huddle: no
+    context — run location: middle
+    context — was pressure: no
+
+- Q1, 1st & 10, 16 yds from end zone, JAX down 3
+    play: (:10) 33-B.Tuten left end pushed ob at BUF 3 for 13 yards (27-T.White).
+    context — offense personnel package: 11 Personnel
+    context — offense formation: UNDER CENTER
+    context — defenders in box: 6
+    context — number of pass rushers: 0
+    context — shotgun: no
+    context — no huddle: no
+    context — run location: left
+    context — run gap: end
+    context — was pressure: no
+
+## running-game efficiency
+edge: BUF
+emphasis: notable
+
+- Q4, 4th & 1, 11 yds from end zone, BUF down 4
+    play: (1:10) 70-A.Anderson reported in as eligible. 17-J.Allen up the middle for 11 yards, TOUCHDOWN. The Replay Official reviewed the runner broke the plane ruling, and the play was REVERSED. 70-A.Anderson reported in as eligible. 17-J.Allen up the middle to JAX 1 for 10 yards (26-An.Johnson; 91-A.Armstead).
+    context — offense personnel package: 11 Personnel
+    context — offense formation: UNDER CENTER
+    context — defenders in box: 8
+    context — number of pass rushers: 0
+    context — shotgun: no
+    context — no huddle: no
+    context — run location: middle
+    context — was pressure: no
+    emphasis: decisive
+
+- Q2, 3rd & 2 (goal-to-go), 2 yds from end zone, BUF down 4
+    play: (5:42) (Shotgun) 17-J.Allen right tackle for 2 yards, TOUCHDOWN.
+    context — offense personnel package: 11 Personnel
+    context — offense formation: SHOTGUN
+    context — defenders in box: 6
+    context — number of pass rushers: 0
+    context — shotgun: yes
+    context — no huddle: no
+    context — run location: right
+    context — run gap: tackle
+    context — was pressure: no
+
+- Q4, 4th & 1, 19 yds from end zone, BUF down 4
+    play: (9:42) 70-A.Anderson reported in as eligible. 17-J.Allen left guard to JAX 15 for 4 yards (47-D.Gardeck).
+    context — offense personnel package: 11 Personnel
+    context — offense formation: UNDER CENTER
+    context — defenders in box: 7
+    context — number of pass rushers: 0
+    context — shotgun: no
+    context — no huddle: no
+    context — run location: left
+    context — run gap: guard
+    context — was pressure: no
+
+# Situational efficiency
+
+## fourth-down conversions
+edge: BUF
+emphasis: decisive
+
+- Q4, 4th & 1, 11 yds from end zone, BUF down 4
+    play: (1:10) 70-A.Anderson reported in as eligible. 17-J.Allen up the middle for 11 yards, TOUCHDOWN. The Replay Official reviewed the runner broke the plane ruling, and the play was REVERSED. 70-A.Anderson reported in as eligible. 17-J.Allen up the middle to JAX 1 for 10 yards (26-An.Johnson; 91-A.Armstead).
+    context — offense personnel package: 11 Personnel
+    context — offense formation: UNDER CENTER
+    context — defenders in box: 8
+    context — number of pass rushers: 0
+    context — shotgun: no
+    context — no huddle: no
+    context — run location: middle
+    context — was pressure: no
+    emphasis: decisive
+
+- Q4, 4th & 1, 19 yds from end zone, BUF down 4
+    play: (9:42) 70-A.Anderson reported in as eligible. 17-J.Allen left guard to JAX 15 for 4 yards (47-D.Gardeck).
+    context — offense personnel package: 11 Personnel
+    context — offense formation: UNDER CENTER
+    context — defenders in box: 7
+    context — number of pass rushers: 0
+    context — shotgun: no
+    context — no huddle: no
+    context — run location: left
+    context — run gap: guard
+    context — was pressure: no
+
 ## finishing red-zone trips with touchdowns
 edge: BUF
 emphasis: notable
@@ -326,7 +279,62 @@ emphasis: notable
     context — run gap: tackle
     context — was pressure: no
 
-## Biggest swing plays
+# Overall offense
+
+## overall offensive efficiency
+edge: BUF
+emphasis: major
+
+- Q2, 2nd & 10, 44 yds from end zone, BUF down 4
+    play: (7:47) (Shotgun) 17-J.Allen pass deep right to 0-K.Coleman pushed ob at JAX 8 for 36 yards (0-D.Lloyd).
+    context — offense personnel package: 11 Personnel
+    context — offense formation: SHOTGUN
+    context — defenders in box: 5
+    context — number of pass rushers: 4
+    context — defense coverage type: COVER_2
+    context — defense man zone type: ZONE_COVERAGE
+    context — shotgun: yes
+    context — no huddle: no
+    context — pass location: right
+    context — pass length: deep
+    context — air yards: 18.0
+    context — yards after catch: 18.0
+    context — route: GO
+    context — time to throw: 2.2
+    context — was pressure: no
+
+- Q4, 4th & 1, 11 yds from end zone, BUF down 4
+    play: (1:10) 70-A.Anderson reported in as eligible. 17-J.Allen up the middle for 11 yards, TOUCHDOWN. The Replay Official reviewed the runner broke the plane ruling, and the play was REVERSED. 70-A.Anderson reported in as eligible. 17-J.Allen up the middle to JAX 1 for 10 yards (26-An.Johnson; 91-A.Armstead).
+    context — offense personnel package: 11 Personnel
+    context — offense formation: UNDER CENTER
+    context — defenders in box: 8
+    context — number of pass rushers: 0
+    context — shotgun: no
+    context — no huddle: no
+    context — run location: middle
+    context — was pressure: no
+    emphasis: decisive
+
+- Q4, 1st & 10, 56 yds from end zone, BUF down 4
+    play: (2:27) (Shotgun) 17-J.Allen pass deep left to 18-B.Cooks to JAX 20 for 36 yards (26-An.Johnson).
+    context — offense personnel package: 11 Personnel
+    context — offense formation: SHOTGUN
+    context — defenders in box: 6
+    context — number of pass rushers: 4
+    context — defense coverage type: COVER_2
+    context — defense man zone type: ZONE_COVERAGE
+    context — shotgun: yes
+    context — no huddle: no
+    context — pass location: left
+    context — pass length: deep
+    context — air yards: 33.0
+    context — yards after catch: 3.0
+    context — route: GO
+    context — time to throw: 2.1
+    context — was pressure: yes
+    emphasis: decisive
+
+# Biggest swing plays
 
 - Q4, 1st & 10, 77 yds from end zone, JAX down 3
     play: (:59) (Shotgun) 16-T.Lawrence pass short middle intended for 3-J.Meyers INTERCEPTED by 24-C.Bishop (27-T.White) at JAX 37. 24-C.Bishop to JAX 35 for 2 yards.
@@ -346,7 +354,7 @@ emphasis: notable
     context — was pressure: no
     emphasis: major
 
-## Scoring plays and turnovers
+# Scoring plays and turnovers
 
 - Q1, 2nd & 10, 60 yds from end zone, tied
     play: (5:25) (Shotgun) 16-T.Lawrence pass short middle intended for 11-P.Washington INTERCEPTED by 45-S.Thompson at BUF 48. 45-S.Thompson to JAX 33 for 19 yards (16-T.Lawrence).

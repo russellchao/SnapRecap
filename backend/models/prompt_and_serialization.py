@@ -87,6 +87,72 @@ def _theme(signal: str) -> str:
 
 
 # ---------------------------------------------------------------------------
+# Signal -> family (the phase of play the metric measures). A fixed property of
+# the metric, NOT a significance judgment: selection already decided what matters;
+# family only labels domain. Sections sharing a family are co-located so the model
+# weaves them into one thread instead of restating the same story per signal.
+# ---------------------------------------------------------------------------
+
+SIGNAL_FAMILIES = {
+    "epa_per_play": "overall",
+    "yards_per_play": "overall",
+    "success_rate": "overall",
+    "explosive_rate": "overall",
+    "epa_per_pass": "passing",
+    "cpoe": "passing",
+    "epa_per_rush": "rushing",
+    "yards_per_rush": "rushing",
+    "third_down": "situational",
+    "fourth_down": "situational",
+    "red_zone_td": "situational",
+    "sack_rate": "protection",
+}
+
+FAMILY_LABELS = {
+    "overall": "Overall offense",
+    "passing": "Passing game",
+    "rushing": "Running game",
+    "situational": "Situational efficiency",
+    "protection": "Pass protection",
+}
+
+# Canonical tiebreak order when families share the same strongest emphasis.
+_FAMILY_ORDER = ("passing", "rushing", "overall", "situational", "protection")
+
+# Emphasis rank for ordering — best (most significant) first.
+_TIER_RANK = {"decisive": 0, "major": 1, "notable": 2}
+
+
+def _section_rank(section: dict) -> int:
+    """Ordering rank from a section's divergence tier (lower = more significant)."""
+    tier = section.get("divergence", {}).get("tier")
+    return _TIER_RANK.get(tier, len(_TIER_RANK))
+
+
+def _family_of(section: dict) -> str:
+    """The family a section belongs to, defaulting unknown signals to 'overall'."""
+    return SIGNAL_FAMILIES.get(section.get("signal", ""), "overall")
+
+
+def _grouped_families(sections: list[dict]) -> list[tuple[str, list[dict]]]:
+    """Group sections into families, order families by strongest emphasis (then
+    canonical), and order sections within a family by emphasis (stable on ties)."""
+    families: dict[str, list[dict]] = {}
+    for section in sections:
+        families.setdefault(_family_of(section), []).append(section)
+
+    def family_key(family: str) -> tuple[int, int]:
+        best = min(_section_rank(s) for s in families[family])
+        canonical = _FAMILY_ORDER.index(family) if family in _FAMILY_ORDER else len(_FAMILY_ORDER)
+        return (best, canonical)
+
+    return [
+        (family, sorted(families[family], key=_section_rank))
+        for family in sorted(families, key=family_key)
+    ]
+
+
+# ---------------------------------------------------------------------------
 # Play-level rendering.
 # ---------------------------------------------------------------------------
 
@@ -167,10 +233,17 @@ def _section_block(section: dict) -> str:
     return f"{header}\n\n{plays}" if plays else header
 
 
+def _family_block(family: str, sections: list[dict]) -> str:
+    """Render a family heading over its sections; the model weaves them into one thread."""
+    header = f"# {FAMILY_LABELS.get(family, family.title())}"
+    body = "\n\n".join(_section_block(s) for s in sections)
+    return f"{header}\n\n{body}"
+
+
 def _flat_bucket(heading: str, plays: list[dict]) -> str:
     """Render a heading over a flat list of plays (anchors, scores/turnovers)."""
     body = "\n\n".join(_play_block(p) for p in plays)
-    return f"## {heading}\n\n{body}"
+    return f"# {heading}\n\n{body}"
 
 
 def _context_block(context: dict) -> str:
@@ -201,7 +274,8 @@ def serialize_projection(projected: dict) -> str:
     """Render the full projected record dict into the user-prompt body."""
     blocks = [_context_block(projected.get("context", {}))]
 
-    blocks.extend(_section_block(s) for s in projected.get("sections", []))
+    for family, sections in _grouped_families(projected.get("sections", [])):
+        blocks.append(_family_block(family, sections))
 
     anchors = projected.get("anchors", [])
     if anchors:
