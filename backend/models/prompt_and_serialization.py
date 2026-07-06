@@ -235,3 +235,7 @@ if __name__ == "__main__":
 
     serialized_projection = serialize_projection(projected)
     print(serialized_projection)
+
+    # Save the user prompt body to a text file for inspection
+    with open("../test_data/serialized_projection.txt", "w") as f:
+        f.write(serialized_projection)
