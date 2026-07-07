@@ -10,12 +10,6 @@ is the seam where the two meet.
 
 from __future__ import annotations
 
-# Dual-import: relative when imported as a package, direct when run as __main__.
-try:
-    from . import serialization
-except ImportError:
-    import backend.models.serialization as serialization
-
 
 # ---------------------------------------------------------------------------
 # System prompt (durable, cacheable — identical across games).
@@ -91,9 +85,13 @@ support.
 """
 
 
-def build_messages(projected: dict) -> list[dict]:
+def build_messages(serialization) -> list[dict]:
     """Assemble the system/user message pair for the generation call."""
     return [
         {"role": "system", "content": SYSTEM_PROMPT},
-        {"role": "user", "content": serialization.serialize_projection(projected)},
+        {"role": "user", "content": serialization},
     ]
+
+
+def call_llm():
+    pass
