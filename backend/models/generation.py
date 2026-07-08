@@ -1,14 +1,20 @@
-"""System prompt and message assembly for NFL game recaps.
+"""System prompt and generation call for NFL game recaps.
 
-Owns the durable system prompt and pairs it with the serialized user-prompt body
-(built by serialization.serialize_projection) into the message list handed to the
-generation call. The prompt/serialization split is deliberate: the system prompt is
-the locked instruction contract — role + boundary rules, identical across every game
-and therefore cacheable — while serialization renders the per-game body. This module
-is the seam where the two meet.
+Owns the durable system prompt and the seam where it meets the per-game user body
+(built by serialization.serialize_projection). The prompt/serialization split is
+deliberate: the system prompt is the locked instruction contract — role + boundary
+rules, identical across every game and therefore cacheable — while serialization
+renders the per-game body.
 """
 
 from __future__ import annotations
+from pathlib import Path
+import anthropic
+from dotenv import load_dotenv
+
+# Load backend/.env (ANTHROPIC_API_KEY) regardless of the working directory the
+# script is run from. anthropic.Anthropic() then picks the key up from the env.
+load_dotenv(Path(__file__).resolve().parents[1] / ".env")
 
 
 # ---------------------------------------------------------------------------
@@ -85,13 +91,72 @@ support.
 """
 
 
-def build_messages(serialization) -> list[dict]:
-    """Assemble the system/user message pair for the generation call."""
-    return [
-        {"role": "system", "content": SYSTEM_PROMPT},
-        {"role": "user", "content": serialization},
-    ]
+# ---------------------------------------------------------------------------
+# Generation defaults. Swap the model to "claude-opus-4-8" to A/B the prose.
+# ---------------------------------------------------------------------------
+
+DEFAULT_MODEL = "claude-sonnet-5"
+DEFAULT_MAX_TOKENS = 2000
 
 
-def call_llm():
-    pass
+def build_messages(serialization: str) -> list[dict]:
+    """Wrap the serialized user body as the single user turn (system is passed separately)."""
+    return [{"role": "user", "content": serialization}]
+
+
+def call_llm(
+    messages: list[dict],
+    *,
+    system: str = SYSTEM_PROMPT,
+    model: str = DEFAULT_MODEL,
+    max_tokens: int = DEFAULT_MAX_TOKENS,
+    stream: bool = True,
+) -> str:
+    """Call the Anthropic API and return the full recap text (API key read from env)."""
+    client = anthropic.Anthropic()
+
+    if not stream:
+        response = client.messages.create(
+            model=model,
+            max_tokens=max_tokens,
+            system=system,
+            messages=messages,
+        )
+        return "".join(b.text for b in response.content if b.type == "text")
+
+    chunks: list[str] = []
+    with client.messages.stream(
+        model=model,
+        max_tokens=max_tokens,
+        system=system,
+        messages=messages,
+    ) as response:
+        for text in response.text_stream:
+            print(text, end="", flush=True)
+            chunks.append(text)
+    print()
+    return "".join(chunks)
+
+
+def generate_recap(serialization: str, **kwargs) -> str:
+    """Build the message payload from a serialized body and generate the recap."""
+    return call_llm(build_messages(serialization), **kwargs)
+
+
+
+
+
+
+if __name__ == "__main__":
+    # NOTE: For testing purposes only.
+    # Take the test serialized projection, generate the recap, and save it locally .
+
+    serialized_projection = "../test_data/serialized_projection.txt"
+    with open(serialized_projection) as f:
+        serialization = f.read()
+
+    recap = generate_recap(serialization)
+
+    with open("../test_data/recap.txt", "w") as f:
+        f.write(recap)
+    print("\n\nRecap saved to ../test_data/recap.txt")
