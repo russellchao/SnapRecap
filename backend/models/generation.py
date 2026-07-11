@@ -92,11 +92,19 @@ support.
 
 
 # ---------------------------------------------------------------------------
-# Generation defaults. Swap the model to "claude-opus-4-8" to A/B the prose.
+# Generation defaults (Sonnet 5). Swap the model to "claude-opus-4-8" to A/B.
+#
+# Sonnet 5 rejects sampling params (temperature/top_p/top_k); output tendency is
+# steered by the system prompt and by `effort` instead. effort=medium steps down
+# from Sonnet 5's high default — this is a phrasing layer, not a reasoning task —
+# and is a real cost lever (it caps text + thinking spend, not just thinking depth).
+# max_tokens is a hard ceiling over thinking PLUS output, not a per-request charge;
+# set generously so adaptive thinking can't crowd out the recap and truncate it.
 # ---------------------------------------------------------------------------
 
 DEFAULT_MODEL = "claude-sonnet-5"
-DEFAULT_MAX_TOKENS = 2000
+DEFAULT_MAX_TOKENS = 6000
+DEFAULT_EFFORT = "medium"
 
 
 def build_messages(serialization: str) -> list[dict]:
@@ -110,27 +118,28 @@ def call_llm(
     system: str = SYSTEM_PROMPT,
     model: str = DEFAULT_MODEL,
     max_tokens: int = DEFAULT_MAX_TOKENS,
+    effort: str = DEFAULT_EFFORT,
     stream: bool = True,
 ) -> str:
     """Call the Anthropic API and return the full recap text (API key read from env)."""
     client = anthropic.Anthropic()
-
-    if not stream:
-        response = client.messages.create(
-            model=model,
-            max_tokens=max_tokens,
-            system=system,
-            messages=messages,
-        )
-        return "".join(b.text for b in response.content if b.type == "text")
-
-    chunks: list[str] = []
-    with client.messages.stream(
+    # `output_config` (the GA home for the `effort` control) is only a typed
+    # parameter on newer anthropic SDKs. Passing it through `extra_body` puts it
+    # directly in the request body, so this works regardless of SDK version.
+    params = dict(
         model=model,
         max_tokens=max_tokens,
         system=system,
         messages=messages,
-    ) as response:
+        extra_body={"output_config": {"effort": effort}},
+    )
+
+    if not stream:
+        response = client.messages.create(**params)
+        return "".join(b.text for b in response.content if b.type == "text")
+
+    chunks: list[str] = []
+    with client.messages.stream(**params) as response:
         for text in response.text_stream:
             print(text, end="", flush=True)
             chunks.append(text)
@@ -149,7 +158,7 @@ def generate_recap(serialization: str, **kwargs) -> str:
 
 if __name__ == "__main__":
     # NOTE: For testing purposes only.
-    # Take the test serialized projection, generate the recap, and save it locally .
+    # Take the test serialized projection, generate the recap, and save it locally.
 
     serialized_projection = "../test_data/serialized_projection.txt"
     with open(serialized_projection) as f:
