@@ -7,14 +7,19 @@ Steps in generating a recap for a game:
     3. Create a GameDocument object with the preprocessed data
     4. Create a RecapSelection object using the created GameDocument object
     5. Project the RecapSelection into the LLM-ready record format
-    6. (Prompt Architecture TBD)
+    6. Serialize the projection into plain text for the LLM to consume
+    7. Feed the prompt and serialization into the LLM to generate the recap.
 """
 
 import sys
 import pandas as pd
 
 from get_data import get_raw_data, preprocess_data
-from models import game_document, selection, projection
+from models import game_document, selection, projection, serialization
+
+
+def save_recap_to_db():
+    pass
 
 
 def generate_recap(season, week, away_team, home_team):
@@ -33,19 +38,15 @@ def generate_recap(season, week, away_team, home_team):
     if not isinstance(pbp_data, pd.DataFrame):
         print(f"Error: PBP data for {game_id} is not available.")
         return pbp_data
-    
     participation_data = get_raw_data.get_participation_data(season, game_id)
     if not isinstance(participation_data, pd.DataFrame):
         print(f"Error: Participation data for {game_id} is not available.")
         return participation_data
-    
     print("Step 1 Complete: Successfully downloaded raw PBP and Participation Data")
-
 
     # Step 2
     merged_df = preprocess_data.clean_and_merge(pbp_data, participation_data)
     print("Step 2 Complete: Successfully cleaned and merged PBP and Participation Data")
-
 
     # Step 3
     header = game_document.GameHeader(
@@ -59,16 +60,19 @@ def generate_recap(season, week, away_team, home_team):
     document = game_document.GameDocument.build(plays, header)
     print("Step 3 Complete: Successfully built GameDocument")
 
-
     # Step 4
     recap_selection = selection.RecapSelection.build(document)
     print("Step 4 Complete: Successfully built RecapSelection")
-
 
     # Step 5
     projected_selection = projection.render_selection(recap_selection)
     print("Step 5 Complete: Successfully projected RecapSelection")
 
+    # Step 6
+    serialized_projection = serialization.serialize_projection(projected_selection)
+    print("Step 6 Complete: Successfully serialized projection")
+
+    # Step 7
 
 
 
