@@ -1,9 +1,13 @@
-from fastapi import FastAPI, HTTPException
+# Libraries and Frameworks
+from fastapi import FastAPI, HTTPException, BackgroundTasks, Header
 from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
 import os
 from dotenv import load_dotenv
-from backend.get_data.get_raw_data import get_pbp_data, get_participation_data
+
+# Internal Modules
+from get_data.get_raw_data import get_pbp_data, get_participation_data
+from get_data.load_players import refresh_players
 
 
 load_dotenv()
@@ -41,3 +45,27 @@ def get_pbp_data_endpoint(season: int, week: int, away: str, home: str):
         status_code=404,
         detail=pbp_stats["Error"],
     )
+
+
+@app.post("/players/refresh", status_code=202)
+def refresh_players_endpoint(
+    background_tasks: BackgroundTasks, authorization: str = Header(None),
+):
+    # Triggered by an external scheduler (i.e. Supabase pg_cron via pg_net).
+    # Protected by a shared secret so it can't be invoked publicly.
+    expected = os.getenv("CRON_SECRET")
+    if not expected:
+        raise HTTPException(
+            status_code=503,
+            detail="CRON_SECRET is not configured on the server.",
+        )
+    if authorization != f"Bearer {expected}":
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+    # Run in the background so the request returns immediately; the download +
+    # DB write takes several seconds and the caller doesn't need to wait.
+    background_tasks.add_task(refresh_players)
+    return {"status": "accepted", "detail": "Player data refresh started."}
+
+
+#NOTE: Run the FastAPI App locally with: uvicorn main:app --reload

@@ -10,7 +10,6 @@ just their first initials and last names.
 
 import os
 from pathlib import Path
-
 import nflreadpy as nfl
 import pandas as pd
 from dotenv import load_dotenv
@@ -74,9 +73,11 @@ def write_to_db(players):
         engine.dispose()
 
 
-def cron_job(): 
-    #NOTE: Placeholder to eventual CRON job function
-    pass
+def refresh_players():
+    """Download the latest player data and write it to the DB."""
+    player_data = load_player_data()
+    write_to_db(player_data)
+
 
 
 
@@ -84,5 +85,4 @@ def cron_job():
 
 
 if __name__ == "__main__":
-    player_data = load_player_data()
-    write_to_db(player_data)
+    refresh_players()
