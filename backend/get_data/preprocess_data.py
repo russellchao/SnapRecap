@@ -11,10 +11,10 @@ pbp_cols_to_drop = [
     # Legacy identifier
     "old_game_id",
 
-    # Raw player name/ID columns (clean versions like passer, rusher, receiver are kept)
-    "passer_player_name", "passer_player_id",
-    "rusher_player_name", "rusher_player_id",
-    "receiver_player_name", "receiver_player_id",
+    # Raw player name columns (clean versions like passer, rusher, receiver are kept)
+    "passer_player_name",
+    "rusher_player_name",
+    "receiver_player_name",
 
     # Lateral play columns
     "lateral_receiver_player_name", "lateral_receiver_player_id",
@@ -47,9 +47,9 @@ pbp_cols_to_drop = [
     # Fumble detail columns
     "forced_fumble_player_1_player_id", "forced_fumble_player_1_player_name", "forced_fumble_player_1_team",
     "forced_fumble_player_2_player_id", "forced_fumble_player_2_player_name", "forced_fumble_player_2_team",
-    "fumbled_1_player_id", "fumbled_1_player_name", "fumbled_1_team",
+    "fumbled_1_player_id", "fumbled_1_player_name",
     "fumbled_2_player_id", "fumbled_2_player_name", "fumbled_2_team",
-    "fumble_recovery_1_player_id", "fumble_recovery_1_player_name", "fumble_recovery_1_team", "fumble_recovery_1_yards",
+    "fumble_recovery_1_player_id", "fumble_recovery_1_player_name", "fumble_recovery_1_yards",
     "fumble_recovery_2_player_id", "fumble_recovery_2_player_name", "fumble_recovery_2_team", "fumble_recovery_2_yards",
 
     # Interception player details
