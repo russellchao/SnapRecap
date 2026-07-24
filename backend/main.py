@@ -51,6 +51,9 @@ def get_pbp_data_endpoint(season: int, week: int, away: str, home: str):
 def refresh_players_endpoint(
     background_tasks: BackgroundTasks, authorization: str = Header(None),
 ):
+    
+    #TODO: Enable the pg_net extension in Supabase to run the CRON scheduler on this endpoint
+
     # Triggered by an external scheduler (i.e. Supabase pg_cron via pg_net).
     # Protected by a shared secret so it can't be invoked publicly.
     expected = os.getenv("CRON_SECRET")
