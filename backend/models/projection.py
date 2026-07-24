@@ -28,6 +28,8 @@ _FACTS = (
     "third_down_converted", "third_down_failed",
     "fourth_down_converted", "fourth_down_failed",
     "touchdown", "sack", "interception", "fumble_lost", "penalty",
+    "fumbled_1_team", "fumble_recovery_1_team",
+    "posteam_score_post", "defteam_score_post", "score_differential_post", 
     "passer", "rusher", "receiver", "desc",
 )
 
@@ -36,6 +38,7 @@ _POSITIVE_ONLY = {
     "first_down", "third_down_converted", "third_down_failed",
     "fourth_down_converted", "fourth_down_failed",
     "touchdown", "sack", "interception", "fumble_lost", "penalty",
+    "fumbled_1_team", "fumble_recovery_1_team",
 }
 
 ANCHOR_REASON = "anchor"          # reasons-dict key holding an anchor's WPA

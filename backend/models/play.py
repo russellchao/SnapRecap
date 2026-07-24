@@ -13,9 +13,17 @@ Aggregate signals are reductions over a collection of these, e.g.:
 from __future__ import annotations
 
 import math
+import os
 from dataclasses import dataclass
+from functools import lru_cache
 from typing import Optional
 import pandas as pd
+from dotenv import load_dotenv
+from pathlib import Path
+from sqlalchemy import create_engine, text
+
+
+load_dotenv(Path(__file__).resolve().parents[1] / ".env")
 
 
 # --- NaN-safe coercion helpers (pandas leaves missing values as float NaN) ---
@@ -110,6 +118,15 @@ class Play:
     fumble_lost: Optional[bool]
     penalty: Optional[bool]
 
+    # --- Outcome (post-play score state) ---
+    posteam_score_post: Optional[int]      # posteam score at end of play
+    defteam_score_post: Optional[int]      # defteam score at end of play
+    score_differential_post: Optional[int] # posteam perspective, end of play
+
+    # --- Outcome (fumble) ---
+    fumbled_1_team: Optional[str]          # team whose player lost the ball
+    fumble_recovery_1_team: Optional[str]  # team that came up with it
+
     # --- Players + raw text (for narrative / fallback) ---
     passer: Optional[str]
     rusher: Optional[str]
@@ -183,9 +200,17 @@ class Play:
             fumble_lost=_bool(g("fumble_lost")),
             penalty=_bool(g("penalty")),
 
-            passer=_str(g("passer")),
-            rusher=_str(g("rusher")),
-            receiver=_str(g("receiver")),
+            posteam_score_post=_int(g("posteam_score_post")),
+            defteam_score_post=_int(g("defteam_score_post")),
+            score_differential_post=_int(g("score_differential_post")),
+
+            fumbled_1_team=_str(g("fumbled_1_team")),
+            fumble_recovery_1_team=_str(g("fumble_recovery_1_team")),
+
+            passer=get_player_full_name(_str(g("passer_player_id"))),
+            rusher=get_player_full_name(_str(g("rusher_player_id"))),
+            receiver=get_player_full_name(_str(g("receiver_player_id"))),
+
             desc=_str(g("desc")),
         )
 
@@ -202,6 +227,38 @@ def teams_in(plays: list["Play"]) -> set[str]:
     return teams
 
 
+@lru_cache(maxsize=1)
+def _players_engine():
+    """Lazily create (and cache) the SQLAlchemy engine for the players DB.
+
+    Cached so the ~3 lookups per play don't each spin up a new connection pool.
+    """
+    database_url = os.getenv("DATABASE_URL")
+    if not database_url:
+        raise RuntimeError("DATABASE_URL environment variable is not set.")
+    return create_engine(database_url)
+
+
+@lru_cache(maxsize=None)
+def get_player_full_name(gsis_id: Optional[str]) -> Optional[str]:
+    """Returns a player's full name based on their nflreadr gsis_id.
+
+    Queries the 'players' table in the Supabase DB and returns the
+    'display_name' associated with the 'gsis_id'. Returns None when the id is
+    missing or has no matching row. Results are cached per gsis_id since the
+    same players recur across many plays in a game.
+    """
+
+    if not gsis_id:
+        return None
+
+    with _players_engine().connect() as conn:
+        row = conn.execute(
+            text("SELECT display_name FROM players WHERE gsis_id = :gsis_id"),
+            {"gsis_id": gsis_id},
+        ).first()
+
+    return row[0] if row else None
 
 
 

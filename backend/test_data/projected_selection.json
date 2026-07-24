@@ -40,8 +40,11 @@
             "play_type": "pass",
             "yards_gained": 36,
             "first_down": true,
-            "passer": "J.Allen",
-            "receiver": "K.Coleman",
+            "posteam_score_post": 3,
+            "defteam_score_post": 7,
+            "score_differential_post": -4,
+            "passer": "Josh Allen",
+            "receiver": "Keon Coleman",
             "desc": "(7:47) (Shotgun) 17-J.Allen pass deep right to 0-K.Coleman pushed ob at JAX 8 for 36 yards (0-D.Lloyd)."
           },
           "selection": {
@@ -84,8 +87,11 @@
             "play_type": "pass",
             "yards_gained": 36,
             "first_down": true,
-            "passer": "J.Allen",
-            "receiver": "B.Cooks",
+            "posteam_score_post": 20,
+            "defteam_score_post": 24,
+            "score_differential_post": -4,
+            "passer": "Josh Allen",
+            "receiver": "Brandin Cooks",
             "desc": "(2:27) (Shotgun) 17-J.Allen pass deep left to 18-B.Cooks to JAX 20 for 36 yards (26-An.Johnson)."
           },
           "selection": {
@@ -131,8 +137,11 @@
             "yards_gained": 15,
             "first_down": true,
             "touchdown": true,
-            "passer": "J.Allen",
-            "receiver": "D.Kincaid",
+            "posteam_score_post": 19,
+            "defteam_score_post": 17,
+            "score_differential_post": 2,
+            "passer": "Josh Allen",
+            "receiver": "Dalton Kincaid",
             "desc": "(9:01) (Shotgun) 17-J.Allen pass short left to 86-D.Kincaid for 15 yards, TOUCHDOWN."
           },
           "selection": {
@@ -190,7 +199,10 @@
             "yards_gained": 10,
             "first_down": true,
             "fourth_down_converted": true,
-            "rusher": "J.Allen",
+            "posteam_score_post": 20,
+            "defteam_score_post": 24,
+            "score_differential_post": -4,
+            "rusher": "Josh Allen",
             "desc": "(1:10) 70-A.Anderson reported in as eligible. 17-J.Allen up the middle for 11 yards, TOUCHDOWN. The Replay Official reviewed the runner broke the plane ruling, and the play was REVERSED. 70-A.Anderson reported in as eligible. 17-J.Allen up the middle to JAX 1 for 10 yards (26-An.Johnson; 91-A.Armstead)."
           },
           "selection": {
@@ -230,7 +242,10 @@
             "yards_gained": 4,
             "first_down": true,
             "fourth_down_converted": true,
-            "rusher": "J.Allen",
+            "posteam_score_post": 13,
+            "defteam_score_post": 17,
+            "score_differential_post": -4,
+            "rusher": "Josh Allen",
             "desc": "(9:42) 70-A.Anderson reported in as eligible. 17-J.Allen left guard to JAX 15 for 4 yards (47-D.Gardeck)."
           },
           "selection": {
@@ -279,7 +294,10 @@
             "play_type": "run",
             "yards_gained": 26,
             "first_down": true,
-            "rusher": "T.Etienne",
+            "posteam_score_post": 7,
+            "defteam_score_post": 13,
+            "score_differential_post": -6,
+            "rusher": "Travis Etienne",
             "desc": "(7:34) 1-T.Etienne right tackle to BUF 26 for 26 yards (27-T.White)."
           },
           "selection": {
@@ -315,7 +333,10 @@
             "yards_gained": 12,
             "first_down": true,
             "third_down_converted": true,
-            "rusher": "T.Etienne",
+            "posteam_score_post": 0,
+            "defteam_score_post": 0,
+            "score_differential_post": 0,
+            "rusher": "Travis Etienne",
             "desc": "(6:00) (Shotgun) 1-T.Etienne up the middle to JAX 40 for 12 yards (21-J.Poyer)."
           },
           "selection": {
@@ -349,7 +370,10 @@
             "play_type": "run",
             "yards_gained": 13,
             "first_down": true,
-            "rusher": "B.Tuten",
+            "posteam_score_post": 0,
+            "defteam_score_post": 3,
+            "score_differential_post": -3,
+            "rusher": "Bhayshul Tuten",
             "desc": "(:10) 33-B.Tuten left end pushed ob at BUF 3 for 13 yards (27-T.White)."
           },
           "selection": {
@@ -397,8 +421,11 @@
             "play_type": "pass",
             "yards_gained": 36,
             "first_down": true,
-            "passer": "J.Allen",
-            "receiver": "K.Coleman",
+            "posteam_score_post": 3,
+            "defteam_score_post": 7,
+            "score_differential_post": -4,
+            "passer": "Josh Allen",
+            "receiver": "Keon Coleman",
             "desc": "(7:47) (Shotgun) 17-J.Allen pass deep right to 0-K.Coleman pushed ob at JAX 8 for 36 yards (0-D.Lloyd)."
           },
           "selection": {
@@ -442,7 +469,10 @@
             "yards_gained": 10,
             "first_down": true,
             "fourth_down_converted": true,
-            "rusher": "J.Allen",
+            "posteam_score_post": 20,
+            "defteam_score_post": 24,
+            "score_differential_post": -4,
+            "rusher": "Josh Allen",
             "desc": "(1:10) 70-A.Anderson reported in as eligible. 17-J.Allen up the middle for 11 yards, TOUCHDOWN. The Replay Official reviewed the runner broke the plane ruling, and the play was REVERSED. 70-A.Anderson reported in as eligible. 17-J.Allen up the middle to JAX 1 for 10 yards (26-An.Johnson; 91-A.Armstead)."
           },
           "selection": {
@@ -481,8 +511,11 @@
             "play_type": "pass",
             "yards_gained": 36,
             "first_down": true,
-            "passer": "J.Allen",
-            "receiver": "B.Cooks",
+            "posteam_score_post": 20,
+            "defteam_score_post": 24,
+            "score_differential_post": -4,
+            "passer": "Josh Allen",
+            "receiver": "Brandin Cooks",
             "desc": "(2:27) (Shotgun) 17-J.Allen pass deep left to 18-B.Cooks to JAX 20 for 36 yards (26-An.Johnson)."
           },
           "selection": {
@@ -541,7 +574,10 @@
             "yards_gained": 10,
             "first_down": true,
             "fourth_down_converted": true,
-            "rusher": "J.Allen",
+            "posteam_score_post": 20,
+            "defteam_score_post": 24,
+            "score_differential_post": -4,
+            "rusher": "Josh Allen",
             "desc": "(1:10) 70-A.Anderson reported in as eligible. 17-J.Allen up the middle for 11 yards, TOUCHDOWN. The Replay Official reviewed the runner broke the plane ruling, and the play was REVERSED. 70-A.Anderson reported in as eligible. 17-J.Allen up the middle to JAX 1 for 10 yards (26-An.Johnson; 91-A.Armstead)."
           },
           "selection": {
@@ -582,7 +618,10 @@
             "first_down": true,
             "third_down_converted": true,
             "touchdown": true,
-            "rusher": "J.Allen",
+            "posteam_score_post": 9,
+            "defteam_score_post": 7,
+            "score_differential_post": 2,
+            "rusher": "Josh Allen",
             "desc": "(5:42) (Shotgun) 17-J.Allen right tackle for 2 yards, TOUCHDOWN."
           },
           "selection": {
@@ -620,7 +659,10 @@
             "yards_gained": 4,
             "first_down": true,
             "fourth_down_converted": true,
-            "rusher": "J.Allen",
+            "posteam_score_post": 13,
+            "defteam_score_post": 17,
+            "score_differential_post": -4,
+            "rusher": "Josh Allen",
             "desc": "(9:42) 70-A.Anderson reported in as eligible. 17-J.Allen left guard to JAX 15 for 4 yards (47-D.Gardeck)."
           },
           "selection": {
@@ -669,8 +711,11 @@
             "play_type": "pass",
             "yards_gained": 36,
             "first_down": true,
-            "passer": "J.Allen",
-            "receiver": "K.Coleman",
+            "posteam_score_post": 3,
+            "defteam_score_post": 7,
+            "score_differential_post": -4,
+            "passer": "Josh Allen",
+            "receiver": "Keon Coleman",
             "desc": "(7:47) (Shotgun) 17-J.Allen pass deep right to 0-K.Coleman pushed ob at JAX 8 for 36 yards (0-D.Lloyd)."
           },
           "selection": {
@@ -713,8 +758,11 @@
             "play_type": "pass",
             "yards_gained": 36,
             "first_down": true,
-            "passer": "J.Allen",
-            "receiver": "B.Cooks",
+            "posteam_score_post": 20,
+            "defteam_score_post": 24,
+            "score_differential_post": -4,
+            "passer": "Josh Allen",
+            "receiver": "Brandin Cooks",
             "desc": "(2:27) (Shotgun) 17-J.Allen pass deep left to 18-B.Cooks to JAX 20 for 36 yards (26-An.Johnson)."
           },
           "selection": {
@@ -760,8 +808,11 @@
             "yards_gained": 15,
             "first_down": true,
             "touchdown": true,
-            "passer": "J.Allen",
-            "receiver": "D.Kincaid",
+            "posteam_score_post": 19,
+            "defteam_score_post": 17,
+            "score_differential_post": 2,
+            "passer": "Josh Allen",
+            "receiver": "Dalton Kincaid",
             "desc": "(9:01) (Shotgun) 17-J.Allen pass short left to 86-D.Kincaid for 15 yards, TOUCHDOWN."
           },
           "selection": {
@@ -819,7 +870,10 @@
             "yards_gained": 10,
             "first_down": true,
             "fourth_down_converted": true,
-            "rusher": "J.Allen",
+            "posteam_score_post": 20,
+            "defteam_score_post": 24,
+            "score_differential_post": -4,
+            "rusher": "Josh Allen",
             "desc": "(1:10) 70-A.Anderson reported in as eligible. 17-J.Allen up the middle for 11 yards, TOUCHDOWN. The Replay Official reviewed the runner broke the plane ruling, and the play was REVERSED. 70-A.Anderson reported in as eligible. 17-J.Allen up the middle to JAX 1 for 10 yards (26-An.Johnson; 91-A.Armstead)."
           },
           "selection": {
@@ -859,8 +913,11 @@
             "yards_gained": 15,
             "first_down": true,
             "touchdown": true,
-            "passer": "J.Allen",
-            "receiver": "D.Kincaid",
+            "posteam_score_post": 19,
+            "defteam_score_post": 17,
+            "score_differential_post": 2,
+            "passer": "Josh Allen",
+            "receiver": "Dalton Kincaid",
             "desc": "(9:01) (Shotgun) 17-J.Allen pass short left to 86-D.Kincaid for 15 yards, TOUCHDOWN."
           },
           "selection": {
@@ -906,7 +963,10 @@
             "first_down": true,
             "third_down_converted": true,
             "touchdown": true,
-            "rusher": "J.Allen",
+            "posteam_score_post": 9,
+            "defteam_score_post": 7,
+            "score_differential_post": 2,
+            "rusher": "Josh Allen",
             "desc": "(5:42) (Shotgun) 17-J.Allen right tackle for 2 yards, TOUCHDOWN."
           },
           "selection": {
@@ -947,8 +1007,11 @@
         "play_type": "pass",
         "yards_gained": 0,
         "interception": true,
-        "passer": "T.Lawrence",
-        "receiver": "J.Meyers",
+        "posteam_score_post": 24,
+        "defteam_score_post": 27,
+        "score_differential_post": -3,
+        "passer": "Trevor Lawrence",
+        "receiver": "Jakobi Meyers",
         "desc": "(:59) (Shotgun) 16-T.Lawrence pass short middle intended for 3-J.Meyers INTERCEPTED by 24-C.Bishop (27-T.White) at JAX 37. 24-C.Bishop to JAX 35 for 2 yards."
       },
       "selection": {
@@ -992,8 +1055,11 @@
         "play_type": "pass",
         "yards_gained": 0,
         "interception": true,
-        "passer": "T.Lawrence",
-        "receiver": "P.Washington",
+        "posteam_score_post": 0,
+        "defteam_score_post": 0,
+        "score_differential_post": 0,
+        "passer": "Trevor Lawrence",
+        "receiver": "Parker Washington",
         "desc": "(5:25) (Shotgun) 16-T.Lawrence pass short middle intended for 11-P.Washington INTERCEPTED by 45-S.Thompson at BUF 48. 45-S.Thompson to JAX 33 for 19 yards (16-T.Lawrence)."
       },
       "selection": {
@@ -1034,8 +1100,11 @@
         "yards_gained": 3,
         "first_down": true,
         "touchdown": true,
-        "passer": "T.Lawrence",
-        "receiver": "B.Thomas",
+        "posteam_score_post": 6,
+        "defteam_score_post": 3,
+        "score_differential_post": 3,
+        "passer": "Trevor Lawrence",
+        "receiver": "Brian Thomas Jr.",
         "desc": "(14:18) (Shotgun) 16-T.Lawrence pass short left to 7-B.Thomas for 3 yards, TOUCHDOWN."
       },
       "selection": {
@@ -1075,6 +1144,11 @@
         "play_type": "kickoff",
         "yards_gained": 0,
         "fumble_lost": true,
+        "fumbled_1_team": "BUF",
+        "fumble_recovery_1_team": "JAX",
+        "posteam_score_post": 3,
+        "defteam_score_post": 7,
+        "score_differential_post": -4,
         "desc": "39-C.Little kicks 65 yards from JAX 35 to BUF 0. 22-R.Davis to BUF 34 for 34 yards (36-L.Allen; 30-M.Brown). FUMBLES (36-L.Allen), RECOVERED by JAX-0-D.Lloyd at BUF 36. BUF-22-R.Davis was injured during the play."
       },
       "selection": {
@@ -1106,8 +1180,11 @@
         "yards_gained": 6,
         "first_down": true,
         "touchdown": true,
-        "passer": "T.Lawrence",
-        "receiver": "P.Washington",
+        "posteam_score_post": 16,
+        "defteam_score_post": 13,
+        "score_differential_post": 3,
+        "passer": "Trevor Lawrence",
+        "receiver": "Parker Washington",
         "desc": "(13:01) (Shotgun) 16-T.Lawrence pass short middle to 11-P.Washington for 6 yards, TOUCHDOWN. JAX-77-A.Harrison was injured during the play."
       },
       "selection": {
@@ -1149,8 +1226,11 @@
         "yards_gained": 14,
         "first_down": true,
         "touchdown": true,
-        "passer": "T.Lawrence",
-        "receiver": "T.Etienne",
+        "posteam_score_post": 23,
+        "defteam_score_post": 20,
+        "score_differential_post": 3,
+        "passer": "Trevor Lawrence",
+        "receiver": "Travis Etienne",
         "desc": "(4:10) 16-T.Lawrence pass short right to 1-T.Etienne for 14 yards, TOUCHDOWN."
       },
       "selection": {
@@ -1192,7 +1272,10 @@
         "yards_gained": 1,
         "first_down": true,
         "touchdown": true,
-        "rusher": "J.Allen",
+        "posteam_score_post": 26,
+        "defteam_score_post": 24,
+        "score_differential_post": 2,
+        "rusher": "Josh Allen",
         "desc": "(1:05) 70-A.Anderson reported in as eligible. 17-J.Allen left guard for 1 yard, TOUCHDOWN."
       },
       "selection": {
