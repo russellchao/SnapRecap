@@ -8,8 +8,8 @@ Final: BUF 27, JAX 24 (BUF won by 3)
 edge: BUF
 emphasis: decisive
 
-- Q2, 2nd & 10, 44 yds from end zone, BUF down 4
-    play: (7:47) (Shotgun) 17-J.Allen pass deep right to 0-K.Coleman pushed ob at JAX 8 for 36 yards (0-D.Lloyd).
+- Q2 7:47, 2nd & 10, 44 yds from end zone, BUF down 4
+    play: (Shotgun) Josh Allen pass deep right to Keon Coleman pushed ob at JAX 8 for 36 yards (D.Lloyd).
     context — offense personnel package: 11 Personnel
     context — offense formation: SHOTGUN
     context — defenders in box: 5
@@ -26,8 +26,8 @@ emphasis: decisive
     context — time to throw: 2.2
     context — was pressure: no
 
-- Q4, 1st & 10, 56 yds from end zone, BUF down 4
-    play: (2:27) (Shotgun) 17-J.Allen pass deep left to 18-B.Cooks to JAX 20 for 36 yards (26-An.Johnson).
+- Q4 2:27, 1st & 10, 56 yds from end zone, BUF down 4
+    play: (Shotgun) Josh Allen pass deep left to Brandin Cooks to JAX 20 for 36 yards (An.Johnson).
     context — offense personnel package: 11 Personnel
     context — offense formation: SHOTGUN
     context — defenders in box: 6
@@ -45,8 +45,9 @@ emphasis: decisive
     context — was pressure: yes
     emphasis: decisive
 
-- Q4, 1st & 10, 15 yds from end zone, BUF down 4
-    play: (9:01) (Shotgun) 17-J.Allen pass short left to 86-D.Kincaid for 15 yards, TOUCHDOWN.
+- Q4 9:01, 1st & 10, 15 yds from end zone, BUF down 4
+    play: (Shotgun) Josh Allen pass short left to Dalton Kincaid for 15 yards, TOUCHDOWN.
+    result: touchdown — BUF takes the lead
     context — offense personnel package: 11 Personnel
     context — offense formation: SHOTGUN
     context — defenders in box: 6
@@ -67,8 +68,8 @@ emphasis: decisive
 edge: BUF
 emphasis: notable
 
-- Q2, 2nd & 10, 44 yds from end zone, BUF down 4
-    play: (7:47) (Shotgun) 17-J.Allen pass deep right to 0-K.Coleman pushed ob at JAX 8 for 36 yards (0-D.Lloyd).
+- Q2 7:47, 2nd & 10, 44 yds from end zone, BUF down 4
+    play: (Shotgun) Josh Allen pass deep right to Keon Coleman pushed ob at JAX 8 for 36 yards (D.Lloyd).
     context — offense personnel package: 11 Personnel
     context — offense formation: SHOTGUN
     context — defenders in box: 5
@@ -85,8 +86,8 @@ emphasis: notable
     context — time to throw: 2.2
     context — was pressure: no
 
-- Q4, 1st & 10, 56 yds from end zone, BUF down 4
-    play: (2:27) (Shotgun) 17-J.Allen pass deep left to 18-B.Cooks to JAX 20 for 36 yards (26-An.Johnson).
+- Q4 2:27, 1st & 10, 56 yds from end zone, BUF down 4
+    play: (Shotgun) Josh Allen pass deep left to Brandin Cooks to JAX 20 for 36 yards (An.Johnson).
     context — offense personnel package: 11 Personnel
     context — offense formation: SHOTGUN
     context — defenders in box: 6
@@ -104,8 +105,9 @@ emphasis: notable
     context — was pressure: yes
     emphasis: decisive
 
-- Q4, 1st & 10, 15 yds from end zone, BUF down 4
-    play: (9:01) (Shotgun) 17-J.Allen pass short left to 86-D.Kincaid for 15 yards, TOUCHDOWN.
+- Q4 9:01, 1st & 10, 15 yds from end zone, BUF down 4
+    play: (Shotgun) Josh Allen pass short left to Dalton Kincaid for 15 yards, TOUCHDOWN.
+    result: touchdown — BUF takes the lead
     context — offense personnel package: 11 Personnel
     context — offense formation: SHOTGUN
     context — defenders in box: 6
@@ -128,8 +130,8 @@ emphasis: notable
 edge: JAX
 emphasis: decisive
 
-- Q3, 1st & 10, 52 yds from end zone, JAX down 6
-    play: (7:34) 1-T.Etienne right tackle to BUF 26 for 26 yards (27-T.White).
+- Q3 7:34, 1st & 10, 52 yds from end zone, JAX down 6
+    play: Travis Etienne right tackle to BUF 26 for 26 yards (T.White).
     context — offense personnel package: 11 Personnel
     context — offense formation: UNDER CENTER
     context — defenders in box: 6
@@ -140,8 +142,9 @@ emphasis: decisive
     context — run gap: tackle
     context — was pressure: no
 
-- Q1, 3rd & 2, 72 yds from end zone, tied
-    play: (6:00) (Shotgun) 1-T.Etienne up the middle to JAX 40 for 12 yards (21-J.Poyer).
+- Q1 6:00, 3rd & 2, 72 yds from end zone, tied
+    play: (Shotgun) Travis Etienne up the middle to JAX 40 for 12 yards (J.Poyer).
+    result: converted on 3rd down
     context — offense personnel package: 11 Personnel
     context — offense formation: SHOTGUN
     context — defenders in box: 6
@@ -151,8 +154,8 @@ emphasis: decisive
     context — run location: middle
     context — was pressure: no
 
-- Q1, 1st & 10, 16 yds from end zone, JAX down 3
-    play: (:10) 33-B.Tuten left end pushed ob at BUF 3 for 13 yards (27-T.White).
+- Q1 0:10, 1st & 10, 16 yds from end zone, JAX down 3
+    play: Bhayshul Tuten left end pushed ob at BUF 3 for 13 yards (T.White).
     context — offense personnel package: 11 Personnel
     context — offense formation: UNDER CENTER
     context — defenders in box: 6
@@ -167,8 +170,9 @@ emphasis: decisive
 edge: BUF
 emphasis: notable
 
-- Q4, 4th & 1, 11 yds from end zone, BUF down 4
-    play: (1:10) 70-A.Anderson reported in as eligible. 17-J.Allen up the middle for 11 yards, TOUCHDOWN. The Replay Official reviewed the runner broke the plane ruling, and the play was REVERSED. 70-A.Anderson reported in as eligible. 17-J.Allen up the middle to JAX 1 for 10 yards (26-An.Johnson; 91-A.Armstead).
+- Q4 1:10, 4th & 1, 11 yds from end zone, BUF down 4
+    play: A.Anderson reported in as eligible. Josh Allen up the middle for 11 yards, TOUCHDOWN. The Replay Official reviewed the runner broke the plane ruling, and the play was REVERSED. A.Anderson reported in as eligible. Josh Allen up the middle to JAX 1 for 10 yards (An.Johnson; A.Armstead).
+    result: converted on 4th down
     context — offense personnel package: 11 Personnel
     context — offense formation: UNDER CENTER
     context — defenders in box: 8
@@ -179,8 +183,9 @@ emphasis: notable
     context — was pressure: no
     emphasis: decisive
 
-- Q2, 3rd & 2 (goal-to-go), 2 yds from end zone, BUF down 4
-    play: (5:42) (Shotgun) 17-J.Allen right tackle for 2 yards, TOUCHDOWN.
+- Q2 5:42, 3rd & 2 (goal-to-go), 2 yds from end zone, BUF down 4
+    play: (Shotgun) Josh Allen right tackle for 2 yards, TOUCHDOWN.
+    result: touchdown — BUF takes the lead; converted on 3rd down
     context — offense personnel package: 11 Personnel
     context — offense formation: SHOTGUN
     context — defenders in box: 6
@@ -191,8 +196,9 @@ emphasis: notable
     context — run gap: tackle
     context — was pressure: no
 
-- Q4, 4th & 1, 19 yds from end zone, BUF down 4
-    play: (9:42) 70-A.Anderson reported in as eligible. 17-J.Allen left guard to JAX 15 for 4 yards (47-D.Gardeck).
+- Q4 9:42, 4th & 1, 19 yds from end zone, BUF down 4
+    play: A.Anderson reported in as eligible. Josh Allen left guard to JAX 15 for 4 yards (D.Gardeck).
+    result: converted on 4th down
     context — offense personnel package: 11 Personnel
     context — offense formation: UNDER CENTER
     context — defenders in box: 7
@@ -209,8 +215,9 @@ emphasis: notable
 edge: BUF
 emphasis: decisive
 
-- Q4, 4th & 1, 11 yds from end zone, BUF down 4
-    play: (1:10) 70-A.Anderson reported in as eligible. 17-J.Allen up the middle for 11 yards, TOUCHDOWN. The Replay Official reviewed the runner broke the plane ruling, and the play was REVERSED. 70-A.Anderson reported in as eligible. 17-J.Allen up the middle to JAX 1 for 10 yards (26-An.Johnson; 91-A.Armstead).
+- Q4 1:10, 4th & 1, 11 yds from end zone, BUF down 4
+    play: A.Anderson reported in as eligible. Josh Allen up the middle for 11 yards, TOUCHDOWN. The Replay Official reviewed the runner broke the plane ruling, and the play was REVERSED. A.Anderson reported in as eligible. Josh Allen up the middle to JAX 1 for 10 yards (An.Johnson; A.Armstead).
+    result: converted on 4th down
     context — offense personnel package: 11 Personnel
     context — offense formation: UNDER CENTER
     context — defenders in box: 8
@@ -221,8 +228,9 @@ emphasis: decisive
     context — was pressure: no
     emphasis: decisive
 
-- Q4, 4th & 1, 19 yds from end zone, BUF down 4
-    play: (9:42) 70-A.Anderson reported in as eligible. 17-J.Allen left guard to JAX 15 for 4 yards (47-D.Gardeck).
+- Q4 9:42, 4th & 1, 19 yds from end zone, BUF down 4
+    play: A.Anderson reported in as eligible. Josh Allen left guard to JAX 15 for 4 yards (D.Gardeck).
+    result: converted on 4th down
     context — offense personnel package: 11 Personnel
     context — offense formation: UNDER CENTER
     context — defenders in box: 7
@@ -237,8 +245,9 @@ emphasis: decisive
 edge: BUF
 emphasis: notable
 
-- Q4, 4th & 1, 11 yds from end zone, BUF down 4
-    play: (1:10) 70-A.Anderson reported in as eligible. 17-J.Allen up the middle for 11 yards, TOUCHDOWN. The Replay Official reviewed the runner broke the plane ruling, and the play was REVERSED. 70-A.Anderson reported in as eligible. 17-J.Allen up the middle to JAX 1 for 10 yards (26-An.Johnson; 91-A.Armstead).
+- Q4 1:10, 4th & 1, 11 yds from end zone, BUF down 4
+    play: A.Anderson reported in as eligible. Josh Allen up the middle for 11 yards, TOUCHDOWN. The Replay Official reviewed the runner broke the plane ruling, and the play was REVERSED. A.Anderson reported in as eligible. Josh Allen up the middle to JAX 1 for 10 yards (An.Johnson; A.Armstead).
+    result: converted on 4th down
     context — offense personnel package: 11 Personnel
     context — offense formation: UNDER CENTER
     context — defenders in box: 8
@@ -249,8 +258,9 @@ emphasis: notable
     context — was pressure: no
     emphasis: decisive
 
-- Q4, 1st & 10, 15 yds from end zone, BUF down 4
-    play: (9:01) (Shotgun) 17-J.Allen pass short left to 86-D.Kincaid for 15 yards, TOUCHDOWN.
+- Q4 9:01, 1st & 10, 15 yds from end zone, BUF down 4
+    play: (Shotgun) Josh Allen pass short left to Dalton Kincaid for 15 yards, TOUCHDOWN.
+    result: touchdown — BUF takes the lead
     context — offense personnel package: 11 Personnel
     context — offense formation: SHOTGUN
     context — defenders in box: 6
@@ -267,8 +277,9 @@ emphasis: notable
     context — time to throw: 2.2
     context — was pressure: no
 
-- Q2, 3rd & 2 (goal-to-go), 2 yds from end zone, BUF down 4
-    play: (5:42) (Shotgun) 17-J.Allen right tackle for 2 yards, TOUCHDOWN.
+- Q2 5:42, 3rd & 2 (goal-to-go), 2 yds from end zone, BUF down 4
+    play: (Shotgun) Josh Allen right tackle for 2 yards, TOUCHDOWN.
+    result: touchdown — BUF takes the lead; converted on 3rd down
     context — offense personnel package: 11 Personnel
     context — offense formation: SHOTGUN
     context — defenders in box: 6
@@ -285,8 +296,8 @@ emphasis: notable
 edge: BUF
 emphasis: major
 
-- Q2, 2nd & 10, 44 yds from end zone, BUF down 4
-    play: (7:47) (Shotgun) 17-J.Allen pass deep right to 0-K.Coleman pushed ob at JAX 8 for 36 yards (0-D.Lloyd).
+- Q2 7:47, 2nd & 10, 44 yds from end zone, BUF down 4
+    play: (Shotgun) Josh Allen pass deep right to Keon Coleman pushed ob at JAX 8 for 36 yards (D.Lloyd).
     context — offense personnel package: 11 Personnel
     context — offense formation: SHOTGUN
     context — defenders in box: 5
@@ -303,8 +314,9 @@ emphasis: major
     context — time to throw: 2.2
     context — was pressure: no
 
-- Q4, 4th & 1, 11 yds from end zone, BUF down 4
-    play: (1:10) 70-A.Anderson reported in as eligible. 17-J.Allen up the middle for 11 yards, TOUCHDOWN. The Replay Official reviewed the runner broke the plane ruling, and the play was REVERSED. 70-A.Anderson reported in as eligible. 17-J.Allen up the middle to JAX 1 for 10 yards (26-An.Johnson; 91-A.Armstead).
+- Q4 1:10, 4th & 1, 11 yds from end zone, BUF down 4
+    play: A.Anderson reported in as eligible. Josh Allen up the middle for 11 yards, TOUCHDOWN. The Replay Official reviewed the runner broke the plane ruling, and the play was REVERSED. A.Anderson reported in as eligible. Josh Allen up the middle to JAX 1 for 10 yards (An.Johnson; A.Armstead).
+    result: converted on 4th down
     context — offense personnel package: 11 Personnel
     context — offense formation: UNDER CENTER
     context — defenders in box: 8
@@ -315,8 +327,8 @@ emphasis: major
     context — was pressure: no
     emphasis: decisive
 
-- Q4, 1st & 10, 56 yds from end zone, BUF down 4
-    play: (2:27) (Shotgun) 17-J.Allen pass deep left to 18-B.Cooks to JAX 20 for 36 yards (26-An.Johnson).
+- Q4 2:27, 1st & 10, 56 yds from end zone, BUF down 4
+    play: (Shotgun) Josh Allen pass deep left to Brandin Cooks to JAX 20 for 36 yards (An.Johnson).
     context — offense personnel package: 11 Personnel
     context — offense formation: SHOTGUN
     context — defenders in box: 6
@@ -336,8 +348,9 @@ emphasis: major
 
 # Biggest swing plays
 
-- Q4, 1st & 10, 77 yds from end zone, JAX down 3
-    play: (:59) (Shotgun) 16-T.Lawrence pass short middle intended for 3-J.Meyers INTERCEPTED by 24-C.Bishop (27-T.White) at JAX 37. 24-C.Bishop to JAX 35 for 2 yards.
+- Q4 0:59, 1st & 10, 77 yds from end zone, JAX down 3
+    play: (Shotgun) Trevor Lawrence pass short middle intended for Jakobi Meyers INTERCEPTED by C.Bishop (T.White) at JAX 37. C.Bishop to JAX 35 for 2 yards.
+    result: BUF takes over on the interception
     context — offense personnel package: 11 Personnel
     context — offense formation: SHOTGUN
     context — defenders in box: 5
@@ -356,8 +369,9 @@ emphasis: major
 
 # Scoring plays and turnovers
 
-- Q1, 2nd & 10, 60 yds from end zone, tied
-    play: (5:25) (Shotgun) 16-T.Lawrence pass short middle intended for 11-P.Washington INTERCEPTED by 45-S.Thompson at BUF 48. 45-S.Thompson to JAX 33 for 19 yards (16-T.Lawrence).
+- Q1 5:25, 2nd & 10, 60 yds from end zone, tied
+    play: (Shotgun) Trevor Lawrence pass short middle intended for Parker Washington INTERCEPTED by S.Thompson at BUF 48. S.Thompson to JAX 33 for 19 yards (Trevor Lawrence).
+    result: BUF takes over on the interception
     context — offense personnel package: 11 Personnel
     context — offense formation: SHOTGUN
     context — defenders in box: 6
@@ -373,8 +387,9 @@ emphasis: major
     context — time to throw: 2.5
     context — was pressure: no
 
-- Q2, 2nd & 3 (goal-to-go), 3 yds from end zone, JAX down 3
-    play: (14:18) (Shotgun) 16-T.Lawrence pass short left to 7-B.Thomas for 3 yards, TOUCHDOWN.
+- Q2 14:18, 2nd & 3 (goal-to-go), 3 yds from end zone, JAX down 3
+    play: (Shotgun) Trevor Lawrence pass short left to Brian Thomas Jr. for 3 yards, TOUCHDOWN.
+    result: touchdown — JAX takes the lead
     context — offense personnel package: 11 Personnel
     context — offense formation: SHOTGUN
     context — defenders in box: 5
@@ -391,16 +406,18 @@ emphasis: major
     context — time to throw: 2.1
     context — was pressure: no
 
-- Q2, kickoff, 35 yds from end zone, BUF down 4
-    play: 39-C.Little kicks 65 yards from JAX 35 to BUF 0. 22-R.Davis to BUF 34 for 34 yards (36-L.Allen; 30-M.Brown). FUMBLES (36-L.Allen), RECOVERED by JAX-0-D.Lloyd at BUF 36. BUF-22-R.Davis was injured during the play.
+- Q2 14:14, kickoff, 35 yds from end zone, BUF down 4
+    play: C.Little kicks 65 yards from JAX 35 to BUF 0. R.Davis to BUF 34 for 34 yards (L.Allen; M.Brown). FUMBLES (L.Allen), RECOVERED by JAX-D.Lloyd at BUF 36. BUF-R.Davis was injured during the play.
+    result: BUF lost the ball, JAX recovered
     context — defenders in box: 0
     context — number of pass rushers: 0
     context — shotgun: no
     context — no huddle: no
     context — was pressure: no
 
-- Q4, 2nd & 6 (goal-to-go), 6 yds from end zone, JAX down 3
-    play: (13:01) (Shotgun) 16-T.Lawrence pass short middle to 11-P.Washington for 6 yards, TOUCHDOWN. JAX-77-A.Harrison was injured during the play.
+- Q4 13:01, 2nd & 6 (goal-to-go), 6 yds from end zone, JAX down 3
+    play: (Shotgun) Trevor Lawrence pass short middle to Parker Washington for 6 yards, TOUCHDOWN. JAX-A.Harrison was injured during the play.
+    result: touchdown — JAX takes the lead
     context — offense personnel package: 11 Personnel
     context — offense formation: SHOTGUN
     context — defenders in box: 5
@@ -417,8 +434,9 @@ emphasis: major
     context — time to throw: 3.3
     context — was pressure: yes
 
-- Q4, 1st & 10, 14 yds from end zone, JAX down 3
-    play: (4:10) 16-T.Lawrence pass short right to 1-T.Etienne for 14 yards, TOUCHDOWN.
+- Q4 4:10, 1st & 10, 14 yds from end zone, JAX down 3
+    play: Trevor Lawrence pass short right to Travis Etienne for 14 yards, TOUCHDOWN.
+    result: touchdown — JAX takes the lead
     context — offense personnel package: 11 Personnel
     context — offense formation: UNDER CENTER
     context — defenders in box: 7
@@ -435,8 +453,9 @@ emphasis: major
     context — time to throw: 3.0
     context — was pressure: no
 
-- Q4, 1st & 1 (goal-to-go), 1 yds from end zone, BUF down 4
-    play: (1:05) 70-A.Anderson reported in as eligible. 17-J.Allen left guard for 1 yard, TOUCHDOWN.
+- Q4 1:05, 1st & 1 (goal-to-go), 1 yds from end zone, BUF down 4
+    play: A.Anderson reported in as eligible. Josh Allen left guard for 1 yard, TOUCHDOWN.
+    result: touchdown — BUF takes the lead
     context — offense personnel package: 11 Personnel
     context — offense formation: UNDER CENTER
     context — defenders in box: 8
