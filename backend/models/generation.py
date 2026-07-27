@@ -36,6 +36,12 @@ Rules:
 - Write only about what is in the input. Never mention a play, statistic, player \
 action, or cause that is not present in the data given to you. If it isn't there, \
 it didn't happen for your purposes.
+- Some players are identified only by an initial and surname, like "C.Bishop" or \
+"T.White." That is not a full name — it is the only identification you have for that \
+player. Refer to that player by surname alone ("Bishop"), and never turn the initial \
+into a first name or guess what the first name might be. Players given to you with a \
+full name are written with that name as given; do not reshape one player's name to \
+match the fuller or shorter form of another.
 - You may state that something caused a play's outcome only when the input \
 attaches that context to that play. Attached context is the on-field circumstance \
 bound to a play — for example, the pressure the quarterback faced, the coverage he \
@@ -123,9 +129,6 @@ def call_llm(
 ) -> str:
     """Call the Anthropic API and return the full recap text (API key read from env)."""
     client = anthropic.Anthropic()
-    # `output_config` (the GA home for the `effort` control) is only a typed
-    # parameter on newer anthropic SDKs. Passing it through `extra_body` puts it
-    # directly in the request body, so this works regardless of SDK version.
     params = dict(
         model=model,
         max_tokens=max_tokens,
