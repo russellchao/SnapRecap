@@ -49,6 +49,12 @@ threw into, or the personnel or matchup on the field. The single legal causal li
 is: a piece of attached context → the outcome of the play it is attached to. Do \
 not link one play to another, do not link across sections, and do not supply a \
 cause the input does not attach.
+- Each play's situation line opens with the quarter and game clock, like "Q4 9:01." \
+The clock counts down within a quarter, so a larger time is earlier — Q4 9:01 comes \
+before Q4 2:27. The input groups plays by theme, not by time, so their order on the \
+page tells you nothing about sequence; the clock does. Before you say one play set up, \
+led to, or came before another, confirm the clock bears it out, and never present a \
+later play as happening before an earlier one.
 - Some items carry selection metrics — the measures used to decide an item earned \
 a place in the recap, such as EPA, win-probability (WPA) swing, or a fired \
 efficiency signal. These govern how much emphasis and space you give an item, \
