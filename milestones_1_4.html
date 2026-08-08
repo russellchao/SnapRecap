@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Snap Recap — Full Vision (M1–M4)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0A0E13;
+    --panel:#11161D;
+    --panel-raised:#161D26;
+    --hair:#242C36;
+    --paper:#E9ECF1;
+    --muted:#8A93A1;
+    --muted-dim:#5B6472;
+    --gold:#F2A93B;
+    --gold-dim:#8A6626;
+    --bills-red:#C8102E;
+    --bills-navy:#1D3E78;
+    --jags-teal:#1F6B72;
+    --jags-gold:#C8963E;
+    --neg:#B5502F;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--ink);color:var(--paper);font-family:'Inter',sans-serif;}
+  body{padding:0 0 90px;}
+  .wrap{max-width:960px;margin:0 auto;padding:0 24px;}
+
+  header.top{border-bottom:1px solid var(--hair);padding:28px 0 22px;}
+  .brand{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+  .brand-mark{font-family:'Big Shoulders Display',sans-serif;font-weight:800;font-size:22px;letter-spacing:0.04em;text-transform:uppercase;color:var(--paper);}
+  .brand-mark span{color:var(--gold);}
+  .scope-tag{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted-dim);border:1px solid var(--hair);padding:5px 10px;border-radius:2px;}
+
+  .game-strip{padding-top:26px;}
+  .matchup{display:flex;align-items:center;justify-content:center;gap:28px;}
+  .team{text-align:center;flex:1;}
+  .team-name{font-family:'Big Shoulders Display',sans-serif;font-weight:700;font-size:26px;letter-spacing:0.02em;text-transform:uppercase;}
+  .team.away .team-name{color:var(--jags-gold);}
+  .team.home .team-name{color:var(--bills-red);}
+  .team-sub{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);margin-top:2px;letter-spacing:0.04em;}
+  .score-block{display:flex;align-items:center;gap:16px;}
+  .score{font-family:'Big Shoulders Display',sans-serif;font-weight:800;font-size:50px;line-height:1;}
+  .score.away{color:var(--jags-gold);}
+  .score.home{color:var(--bills-red);}
+  .dash{color:var(--muted-dim);font-family:'Big Shoulders Display',sans-serif;font-size:32px;font-weight:600;}
+  .game-meta{text-align:center;margin-top:10px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted-dim);letter-spacing:0.06em;text-transform:uppercase;}
+
+  .sec-label{display:flex;align-items:center;gap:12px;margin:54px 0 20px;}
+  .sec-num{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--gold);border:1px solid var(--gold-dim);padding:3px 7px;border-radius:2px;}
+  .sec-title{font-family:'Big Shoulders Display',sans-serif;font-weight:700;font-size:19px;text-transform:uppercase;letter-spacing:0.03em;}
+  .sec-line{flex:1;height:1px;background:var(--hair);}
+  .sec-intro{color:var(--muted);font-size:13.5px;line-height:1.6;max-width:640px;margin-bottom:22px;}
+
+  /* M1 LEDGER (condensed) */
+  .ledger{background:var(--panel);border:1px solid var(--hair);border-radius:4px;padding:6px 0;}
+  .ledger-row{display:grid;grid-template-columns:1fr 190px 1fr;align-items:center;padding:11px 22px;border-top:1px solid var(--hair);}
+  .ledger-row:first-of-type{border-top:none;}
+  .bar-cell{position:relative;height:18px;}
+  .bar-cell.left{display:flex;justify-content:flex-end;}
+  .bar-cell.right{display:flex;justify-content:flex-start;}
+  .bar{height:100%;border-radius:2px;}
+  .bar.jags{background:linear-gradient(90deg, var(--jags-teal), var(--jags-gold));}
+  .bar.bills{background:linear-gradient(90deg, var(--bills-navy), var(--bills-red));}
+  .ledger-mid{text-align:center;font-family:'IBM Plex Mono',monospace;font-size:11.5px;}
+  .ledger-mid .cat{color:var(--paper);font-size:12px;display:block;margin-bottom:2px;}
+  .ledger-mid .val{color:var(--muted);font-size:10.5px;}
+
+  /* M2 CONTRAST (condensed) */
+  .contrast{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--hair);border:1px solid var(--hair);border-radius:4px;overflow:hidden;}
+  .panel{background:var(--panel);padding:22px 22px 20px;}
+  .panel-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px;}
+  .panel.seen .panel-eyebrow{color:var(--muted);}
+  .panel.said .panel-eyebrow{color:var(--gold);}
+  .panel-headline{font-family:'Big Shoulders Display',sans-serif;font-weight:700;font-size:19px;line-height:1.15;margin-bottom:10px;}
+  .panel-body{font-size:13.5px;line-height:1.6;color:#C7CDD6;}
+  .panel-stat{margin-top:14px;padding-top:14px;border-top:1px solid var(--hair);font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);}
+  .panel-stat b{color:var(--paper);font-weight:600;}
+  .panel.said .panel-stat b{color:var(--gold);}
+
+  /* M3 QUERY */
+  .query-box{background:var(--panel);border:1px solid var(--hair);border-radius:4px;padding:22px;}
+  .query-input-row{display:flex;gap:10px;align-items:center;background:var(--ink);border:1px solid var(--hair);border-radius:3px;padding:12px 14px;}
+  .query-input-row .cursor-txt{font-family:'Inter',sans-serif;font-size:14.5px;color:var(--paper);}
+  .query-input-row .cursor-txt .blink{display:inline-block;width:2px;height:16px;background:var(--gold);margin-left:2px;vertical-align:middle;animation:blink 1.1s step-start infinite;}
+  @keyframes blink{50%{opacity:0;}}
+  .query-send{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink);background:var(--gold);padding:7px 12px;border-radius:2px;white-space:nowrap;}
+  .chip-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+  .chip{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);border:1px solid var(--hair);padding:6px 11px;border-radius:14px;}
+  .query-answer{margin-top:18px;padding-top:16px;border-top:1px solid var(--hair);}
+  .query-answer .q{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--gold);margin-bottom:8px;}
+  .query-answer .a{font-size:13.5px;line-height:1.65;color:#C7CDD6;}
+  .query-answer .a b{color:var(--paper);}
+
+  /* M4 SIGNAL GRID */
+  .signal-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--hair);border:1px solid var(--hair);border-radius:4px;overflow:hidden;}
+  .sig-card{background:var(--panel);padding:16px 14px 14px;}
+  .sig-fam{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted-dim);margin-bottom:10px;}
+  .sig-spark{display:flex;align-items:flex-end;gap:3px;height:34px;margin-bottom:10px;}
+  .sig-spark i{flex:1;background:var(--hair);border-radius:1px;display:block;}
+  .sig-spark i.on{background:var(--gold);}
+  .sig-val{font-family:'IBM Plex Mono',monospace;font-size:15px;color:var(--paper);font-weight:600;}
+  .sig-val.pos::before{content:'+';color:var(--gold);}
+  .sig-label{font-size:10.5px;color:var(--muted);margin-top:3px;line-height:1.4;}
+
+  .scope-note{margin-top:60px;padding-top:20px;border-top:1px solid var(--hair);font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted-dim);line-height:1.7;}
+
+  @media (max-width:760px){
+    .contrast{grid-template-columns:1fr;}
+    .signal-grid{grid-template-columns:repeat(2,1fr);}
+  }
+  @media (max-width:640px){
+    .matchup{gap:14px;}
+    .score{font-size:36px;}
+    .team-name{font-size:17px;}
+    .ledger-row{grid-template-columns:1fr 120px 1fr;padding:10px 12px;}
+    .ledger-mid .cat{font-size:10.5px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="brand">
+      <div class="brand-mark">SNAP <span>RECAP</span></div>
+      <div class="scope-tag">Mockup — Full Vision, M1–M4</div>
+    </div>
+  </header>
+
+  <div class="game-strip">
+    <div class="matchup">
+      <div class="team away">
+        <div class="team-name">Jaguars</div>
+        <div class="team-sub">AFC South</div>
+      </div>
+      <div class="score-block">
+        <div class="score away">17</div>
+        <div class="dash">–</div>
+        <div class="score home">31</div>
+      </div>
+      <div class="team home">
+        <div class="team-name">Bills</div>
+        <div class="team-sub">AFC East</div>
+      </div>
+    </div>
+    <div class="game-meta">AFC Wild Card · Final · Highmark Stadium</div>
+  </div>
+
+  <div class="sec-label">
+    <div class="sec-num">01</div>
+    <div class="sec-title">The Margin, Decomposed</div>
+    <div class="sec-line"></div>
+  </div>
+  <div class="ledger">
+    <div class="ledger-row">
+      <div class="bar-cell left"><div class="bar bills" style="width:78%"></div></div>
+      <div class="ledger-mid"><span class="cat">Turnovers</span><span class="val">+6.2 EP · BUF</span></div>
+      <div class="bar-cell right"></div>
+    </div>
+    <div class="ledger-row">
+      <div class="bar-cell left"><div class="bar bills" style="width:44%"></div></div>
+      <div class="ledger-mid"><span class="cat">Third-Down Conversions</span><span class="val">+3.1 EP · BUF</span></div>
+      <div class="bar-cell right"></div>
+    </div>
+    <div class="ledger-row">
+      <div class="bar-cell left"><div class="bar bills" style="width:34%"></div></div>
+      <div class="ledger-mid"><span class="cat">Red Zone Efficiency</span><span class="val">+2.4 EP · BUF</span></div>
+      <div class="bar-cell right"></div>
+    </div>
+    <div class="ledger-row">
+      <div class="bar-cell left"></div>
+      <div class="ledger-mid"><span class="cat">Pass Protection</span><span class="val">+1.1 EP · JAX</span></div>
+      <div class="bar-cell right"><div class="bar jags" style="width:16%"></div></div>
+    </div>
+  </div>
+
+  <div class="sec-label">
+    <div class="sec-num">02</div>
+    <div class="sec-title">What You Saw vs. What Decided It</div>
+    <div class="sec-line"></div>
+  </div>
+  <div class="contrast">
+    <div class="panel seen">
+      <div class="panel-eyebrow">What You Saw</div>
+      <div class="panel-headline">Kincaid's go-ahead score, 1:43 left</div>
+      <div class="panel-body">A 2-yard fade in the back of the end zone put Buffalo ahead for good — the moment everyone will clip.</div>
+      <div class="panel-stat">Win probability added: <b>+0.19</b></div>
+    </div>
+    <div class="panel said">
+      <div class="panel-eyebrow">What the Numbers Say</div>
+      <div class="panel-headline">Buffalo had already won it on third down</div>
+      <div class="panel-body">By that snap, Buffalo's third-down offense had already out-produced Jacksonville's whole game plan.</div>
+      <div class="panel-stat">Signal contribution before the play: <b>+9.8 EP, BUF</b></div>
+    </div>
+  </div>
+
+  <div class="sec-label">
+    <div class="sec-num">03</div>
+    <div class="sec-title">Ask the Game Anything</div>
+    <div class="sec-line"></div>
+  </div>
+  <p class="sec-intro">Every answer is retrieved from the same signal set above — Python decides what's true, the model only phrases the response to your specific question.</p>
+  <div class="query-box">
+    <div class="query-input-row">
+      <span class="cursor-txt">How did Buffalo's pass protection hold up in the second half?<span class="blink"></span></span>
+      <span class="query-send">Ask</span>
+    </div>
+    <div class="chip-row">
+      <span class="chip">Why did the Bills win?</span>
+      <span class="chip">What changed after halftime?</span>
+      <span class="chip">Did Jacksonville have a chance?</span>
+    </div>
+    <div class="query-answer">
+      <div class="q">→ How did Buffalo's pass protection hold up in the second half?</div>
+      <div class="a">It didn't, particularly — Buffalo's offensive line gave up pressure at a higher rate after the break, costing them <b>1.1 EP</b> net over the final two quarters. It's the one category Jacksonville actually won, it just wasn't enough to offset the turnover margin.</div>
+    </div>
+  </div>
+
+  <div class="sec-label">
+    <div class="sec-num">04</div>
+    <div class="sec-title">Signal Board</div>
+    <div class="sec-line"></div>
+  </div>
+  <p class="sec-intro">Every family the selection layer tracks, side by side. Bars are illustrative distribution shape, not a literal time series.</p>
+  <div class="signal-grid">
+    <div class="sig-card">
+      <div class="sig-fam">Passing</div>
+      <div class="sig-spark"><i style="height:30%"></i><i style="height:55%"></i><i class="on" style="height:100%"></i><i style="height:40%"></i><i style="height:60%"></i></div>
+      <div class="sig-val pos">4.9</div>
+      <div class="sig-label">EPA/dropback edge, BUF</div>
+    </div>
+    <div class="sig-card">
+      <div class="sig-fam">Rushing</div>
+      <div class="sig-spark"><i style="height:45%"></i><i style="height:30%"></i><i style="height:35%"></i><i class="on" style="height:70%"></i><i style="height:25%"></i></div>
+      <div class="sig-val">0.6</div>
+      <div class="sig-label">EPA/rush edge, BUF</div>
+    </div>
+    <div class="sig-card">
+      <div class="sig-fam">Overall</div>
+      <div class="sig-spark"><i style="height:50%"></i><i class="on" style="height:90%"></i><i style="height:60%"></i><i style="height:70%"></i><i style="height:40%"></i></div>
+      <div class="sig-val pos">12.4</div>
+      <div class="sig-label">Net EP swing, BUF</div>
+    </div>
+    <div class="sig-card">
+      <div class="sig-fam">Situational</div>
+      <div class="sig-spark"><i style="height:20%"></i><i style="height:35%"></i><i style="height:55%"></i><i class="on" style="height:95%"></i><i style="height:30%"></i></div>
+      <div class="sig-val pos">3.1</div>
+      <div class="sig-label">3rd-down EP edge, BUF</div>
+    </div>
+    <div class="sig-card">
+      <div class="sig-fam">Protection</div>
+      <div class="sig-spark"><i style="height:40%"></i><i style="height:60%"></i><i style="height:30%"></i><i style="height:50%"></i><i class="on" style="height:85%"></i></div>
+      <div class="sig-val">-1.1</div>
+      <div class="sig-label">Pressure rate edge, JAX</div>
+    </div>
+  </div>
+
+  <div class="scope-note">
+    Full-vision mockup: M1 (decomposition) and M2 (contrast) form the static article above. M3 layers a query interface over the same selection output for on-demand answers. M4 exposes every signal family as a visual board, letting captions shrink further as the charts carry more of the explanation. Each milestone is additive — none requires re-architecting the layer below it.
+  </div>
+
+</div>
+</body>
+</html>
