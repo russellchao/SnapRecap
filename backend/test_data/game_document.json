@@ -9,6 +9,142 @@
     "home_score": 24
   },
   "signals": {
+    "JAX": {
+      "offense": {
+        "third_down": {
+          "attempts": 9,
+          "successes": 5,
+          "rate": 0.5555555555555556
+        },
+        "fourth_down": {
+          "attempts": 1,
+          "successes": 0,
+          "rate": 0.0
+        },
+        "red_zone_td": {
+          "attempts": 4,
+          "successes": 3,
+          "rate": 0.75
+        },
+        "success_rate": {
+          "attempts": 55,
+          "successes": 29,
+          "rate": 0.5272727272727272
+        },
+        "explosive_rate": {
+          "attempts": 55,
+          "successes": 7,
+          "rate": 0.12727272727272726
+        },
+        "sack_rate": {
+          "attempts": 33,
+          "successes": 1,
+          "rate": 0.030303030303030304
+        },
+        "epa_per_play": {
+          "n": 55,
+          "mean": 0.05391762596680858
+        },
+        "epa_per_pass": {
+          "n": 34,
+          "mean": 0.0626809630761935
+        },
+        "epa_per_rush": {
+          "n": 21,
+          "mean": 0.03972936588494728
+        },
+        "yards_per_play": {
+          "n": 55,
+          "mean": 6.527272727272727
+        },
+        "yards_per_rush": {
+          "n": 21,
+          "mean": 6.0
+        },
+        "cpoe": {
+          "n": 30,
+          "mean": -5.053668220837912
+        },
+        "personnel": {
+          "11 Personnel": 0.7037037037037037,
+          "12 Personnel": 0.2222222222222222,
+          "10 Personnel": 0.037037037037037035,
+          "13 Personnel": 0.018518518518518517,
+          "21 Personnel": 0.018518518518518517
+        }
+      },
+      "defense": {
+        "third_down_allowed": {
+          "attempts": 14,
+          "successes": 7,
+          "rate": 0.5
+        },
+        "red_zone_td_allowed": {
+          "attempts": 3,
+          "successes": 3,
+          "rate": 1.0
+        },
+        "success_rate_allowed": {
+          "attempts": 61,
+          "successes": 29,
+          "rate": 0.47540983606557374
+        },
+        "explosive_rate_allowed": {
+          "attempts": 61,
+          "successes": 5,
+          "rate": 0.08196721311475409
+        },
+        "epa_per_play_allowed": {
+          "n": 61,
+          "mean": 0.22406136035159033
+        },
+        "epa_per_pass_allowed": {
+          "n": 39,
+          "mean": 0.24080957428115468
+        },
+        "epa_per_rush_allowed": {
+          "n": 22,
+          "mean": 0.19437134474918077
+        },
+        "yards_per_play_allowed": {
+          "n": 61,
+          "mean": 5.60655737704918
+        },
+        "yards_per_rush_allowed": {
+          "n": 22,
+          "mean": 3.0
+        },
+        "pressure_rate": {
+          "attempts": 39,
+          "successes": 11,
+          "rate": 0.28205128205128205
+        },
+        "sacks": {
+          "attempts": 39,
+          "successes": 1,
+          "rate": 0.02564102564102564
+        },
+        "blitz_rate": {
+          "attempts": 39,
+          "successes": 11,
+          "rate": 0.28205128205128205
+        },
+        "avg_box_defenders": {
+          "n": 22,
+          "mean": 6.318181818181818
+        },
+        "coverage": {
+          "COVER_2": 0.5128205128205128,
+          "COVER_3": 0.2564102564102564,
+          "COVER_1": 0.1794871794871795,
+          "COVER_0": 0.05128205128205128
+        },
+        "man_zone": {
+          "ZONE_COVERAGE": 0.7692307692307693,
+          "MAN_COVERAGE": 0.23076923076923078
+        }
+      }
+    },
     "BUF": {
       "offense": {
         "third_down": {
@@ -145,142 +281,6 @@
         "man_zone": {
           "ZONE_COVERAGE": 0.7352941176470589,
           "MAN_COVERAGE": 0.2647058823529412
-        }
-      }
-    },
-    "JAX": {
-      "offense": {
-        "third_down": {
-          "attempts": 9,
-          "successes": 5,
-          "rate": 0.5555555555555556
-        },
-        "fourth_down": {
-          "attempts": 1,
-          "successes": 0,
-          "rate": 0.0
-        },
-        "red_zone_td": {
-          "attempts": 4,
-          "successes": 3,
-          "rate": 0.75
-        },
-        "success_rate": {
-          "attempts": 55,
-          "successes": 29,
-          "rate": 0.5272727272727272
-        },
-        "explosive_rate": {
-          "attempts": 55,
-          "successes": 7,
-          "rate": 0.12727272727272726
-        },
-        "sack_rate": {
-          "attempts": 33,
-          "successes": 1,
-          "rate": 0.030303030303030304
-        },
-        "epa_per_play": {
-          "n": 55,
-          "mean": 0.05391762596680858
-        },
-        "epa_per_pass": {
-          "n": 34,
-          "mean": 0.0626809630761935
-        },
-        "epa_per_rush": {
-          "n": 21,
-          "mean": 0.03972936588494728
-        },
-        "yards_per_play": {
-          "n": 55,
-          "mean": 6.527272727272727
-        },
-        "yards_per_rush": {
-          "n": 21,
-          "mean": 6.0
-        },
-        "cpoe": {
-          "n": 30,
-          "mean": -5.053668220837912
-        },
-        "personnel": {
-          "11 Personnel": 0.7037037037037037,
-          "12 Personnel": 0.2222222222222222,
-          "10 Personnel": 0.037037037037037035,
-          "13 Personnel": 0.018518518518518517,
-          "21 Personnel": 0.018518518518518517
-        }
-      },
-      "defense": {
-        "third_down_allowed": {
-          "attempts": 14,
-          "successes": 7,
-          "rate": 0.5
-        },
-        "red_zone_td_allowed": {
-          "attempts": 3,
-          "successes": 3,
-          "rate": 1.0
-        },
-        "success_rate_allowed": {
-          "attempts": 61,
-          "successes": 29,
-          "rate": 0.47540983606557374
-        },
-        "explosive_rate_allowed": {
-          "attempts": 61,
-          "successes": 5,
-          "rate": 0.08196721311475409
-        },
-        "epa_per_play_allowed": {
-          "n": 61,
-          "mean": 0.22406136035159033
-        },
-        "epa_per_pass_allowed": {
-          "n": 39,
-          "mean": 0.24080957428115468
-        },
-        "epa_per_rush_allowed": {
-          "n": 22,
-          "mean": 0.19437134474918077
-        },
-        "yards_per_play_allowed": {
-          "n": 61,
-          "mean": 5.60655737704918
-        },
-        "yards_per_rush_allowed": {
-          "n": 22,
-          "mean": 3.0
-        },
-        "pressure_rate": {
-          "attempts": 39,
-          "successes": 11,
-          "rate": 0.28205128205128205
-        },
-        "sacks": {
-          "attempts": 39,
-          "successes": 1,
-          "rate": 0.02564102564102564
-        },
-        "blitz_rate": {
-          "attempts": 39,
-          "successes": 11,
-          "rate": 0.28205128205128205
-        },
-        "avg_box_defenders": {
-          "n": 22,
-          "mean": 6.318181818181818
-        },
-        "coverage": {
-          "COVER_2": 0.5128205128205128,
-          "COVER_3": 0.2564102564102564,
-          "COVER_1": 0.1794871794871795,
-          "COVER_0": 0.05128205128205128
-        },
-        "man_zone": {
-          "ZONE_COVERAGE": 0.7692307692307693,
-          "MAN_COVERAGE": 0.23076923076923078
         }
       }
     }

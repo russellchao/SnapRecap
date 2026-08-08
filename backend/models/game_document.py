@@ -112,12 +112,9 @@ if __name__ == "__main__":
     df = pd.read_csv(csv_file)
 
     # Obtain the GameHeader attributes obtained from the preprocessed CSV
-    header_attrs = {f: df[f][0] for f in ("season", "week", "away_team", "home_team", "away_score", "home_score")}
+    header_attrs = {f: df[f][0] for f in ("game_id", "season", "week", "away_team", "home_team", "away_score", "home_score")}
     buf_jax_header = GameHeader(
-        game_id = f"{
-            header_attrs['season']}_{header_attrs['week'] < 10 and '0' + str(header_attrs['week']) or 
-            str(header_attrs['week'])}_{header_attrs['away_team']}_{header_attrs['home_team']
-        }",
+        game_id = f"{header_attrs['game_id']}",
         season = header_attrs['season'],
         week = header_attrs['week'],
         away_team = header_attrs['away_team'],
