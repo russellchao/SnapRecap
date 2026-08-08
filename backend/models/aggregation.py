@@ -11,6 +11,27 @@ points did this category actually contribute to the final margin."
 Sign convention: diff = home_ep - away_ep.
   positive -> home team advantage
   negative -> away team advantage
+
+--- On reconciliation ---
+EPA is already denominated in points, so there is no unit conversion
+step. What there IS is a coverage problem: categories can overlap (a
+3rd-down explosive pass matches two filters) and most plays don't match
+any named category at all. Both are solved the same way — each play is
+claimed by exactly one category, in LEDGER_CATEGORIES priority order,
+and anything left over falls into "other".
+
+Once every play with a valid posteam is claimed exactly once, summing
+category diffs is a real accounting identity, not an approximation: for
+any single play, crediting -epa to the defense produces the identical
+contribution to (home_ep - away_ep) as leaving the offense's own raw epa
+in place. So categorized_diff == total_epa_diff by construction — that
+equality isn't something to test for, it's guaranteed by the partition.
+
+What's NOT guaranteed, and never will be, is total_epa_diff == actual
+score margin. EPA is a probabilistic model of point value, not a ledger
+— special teams variance, garbage time, kneel-downs, and model residual
+mean this gap is normal. Report it as a diagnostic (epa_vs_score_gap),
+don't chase it to zero.
 """
 
 from __future__ import annotations
@@ -35,9 +56,30 @@ except ImportError:
 # ledger — most categories credit the possessing team (posteam), but
 # turnovers and pass-protection failures are credited to the defense,
 # since that's the team the EP swing actually benefits.
+#
+# Order in LEDGER_CATEGORIES is claim PRIORITY: a play matching more than
+# one filter (e.g. a 3rd-down interception) is claimed by whichever
+# category comes first in the list, and excluded from the rest. This
+# ordering is a real design choice, not an implementation detail — it
+# decides whether that interception reads as a turnover or a third-down
+# stop. Reorder if a different priority tells a truer story.
 
 def _is_turnover(play: Play) -> bool:
     return bool(play.interception or play.fumble_lost)
+
+def _is_protection_play(play: Play) -> bool:
+    # Matches sack_rate/pressure_rate's population: dropbacks, not all
+    # pass plays (a screen with no dropback shouldn't count here).
+    return bool(play.qb_dropback and (play.sack or play.was_pressure))
+
+def _is_penalty(play: Play) -> bool:
+    # epa already reflects the penalty's net effect on posteam correctly
+    # regardless of which team was flagged, so no credit-defense flip
+    # is needed here.
+    return bool(play.penalty)
+
+def _is_special_teams(play: Play) -> bool:
+    return bool(play.is_special)
 
 def _is_third_down(play: Play) -> bool:
     # Matches third_down_conversion's population exactly (not down == 3,
@@ -46,11 +88,6 @@ def _is_third_down(play: Play) -> bool:
 
 def _is_red_zone(play: Play) -> bool:
     return play.yardline_100 is not None and play.yardline_100 <= 20
-
-def _is_protection_play(play: Play) -> bool:
-    # Matches sack_rate/pressure_rate's population: dropbacks, not all
-    # pass plays (a screen with no dropback shouldn't count here).
-    return bool(play.qb_dropback and (play.sack or play.was_pressure))
 
 def _is_explosive(play: Play) -> bool:
     if play.yards_gained is None:
@@ -71,10 +108,12 @@ class CategoryFilter:
 
 LEDGER_CATEGORIES: List[CategoryFilter] = [
     CategoryFilter("turnovers", _is_turnover, credit_defense=True),
-    CategoryFilter("third_down", _is_third_down),
-    CategoryFilter("red_zone", _is_red_zone),
-    CategoryFilter("explosive_plays", _is_explosive),
     CategoryFilter("pass_protection", _is_protection_play, credit_defense=True),
+    CategoryFilter("penalties", _is_penalty),
+    CategoryFilter("special_teams", _is_special_teams),
+    CategoryFilter("red_zone", _is_red_zone),
+    CategoryFilter("third_down", _is_third_down),
+    CategoryFilter("explosive_plays", _is_explosive),
 ]
 
 
@@ -98,36 +137,35 @@ class GameLedger:
     away_team: str
     home_score: Optional[int]
     away_score: Optional[int]
-    categories: Dict[str, CategoryLedger]
-    reconciliation: float  # sum(category diffs); TODO once EP->points conversion exists
+    categories: Dict[str, CategoryLedger]           # includes "other"
+    categorized_diff: float                          # sum of category diffs
+    total_epa_diff: float                             # raw total, all plays — should equal categorized_diff exactly
+    epa_vs_score_gap: Optional[float]                 # total_epa_diff - actual margin; diagnostic only, not forced to 0
 
 
-def _credit_team(play: Play, cat: CategoryFilter) -> Optional[str]:
-    return play.defteam if cat.credit_defense else play.posteam
+def _credit(play: Play, credit_defense: bool):
+    """Returns (credited_team, credited_epa) for a play under this category's rule."""
+    raw_epa = play.epa or 0.0
+    if credit_defense:
+        return play.defteam, -raw_epa
+    return play.posteam, raw_epa
 
 
-def aggregate_category(
-    plays: List[Play], home_team: str, away_team: str, cat: CategoryFilter
-) -> CategoryLedger:
+def _sum_plays(plays: List[Play], home_team: str, away_team: str, credit_defense: bool) -> CategoryLedger:
     home_ep = away_ep = 0.0
     home_n = away_n = 0
+
     for play in plays:
-        if not cat.play_filter(play):
-            continue
-        team = _credit_team(play, cat)
-        raw_epa = play.epa or 0.0
-        # epa is signed from posteam's perspective. When crediting the
-        # defense, flip the sign — a -5.5 EPA interception is a +5.5 swing
-        # for the team that forced it, not a -5.5 one.
-        epa = -raw_epa if cat.credit_defense else raw_epa
+        team, epa = _credit(play, credit_defense)
         if team == home_team:
             home_ep += epa
             home_n += 1
         elif team == away_team:
             away_ep += epa
             away_n += 1
+            
     return CategoryLedger(
-        category=cat.name,
+        category="",  # filled in by caller
         home_ep=home_ep,
         away_ep=away_ep,
         diff=home_ep - away_ep,
@@ -137,12 +175,46 @@ def aggregate_category(
 
 
 def build_ledger(doc: GameDocument) -> GameLedger:
-    home, away = doc.header.home_team, doc.header.away_team
-    categories = {
-        cat.name: aggregate_category(doc.plays, home, away, cat)
-        for cat in LEDGER_CATEGORIES
-    }
-    reconciliation = sum(c.diff for c in categories.values())
+    home = doc.header.home_team
+    away = doc.header.away_team
+    plays = doc.plays
+
+    claimed: set = set()
+    categories: Dict[str, CategoryLedger] = {}
+
+    for cat in LEDGER_CATEGORIES:
+        cat_plays = [p for p in plays if id(p) not in claimed and cat.play_filter(p)]
+        claimed.update(id(p) for p in cat_plays)
+        ledger = _sum_plays(cat_plays, home, away, cat.credit_defense)
+        ledger.category = cat.name
+        categories[cat.name] = ledger
+
+    # Everything else with a real possession — normal downs, standard
+    # completions/runs, whatever no named category claimed. Offense-credited,
+    # same as any uncategorized scrimmage play would be.
+    other_plays = [
+        p for p in plays
+        if id(p) not in claimed and p.posteam in (home, away)
+    ]
+    other_ledger = _sum_plays(other_plays, home, away, credit_defense=False)
+    other_ledger.category = "other"
+    categories["other"] = other_ledger
+
+    categorized_diff = sum(c.diff for c in categories.values())
+
+    # Independent total, computed without any category logic at all — every
+    # play's raw epa, credited to its own posteam. Should equal
+    # categorized_diff exactly (see module docstring). Any gap here means a
+    # play was double-claimed or dropped, i.e. a real bug, not noise.
+    total_home = sum((p.epa or 0.0) for p in plays if p.posteam == home)
+    total_away = sum((p.epa or 0.0) for p in plays if p.posteam == away)
+    total_epa_diff = total_home - total_away
+
+    epa_vs_score_gap = None
+    if doc.header.home_score is not None and doc.header.away_score is not None:
+        actual_margin = doc.header.home_score - doc.header.away_score
+        epa_vs_score_gap = total_epa_diff - actual_margin
+
     return GameLedger(
         game_id=doc.header.game_id,
         home_team=home,
@@ -150,33 +222,49 @@ def build_ledger(doc: GameDocument) -> GameLedger:
         home_score=doc.header.home_score,
         away_score=doc.header.away_score,
         categories=categories,
-        reconciliation=reconciliation,
+        categorized_diff=categorized_diff,
+        total_epa_diff=total_epa_diff,
+        epa_vs_score_gap=epa_vs_score_gap,
     )
 
 
 
 
 if __name__ == "__main__":
-    # NOTE: For testing purposes only. Loads plays directly from the
-    # sample game_document.json rather than rebuilding via GameDocument.build,
-    # since the JSON is already a flattened dict of Play fields.
+    # NOTE: For testing purposes only.
+    # Build the game ledger from the loaded game document JSON.
+
     json_file = "../test_data/game_document.json"
     with open(json_file) as f:
         raw = json.load(f)
 
     plays = [Play(**p) for p in raw["plays"]]
-    home, away = raw["header"]["home_team"], raw["header"]["away_team"]
+    header = raw["header"]
+    home, away = header["home_team"], header["away_team"]
+
+    class _Doc:
+        pass
+    doc = _Doc()
+    doc.plays = plays
+    class _Header:
+        pass
+    h = _Header()
+    for k, v in header.items():
+        setattr(h, k, v)
+    doc.header = h
+
+    ledger = build_ledger(doc)  # type: ignore[arg-type]
 
     print(f"{away} @ {home}\n")
-    for cat in LEDGER_CATEGORIES:
-        ledger = aggregate_category(plays, home, away, cat)
+    for name, c in ledger.categories.items():
         print(
-            f"{ledger.category:16s}  "
-            f"{home} {ledger.home_ep:+.2f} ({ledger.home_plays}p)   "
-            f"{away} {ledger.away_ep:+.2f} ({ledger.away_plays}p)   "
-            f"diff {ledger.diff:+.2f}"
+            f"{name:16s}  "
+            f"{home} {c.home_ep:+.2f} ({c.home_plays}p)   "
+            f"{away} {c.away_ep:+.2f} ({c.away_plays}p)   "
+            f"diff {c.diff:+.2f}"
         )
 
-    net = sum(aggregate_category(plays, home, away, c).diff for c in LEDGER_CATEGORIES)
-    print(f"\nreconciliation (sum of category diffs): {net:+.2f}")
-    print(f"actual margin: {raw['header']['home_score'] - raw['header']['away_score']:+d}")
+    print(f"\ncategorized_diff:  {ledger.categorized_diff:+.2f}")
+    print(f"total_epa_diff:    {ledger.total_epa_diff:+.2f}  (should match categorized_diff exactly)")
+    print(f"epa_vs_score_gap:  {ledger.epa_vs_score_gap:+.2f}  (diagnostic only — expected to be nonzero)")
+    print(f"actual margin:     {header['home_score'] - header['away_score']:+d}")
