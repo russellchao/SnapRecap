@@ -122,25 +122,25 @@ LEDGER_CATEGORIES: List[CategoryFilter] = [
 @dataclass
 class CategoryLedger:
     category: str
-    home_ep: float
     away_ep: float
+    home_ep: float
     diff: float          # home_ep - away_ep
-    home_plays: int
     away_plays: int
+    home_plays: int
 
 
 @dataclass
 class GameLedger:
     """DB entity: nflverse game_id as PK, teams/scores, per-category diffs."""
     game_id: str
-    home_team: str
     away_team: str
-    home_score: Optional[int]
+    home_team: str
     away_score: Optional[int]
+    home_score: Optional[int]
     categories: Dict[str, CategoryLedger]           # includes "other"
-    categorized_diff: float                          # sum of category diffs
-    total_epa_diff: float                             # raw total, all plays — should equal categorized_diff exactly
-    epa_vs_score_gap: Optional[float]                 # total_epa_diff - actual margin; diagnostic only, not forced to 0
+    categorized_diff: float                         # sum of category diffs
+    total_epa_diff: float                           # raw total, all plays — should equal categorized_diff exactly
+    epa_vs_score_gap: Optional[float]               # total_epa_diff - actual margin; diagnostic only, not forced to 0
 
 
 def _credit(play: Play, credit_defense: bool):
@@ -166,11 +166,11 @@ def _sum_plays(plays: List[Play], home_team: str, away_team: str, credit_defense
             
     return CategoryLedger(
         category="",  # filled in by caller
-        home_ep=home_ep,
         away_ep=away_ep,
+        home_ep=home_ep,
         diff=home_ep - away_ep,
-        home_plays=home_n,
         away_plays=away_n,
+        home_plays=home_n,
     )
 
 
@@ -217,10 +217,10 @@ def build_ledger(doc: GameDocument) -> GameLedger:
 
     return GameLedger(
         game_id=doc.header.game_id,
-        home_team=home,
         away_team=away,
-        home_score=doc.header.home_score,
+        home_team=home,
         away_score=doc.header.away_score,
+        home_score=doc.header.home_score,
         categories=categories,
         categorized_diff=categorized_diff,
         total_epa_diff=total_epa_diff,
