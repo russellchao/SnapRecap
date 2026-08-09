@@ -64,7 +64,7 @@ if __name__ == "__main__":
     
     game_id = f"{season}_{week < 10 and '0' + str(week) or str(week)}_{away_team}_{home_team}"
 
-    pbp_data = get_pbp_data(game_id)
+    pbp_data = get_pbp_data(season, game_id)
     participation_data = get_participation_data(season, game_id)
 
     if isinstance(pbp_data, pd.DataFrame):
