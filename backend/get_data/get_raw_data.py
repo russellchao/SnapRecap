@@ -12,7 +12,7 @@ import pandas as pd
 import sys
 
 
-def get_pbp_data(game_id):
+def get_pbp_data(season, game_id):
     try: 
         pbp = nfl.load_pbp(season).to_pandas()
         filtered_pbp = pbp[(pbp['game_id'] == game_id)]
