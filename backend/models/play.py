@@ -233,9 +233,9 @@ def _players_engine():
 
     Cached so the ~3 lookups per play don't each spin up a new connection pool.
     """
-    database_url = os.getenv("SUPABASE_URL")
+    database_url = os.getenv("DATABASE_URL")
     if not database_url:
-        raise RuntimeError("SUPABASE_URL environment variable is not set.")
+        raise RuntimeError("DATABASE_URL environment variable is not set.")
     return create_engine(database_url)
 
 

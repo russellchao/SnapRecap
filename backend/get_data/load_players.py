@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
 
 # Load backend/.env regardless of the directory the CRON job runs this from,
-# so SUPABASE_URL is available. load_players.py lives in backend/get_data/,
+# so DATABASE_URL is available. load_players.py lives in backend/get_data/,
 # so parents[1] is backend/.
 load_dotenv(Path(__file__).resolve().parents[1] / ".env")
 
@@ -50,9 +50,9 @@ def write_to_db(players):
         print(players)  # Prints out the error message
         return
 
-    database_url = os.getenv("SUPABASE_URL")
+    database_url = os.getenv("DATABASE_URL")
     if not database_url:
-        print("Error: SUPABASE_URL environment variable is not set.")
+        print("Error: DATABASE_URL environment variable is not set.")
         return
 
     print("Writing player data to the database...")
