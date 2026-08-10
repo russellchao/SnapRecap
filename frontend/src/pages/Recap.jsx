@@ -22,7 +22,7 @@ function splitTeamName(displayName) {
 }
 
 export default function Recap() {
-    const { gameId } = useParams();
+    const { season, week, away_team, home_team } = useParams();
     const { state } = useLocation();
     const game = state?.game;
     const status = game?.status || "Unknown";

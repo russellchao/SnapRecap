@@ -6,6 +6,20 @@ import { fetchGamesByTeamOnly, fetchGamesByWeekOnly, fetchGamesByTeamAndWeek } f
 import Gamecard from '../components/Gamecard'
 
 
+// nflreadpy / nflverse PBP data uses team abbreviations (e.g. "BUF"), but the
+// game object carries full display names (e.g. "Buffalo Bills"). Map between them.
+const TEAM_ABBR = {
+    "Arizona Cardinals": "ARI", "Atlanta Falcons": "ATL", "Baltimore Ravens": "BAL", "Buffalo Bills": "BUF",
+    "Carolina Panthers": "CAR", "Chicago Bears": "CHI", "Cincinnati Bengals": "CIN", "Cleveland Browns": "CLE",
+    "Dallas Cowboys": "DAL", "Denver Broncos": "DEN", "Detroit Lions": "DET", "Green Bay Packers": "GB",
+    "Houston Texans": "HOU", "Indianapolis Colts": "IND", "Jacksonville Jaguars": "JAX", "Kansas City Chiefs": "KC",
+    "Las Vegas Raiders": "LV", "Los Angeles Chargers": "LAC", "Los Angeles Rams": "LA", "Miami Dolphins": "MIA",
+    "Minnesota Vikings": "MIN", "New England Patriots": "NE", "New Orleans Saints": "NO", "New York Giants": "NYG",
+    "New York Jets": "NYJ", "Philadelphia Eagles": "PHI", "Pittsburgh Steelers": "PIT", "San Francisco 49ers": "SF",
+    "Seattle Seahawks": "SEA", "Tampa Bay Buccaneers": "TB", "Tennessee Titans": "TEN", "Washington Commanders": "WAS",
+};
+
+
 export default function Games() {
   const [season, setSeason] = useState("");
   const [week, setWeek] = useState("");
@@ -18,7 +32,10 @@ export default function Games() {
   // The full game object is passed along via router state so the recap
   // page can render without refetching.
   const handleViewRecap = (game) => {
-    navigate(`/recap/${game.espn_id}`, { state: { game } });
+    navigate(
+      `/recap/${game.season}/${game.week}/${TEAM_ABBR[game.away_team] ?? game.away_team}/${TEAM_ABBR[game.home_team] ?? game.home_team}`, 
+      { state: { game } }
+    );
   };
 
 
