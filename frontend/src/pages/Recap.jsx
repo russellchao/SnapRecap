@@ -36,7 +36,7 @@ export default function Recap() {
         // run from writing state back after the real one has already resolved.
         let stale = false;
         setLoading(true);
-        fetchRecap(season, week, away_team, home_team)
+        fetchRecap(season, week, away_team, home_team, game.away_score, game.home_score)
             .then(({ status }) => {
                 if (!stale) setRecapStatus(status);
             })

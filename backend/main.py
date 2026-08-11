@@ -51,11 +51,13 @@ def refresh_players_endpoint(
     return {"status": "accepted", "detail": "Player data refresh started."}
 
 
-@app.get("/get_recap/{season}/{week}/{away_team}/{home_team}")
-def get_recap_endpoint(season: str, week: str, away_team: str, home_team: str):
+@app.get("/get_recap/{season}/{week}/{away_team}/{home_team}/{away_score}/{home_score}/")
+def get_recap_endpoint(season: str, week: str, away_team: str, home_team: str, away_score: str, home_score: str):
 
     game_id = f"{season}_{int(week) < 10 and '0' + str(week) or str(week)}_{away_team}_{home_team}"
-    _game_ledger, _anchor_plays, _recap_cache, _signals = get_recap(season, week, away_team, home_team, game_id)
+    _game_ledger, _anchor_plays, _recap_cache, _signals = get_recap(
+        game_id, season, week, away_team, home_team, int(away_score), int(home_score) 
+    )
 
     return {
         "game_ledger": _game_ledger,

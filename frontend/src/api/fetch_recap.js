@@ -14,8 +14,8 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 */
 const inFlight = new Map();
 
-export function fetchRecap(season, week, away_team, home_team) {
-    const url = `${API_BASE_URL}/get_recap/${season}/${week}/${away_team}/${home_team}`;
+export function fetchRecap(season, week, away_team, home_team, away_score, home_score) {
+    const url = `${API_BASE_URL}/get_recap/${season}/${week}/${away_team}/${home_team}/${away_score}/${home_score}/`;
 
     const pending = inFlight.get(url);
     if (pending) return pending;

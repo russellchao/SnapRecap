@@ -15,7 +15,7 @@ supabase = client.create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_K
 
 # ------ Helper function to build the GameDocument object ------
 
-def build_game_doc(season: str, week: str, away_team: str, home_team: str, game_id: str):
+def build_game_doc(game_id: str, season: str, week: str, away_team: str, home_team: str, away_score: int, home_score: int):
     # Get the PBP and Participation data for the requested game
     pbp_data = get_raw_data.get_pbp_data(int(season), game_id)
     if not isinstance(pbp_data, pd.DataFrame):
@@ -38,6 +38,8 @@ def build_game_doc(season: str, week: str, away_team: str, home_team: str, game_
         week=week,
         away_team=away_team,
         home_team=home_team,
+        away_score=away_score,
+        home_score=home_score,
     )
     plays = game_document.plays_from_frame(merged_df)
     game_doc = game_document.GameDocument.build(plays, header)
@@ -49,12 +51,12 @@ def build_game_doc(season: str, week: str, away_team: str, home_team: str, game_
 # ------ Helper function to build the necessary recap components and save to the DB ------
 
 def build_recap(
-        season: str, week: str, away_team: str, home_team: str, game_id: str,
+        game_id: str, season: str, week: str, away_team: str, home_team: str, away_score: int, home_score: int,
         game_ledgers_exist: bool, anchor_plays_exist: bool, recap_cache_exist: bool, signals_exist: bool
     ):
 
     # Build the GameDocument for the requested game
-    game_doc = build_game_doc(season, week, away_team, home_team, game_id)
+    game_doc = build_game_doc(game_id, season, week, away_team, home_team, away_score, home_score)
     if not isinstance(game_doc, game_document.GameDocument):
         print(f"Error: Failed to build GameDocument for {game_id}.")
         return None, None, None, None
@@ -83,7 +85,7 @@ def build_recap(
 
 # ------ Main function ------
 
-def get_recap(season: str, week: str, away_team: str, home_team: str, game_id: str): 
+def get_recap(game_id: str, season: str, week: str, away_team: str, home_team: str, away_score: int, home_score: int): 
     # Get the game ledgers, anchor plays, recap cache, and signals for the requested game ID from the DB,
     # and build the components if they don't exist
 
@@ -114,7 +116,7 @@ def get_recap(season: str, week: str, away_team: str, home_team: str, game_id: s
     #NOTE: Add each component's flag to this list as you implement it.
     if False in [game_ledgers_exist]:
         built_ledger, built_anchors, built_cache, built_signals = build_recap(
-            season, week, away_team, home_team, game_id,
+            game_id, season, week, away_team, home_team, away_score, home_score,
             game_ledgers_exist, anchor_plays_exist, recap_cache_exist, signals_exist
         )
         _game_ledger = _game_ledger if game_ledgers_exist else built_ledger
