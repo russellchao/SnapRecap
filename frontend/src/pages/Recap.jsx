@@ -27,6 +27,7 @@ export default function Recap() {
     const game = state?.game;
     const status = game?.status || "Unknown";
 
+    const [recap, setRecap] = useState(null);
     const [recapStatus, setRecapStatus] = useState(null);
     const [loading, setLoading] = useState(false);
 
@@ -37,8 +38,12 @@ export default function Recap() {
         let stale = false;
         setLoading(true);
         fetchRecap(season, week, away_team, home_team, game.away_score, game.home_score)
-            .then(({ status }) => {
-                if (!stale) setRecapStatus(status);
+            .then(({ status, data }) => {
+                if (!stale) {
+                    setRecapStatus(status);
+                    setRecap(data);
+                    console.log("Fetched recap data:", data);
+                }
             })
             .finally(() => {
                 if (!stale) setLoading(false);
