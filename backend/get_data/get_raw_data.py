@@ -20,7 +20,7 @@ def get_pbp_data(season, game_id):
         if filtered_pbp.empty:
             return {
                 f"Error": 
-                f"Play-by-play data not available for the game: {away_team} vs. {home_team} in Week {week} of the {season} Season"
+                f"Play-by-play data not available for the game with ID: {game_id}"
             }
 
         return filtered_pbp
@@ -28,7 +28,7 @@ def get_pbp_data(season, game_id):
     except Exception as e:
         return {
             f"Error": 
-            f"An error occurred while fetching play-by-play data for the game: {away_team} vs. {home_team} in Week {week} of the {season} Season. Details: {str(e)}"
+            f"An error occurred while fetching play-by-play data for the game with ID: {game_id}. Details: {str(e)}"
         }
 
 

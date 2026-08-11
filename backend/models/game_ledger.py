@@ -124,9 +124,19 @@ class CategoryLedger:
     category: str
     away_ep: float
     home_ep: float
-    diff: float          # home_ep - away_ep
+    diff: float     # home_ep - away_ep
     away_plays: int
     home_plays: int
+
+    def to_dict(self) -> Dict:
+        return {
+            "category": self.category,
+            "away_ep": round(self.away_ep, 2),
+            "home_ep": round(self.home_ep, 2),
+            "diff": round(self.diff, 2),
+            "away_plays": self.away_plays,
+            "home_plays": self.home_plays,
+        }
 
 
 @dataclass
@@ -141,6 +151,22 @@ class GameLedger:
     categorized_diff: float                         # sum of category diffs
     total_epa_diff: float                           # raw total, all plays — should equal categorized_diff exactly
     epa_vs_score_gap: Optional[float]               # total_epa_diff - actual margin; diagnostic only, not forced to 0
+
+    def to_dict(self) -> Dict:
+        return {
+            "game_id": self.game_id,
+            "away_team": self.away_team,
+            "home_team": self.home_team,
+            "away_score": self.away_score,
+            "home_score": self.home_score,
+            "categories": {k: v.to_dict() for k, v in self.categories.items()},
+            "categorized_diff": round(self.categorized_diff, 2),
+            "total_epa_diff": round(self.total_epa_diff, 2),
+            "epa_vs_score_gap": (
+                None if self.epa_vs_score_gap is None
+                else round(self.epa_vs_score_gap, 2)
+            ),
+        }
 
 
 def _credit(play: Play, credit_defense: bool):

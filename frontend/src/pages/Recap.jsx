@@ -32,11 +32,19 @@ export default function Recap() {
 
     useEffect(() => {
         if (!game) return;
+        // StrictMode runs effects twice in dev; `stale` keeps the discarded first
+        // run from writing state back after the real one has already resolved.
+        let stale = false;
         setLoading(true);
-        fetchRecap(game.season, game.week, game.away_team, game.home_team)
-            .then(({ status }) => setRecapStatus(status))
-            .finally(() => setLoading(false));
-    }, [game]);
+        fetchRecap(season, week, away_team, home_team)
+            .then(({ status }) => {
+                if (!stale) setRecapStatus(status);
+            })
+            .finally(() => {
+                if (!stale) setLoading(false);
+            });
+        return () => { stale = true; };
+    }, [season, week, away_team, home_team]);
 
     /*
         The game object is passed via router state from the games list.

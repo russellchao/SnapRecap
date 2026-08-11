@@ -6,8 +6,8 @@ import os
 from dotenv import load_dotenv
 
 # Internal Modules
-from get_data.get_raw_data import get_pbp_data, get_participation_data
 from get_data.load_players import refresh_players
+from get_recap import get_recap, build_recap
 
 
 load_dotenv()
@@ -28,30 +28,10 @@ def health():
     return {"status": "ok"}
 
 
-@app.get("/pbp/{season}/{week}/{away}/{home}")
-def get_pbp_data_endpoint(season: int, week: int, away: str, home: str):
-    #NOTE: Placeholder endpoint. Will eventually replace.
-
-    pbp_stats = get_pbp_data(season, week, away, home)
-
-    if isinstance(pbp_stats, pd.DataFrame):
-        return {
-            "Success":
-            f"Play-by-play data exists for the game: {away} vs. {home} in Week {week} of the {season} Season",
-        }
-
-    print(pbp_stats["Error"])
-    raise HTTPException(
-        status_code=404,
-        detail=pbp_stats["Error"],
-    )
-
-
 @app.post("/players/refresh", status_code=202)
 def refresh_players_endpoint(
     background_tasks: BackgroundTasks, authorization: str = Header(None),
 ):
-    
     #TODO: Enable the pg_net extension in Supabase to run the CRON scheduler on this endpoint
 
     # Triggered by an external scheduler (i.e. Supabase pg_cron via pg_net).
@@ -69,6 +49,20 @@ def refresh_players_endpoint(
     # DB write takes several seconds and the caller doesn't need to wait.
     background_tasks.add_task(refresh_players)
     return {"status": "accepted", "detail": "Player data refresh started."}
+
+
+@app.get("/get_recap/{season}/{week}/{away_team}/{home_team}")
+def get_recap_endpoint(season: str, week: str, away_team: str, home_team: str):
+
+    game_id = f"{season}_{int(week) < 10 and '0' + str(week) or str(week)}_{away_team}_{home_team}"
+    _game_ledger, _anchor_plays, _recap_cache, _signals = get_recap(season, week, away_team, home_team, game_id)
+
+    return {
+        "game_ledger": _game_ledger,
+        "anchor_plays": _anchor_plays,
+        "recap_cache": _recap_cache,
+        "signals": _signals,
+    }
 
 
 #NOTE: Run the FastAPI App locally with: uvicorn main:app --reload
