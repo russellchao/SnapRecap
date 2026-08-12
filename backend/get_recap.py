@@ -52,7 +52,7 @@ def build_game_doc(game_id: str, season: str, week: str, away_team: str, home_te
 
 def build_recap(
         game_id: str, season: str, week: str, away_team: str, home_team: str, away_score: int, home_score: int,
-        game_ledgers_exist: bool, anchor_plays_exist: bool, recap_cache_exist: bool, signals_exist: bool
+        game_ledgers_exist: bool, anchor_plays_exist: bool, team_signals_exist: bool, recap_cache_exist: bool
     ):
 
     # Build the GameDocument for the requested game
@@ -61,7 +61,7 @@ def build_recap(
         print(f"Error: Failed to build GameDocument for {game_id}.")
         return None, None, None, None
 
-    _game_ledger, _anchor_plays, _recap_cache, _signals = None, None, None, None
+    _game_ledger, _anchor_plays, _team_signals, _recap_cache = None, None, None, None
 
     if not game_ledgers_exist:
         _game_ledger = game_ledger.build_ledger(game_doc).to_dict()
@@ -72,28 +72,48 @@ def build_recap(
         # TODO: Build anchor plays and write to DB
         pass
 
+    if not team_signals_exist:
+        game_doc_dict = game_doc.to_dict()
+        away_team_signals = game_doc_dict.get("signals", {}).get(away_team, {})
+        home_team_signals = game_doc_dict.get("signals", {}).get(home_team, {})
+        away_signals_db_row = {
+            "game_id": game_id,
+            "team": away_team,
+            "offense": away_team_signals.get("offense"),
+            "defense": away_team_signals.get("defense")
+        }
+        home_signals_db_row = {
+            "game_id": game_id,
+            "team": home_team,
+            "offense": home_team_signals.get("offense"),
+            "defense": home_team_signals.get("defense")
+        }
+        supabase.table("team_signals").insert(away_signals_db_row).execute()
+        supabase.table("team_signals").insert(home_signals_db_row).execute()
+        print(f"Inserted home and away team signals for {game_id} into the DB")
+        _team_signals = {
+            away_team: away_signals_db_row,
+            home_team: home_signals_db_row
+        }
+
     if not recap_cache_exist:
         # TODO: Build recap cache and write to DB
         pass
-    
-    if not signals_exist:
-        # TODO: Build signals and write to DB
-        pass
 
-    return _game_ledger, _anchor_plays, _recap_cache, _signals
+    return _game_ledger, _anchor_plays, _team_signals, _recap_cache
 
 
 # ------ Main function ------
 
 def get_recap(game_id: str, season: str, week: str, away_team: str, home_team: str, away_score: int, home_score: int): 
-    # Get the game ledgers, anchor plays, recap cache, and signals for the requested game ID from the DB,
+    # Get the game ledgers, anchor plays, team signals, and recap cache for the requested game ID from the DB,
     # and build the components if they don't exist
 
-    game_ledgers_exist, anchor_plays_exist, recap_cache_exist, signals_exist = False, False, False, False
-    _game_ledger, _anchor_plays, _recap_cache, _signals = None, None, None, None
+    game_ledgers_exist, anchor_plays_exist, team_signals_exist, recap_cache_exist = False, False, False, False
+    _game_ledger, _anchor_plays, _team_signals, _recap_cache = None, None, None, None
 
     # Check if each of the four components exist in the DB
-    #NOTE: For now, only the game ledger entity exists in the DB, edit as you add each component
+    #NOTE: For now, only the game ledger and team signals entity exists in the DB, edit as you add each component
     try:
         response = (
             supabase.table("game_ledgers")
@@ -113,15 +133,32 @@ def get_recap(game_id: str, season: str, week: str, away_team: str, home_team: s
         # Fall back to rebuilding rather than failing the whole request — a lookup failure is indistinguishable from a cache miss here.
         print(f"Error: game ledger lookup for {game_id} failed ({e}), it will be built")
 
-    #NOTE: Add each component's flag to this list as you implement it.
-    if False in [game_ledgers_exist]:
-        built_ledger, built_anchors, built_cache, built_signals = build_recap(
+    try:
+        response = (
+            supabase.table("team_signals")
+            .select("*")
+            .eq("game_id", game_id)
+            .execute()
+        )
+        team_signals_rows = response.data or []
+        # One row per team, so both the away and home rows have to be present to count as cached.
+        if len(team_signals_rows) >= 2:
+            _team_signals = {row["team"]: row for row in team_signals_rows}
+            team_signals_exist = True
+            print(f"Found cached team signals for {game_id}")
+        else:
+            print(f"No team signals found for {game_id}, they will be built")
+    except Exception as e:
+        print(f"Error: team signals lookup for {game_id} failed ({e}), they will be built")
+
+    if False in [game_ledgers_exist, anchor_plays_exist, team_signals_exist, recap_cache_exist]:
+        built_ledger, built_anchors, built_signals, built_cache = build_recap(
             game_id, season, week, away_team, home_team, away_score, home_score,
-            game_ledgers_exist, anchor_plays_exist, recap_cache_exist, signals_exist
+            game_ledgers_exist, anchor_plays_exist, team_signals_exist, recap_cache_exist
         )
         _game_ledger = _game_ledger if game_ledgers_exist else built_ledger
         _anchor_plays = _anchor_plays if anchor_plays_exist else built_anchors
+        _team_signals = _team_signals if team_signals_exist else built_signals
         _recap_cache = _recap_cache if recap_cache_exist else built_cache
-        _signals = _signals if signals_exist else built_signals
 
-    return _game_ledger, _anchor_plays, _recap_cache, _signals
+    return _game_ledger, _anchor_plays, _team_signals, _recap_cache
