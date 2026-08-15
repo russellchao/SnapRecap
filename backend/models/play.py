@@ -74,6 +74,9 @@ class Play:
     is_pass: Optional[bool]
     is_rush: Optional[bool]
     is_special: Optional[bool]
+    extra_point_attempt: Optional[bool]
+    two_point_attempt: Optional[bool]
+    field_goal_attempt: Optional[bool]
     shotgun: Optional[bool]
     no_huddle: Optional[bool]
     qb_dropback: Optional[bool]
@@ -159,6 +162,9 @@ class Play:
             is_pass=_bool(g("pass")),
             is_rush=_bool(g("rush")),
             is_special=_bool(g("special")),
+            extra_point_attempt=_bool(g("extra_point_attempt")),
+            two_point_attempt=_bool(g("two_point_attempt")),
+            field_goal_attempt=_bool(g("field_goal_attempt")),
             shotgun=_bool(g("shotgun")),
             no_huddle=_bool(g("no_huddle")),
             qb_dropback=_bool(g("qb_dropback")),
