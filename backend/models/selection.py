@@ -1,7 +1,7 @@
 """Selection layer: projects a lossless GameDocument into a selected, prompt-ready structure.
 
 Anchor-only. Category attribution (the margin decomposition ledger) lives in
-aggregation.py; this layer's sole job is picking the dramatic WPA-swing plays.
+game_ledger.py; this layer's sole job is picking the plays that mattered most.
 """
 
 from dataclasses import dataclass, field, asdict
@@ -18,7 +18,6 @@ class SelectedPlay:
     """An anchor play chosen for the prompt."""
     play: Play
     anchor_wpa: float
-    go_ahead_score: bool = False   # placeholder; real go-ahead/game-tying detection is deferred
 
 @dataclass
 class RecapSelection:
@@ -27,16 +26,10 @@ class RecapSelection:
     anchors: list[SelectedPlay] = field(default_factory=list)
 
     @classmethod
-    def build(
-        cls, document: GameDocument, threshold: float | None = None,
-        min_anchors: int | None = None, max_anchors: int | None = None,
-    ) -> "RecapSelection":
+    def build(cls, document: GameDocument, max_anchors: int | None = None) -> "RecapSelection":
         """Project a GameDocument into its anchor selection."""
         anchors = _select_anchors(
-            document,
-            threshold=threshold if threshold is not None else ANCHOR_WPA_THRESHOLD,
-            min_anchors=min_anchors if min_anchors is not None else MIN_ANCHORS,
-            max_anchors=max_anchors if max_anchors is not None else MAX_ANCHORS,
+            document, max_anchors=max_anchors if max_anchors is not None else MAX_ANCHORS,
         )
         return cls(header=document.header, anchors=anchors)
 
@@ -44,39 +37,75 @@ class RecapSelection:
         """JSON-serializable form for the prompt step and cache."""
         return asdict(self)
 
+    def to_db_item(self) -> dict:
+        return [
+            {
+                "game_id": self.header.game_id,
+                "play_id": sp.play.play_id,
+                "wpa": sp.play.wpa,
+                "quarter": sp.play.qtr,
+                "game_seconds_remaining": sp.play.game_seconds_remaining,
+                "description": sp.play.desc,
+                "posteam": sp.play.posteam
+            }
+            for sp in self.anchors
+        ]
+
 
 # ------- Configuration -------
 
-MIN_ANCHORS = 1
 MAX_ANCHORS = 5
-ANCHOR_WPA_THRESHOLD = 0.08   # eyeball value, tune against test games
+
+# Convex recency weighting: leverage stays compressed for most of the game and
+# spikes late. Regulation runs W_MIN -> W_MAX; OT is treated as strictly higher
+# leverage than any regulation play and runs W_MAX -> W_OT_MAX.
+W_MIN = 0.5
+W_MAX = 1.0
+W_OT_MAX = 1.3
+RECENCY_EXPONENT = 3
+
+REGULATION_SECONDS = 3600
+OT_PERIOD_SECONDS = 900
+
+
+# ------- Recency weighting -------
+
+def _recency_weight(qtr: int, game_seconds_remaining: float) -> float:
+    """Convex leverage weight. `game_seconds_remaining` is continuous 3600->0 in
+    regulation and resets to 900 each OT period, so the two are weighted separately.
+    """
+    if qtr >= 5:
+        s = min(max(game_seconds_remaining, 0), OT_PERIOD_SECONDS)
+        progress = 1 - s / OT_PERIOD_SECONDS
+        return W_MAX + (W_OT_MAX - W_MAX) * progress ** RECENCY_EXPONENT
+
+    s = min(max(game_seconds_remaining, 0), REGULATION_SECONDS)
+    progress = 1 - s / REGULATION_SECONDS
+    return W_MIN + (W_MAX - W_MIN) * progress ** RECENCY_EXPONENT
+
+
+def _priority(play: Play) -> float:
+    """Composite ranking score: raw WP swing scaled by how late it happened."""
+    return abs(play.wpa) * _recency_weight(play.qtr, play.game_seconds_remaining)
 
 
 # ------- Anchor selection -------
 
-def _select_anchors(
-        document: GameDocument, threshold: float = ANCHOR_WPA_THRESHOLD,
-        min_anchors: int = MIN_ANCHORS, max_anchors: int = MAX_ANCHORS,
-    ) -> list[SelectedPlay]:
-    """The dramatic plays: one |WPA| swing per drive, threshold-gated with a floor/ceiling. Ungated by garbage time, by design."""
+def _select_anchors(document: GameDocument, max_anchors: int = MAX_ANCHORS) -> list[SelectedPlay]:
+    """Top-`max_anchors` plays by composite priority, one candidate per drive. Ungated by garbage time, by design."""
     swings = [p for p in document.plays if p.wpa is not None]
 
     by_drive: dict[int, Play] = {}
     for p in swings:
         key = p.drive if p.drive is not None else p.play_id
         current = by_drive.get(key)
-        if current is None or abs(p.wpa) > abs(current.wpa):
+        if current is None or _priority(p) > _priority(current):
             by_drive[key] = p
 
-    candidates = sorted(by_drive.values(), key=lambda p: abs(p.wpa), reverse=True)
+    candidates = sorted(by_drive.values(), key=_priority, reverse=True)
+    top = candidates[:max_anchors]
 
-    cleared = [p for p in candidates if abs(p.wpa) >= threshold]
-    if len(cleared) < min_anchors:
-        cleared = candidates[:min_anchors]
-    elif len(cleared) > max_anchors:
-        cleared = cleared[:max_anchors]
-
-    return [SelectedPlay(play=p, anchor_wpa=p.wpa) for p in cleared]
+    return [SelectedPlay(play=p, anchor_wpa=p.wpa) for p in top]
 
 
 
@@ -129,11 +158,11 @@ if __name__ == "__main__":
 
     # ------- Step 1: Anchors -------
     anchors = _select_anchors(document)
-    print(f"\n{len(anchors)} anchor(s) selected (threshold {ANCHOR_WPA_THRESHOLD}, "
-          f"bounds {MIN_ANCHORS}-{MAX_ANCHORS}):\n")
+    print(f"\n{len(anchors)} anchor(s) selected (cap {MAX_ANCHORS}):\n")
     for sp in anchors:
         p = sp.play
-        print(f"  WPA {sp.anchor_wpa:+.3f}  q{p.qtr} {(p.desc or '')[:90]}")
+        print(f"  WPA {sp.anchor_wpa:+.3f}  priority {_priority(p):.3f}  "
+              f"q{p.qtr} {(p.desc or '')[:80]}")
 
     # ------- Step 2: Full build and save to a JSON-serializable dict for inspection -------
     selection = RecapSelection.build(document)
