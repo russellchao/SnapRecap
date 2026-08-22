@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 from pathlib import Path
 
-from models import game_document, game_ledger, selection
+from models import game_document, game_ledger, selection, recap
 from get_data import get_raw_data, preprocess_data
 
 
@@ -55,16 +55,20 @@ def build_recap(
         game_ledgers_exist: bool, selected_plays_exist: bool, team_signals_exist: bool, recap_cache_exist: bool
     ):
 
+    _game_ledger, _selected_plays, _team_signals, _recap_cache = None, None, None, None
+
     # Build the GameDocument for the requested game
     game_doc = build_game_doc(game_id, season, week, away_team, home_team, away_score, home_score)
     if not isinstance(game_doc, game_document.GameDocument):
         print(f"Error: Failed to build GameDocument for {game_id}.")
         return None, None, None, None
 
-    _game_ledger, _selected_plays, _team_signals, _recap_cache = None, None, None, None
+    # Build the GameLedger object, where it returns the main object and the play category map
+    # Occurs outside of the cehcks since both game_ledgers_exist and recap_cache_exist rely on it.
+    _ledger_obj, _play_category_map = game_ledger.build_ledger(game_doc)
 
     if not game_ledgers_exist:
-        _game_ledger = game_ledger.build_ledger(game_doc).to_dict()
+        _game_ledger = _ledger_obj.to_dict()
         supabase.table("game_ledgers").insert(_game_ledger).execute()
         print(f"Inserted game ledger for {game_id} into the DB")
 
@@ -99,8 +103,23 @@ def build_recap(
         }
 
     if not recap_cache_exist:
-        # TODO: Build recap cache and write to DB
-        pass
+        _recap_selection = selection.RecapSelection.build(game_doc)
+
+        try:
+            _captions = recap.generate_captions(
+                _recap_selection.anchors, _play_category_map
+            )
+        except recap.RecapValidationError as e:
+            print(f"Error: recap generation for {game_id} failed validation ({e}), cache not written")
+        else:
+            _recap_cache = {
+                "game_id": game_id,
+                "captions": _captions,
+                "model": recap.MODEL,
+                "prompt_version": recap.PROMPT_VERSION,
+            }
+            supabase.table("recap_caches").upsert(_recap_cache, on_conflict="game_id").execute()
+            print(f"Inserted recap cache for {game_id} into the DB")
 
     return _game_ledger, _selected_plays, _team_signals, _recap_cache
 
@@ -111,7 +130,7 @@ def get_recap(game_id: str, season: str, week: str, away_team: str, home_team: s
     # Get the game ledgers, anchor plays, team signals, and recap cache for the requested game ID from the DB,
     # and build the components if they don't exist
 
-    #NOTE: The recap cache is not yet implemented, so it will always be set to True to avoid rebuilding it for now. 
+    # NOTE: Set recap_cache_exist back to False when finished testing locally
     game_ledgers_exist, selected_plays_exist, team_signals_exist, recap_cache_exist = False, False, False, True
     _game_ledger, _selected_plays, _team_signals, _recap_cache = None, None, None, None
 
@@ -169,6 +188,28 @@ def get_recap(game_id: str, season: str, week: str, away_team: str, home_team: s
             print(f"No team signals found for {game_id}, they will be built")
     except Exception as e:
         print(f"Error: team signals lookup for {game_id} failed ({e}), they will be built")
+
+    try:
+        response = (
+            supabase.table("recap_caches")
+            .select("*")
+            .eq("game_id", game_id)
+            .limit(1)
+            .execute()
+        )
+        recap_cache_rows = response.data or []
+        if recap_cache_rows:
+            row = recap_cache_rows[0]
+            if row.get("model") == recap.MODEL and row.get("prompt_version") == recap.PROMPT_VERSION:
+                _recap_cache = row
+                recap_cache_exist = True
+                print(f"Found current cached recap for {game_id}")
+            else:
+                print(f"Cached recap for {game_id} is stale (model/prompt_version mismatch), it will be rebuilt")
+        else:
+            print(f"No recap cache found for {game_id}, it will be built")
+    except Exception as e:
+        print(f"Error: recap cache lookup for {game_id} failed ({e}), it will be built")
 
     if False in [game_ledgers_exist, selected_plays_exist, team_signals_exist, recap_cache_exist]:
         built_ledger, built_selected_plays, built_signals, built_cache = build_recap(
