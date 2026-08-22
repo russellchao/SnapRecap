@@ -212,7 +212,7 @@ def build_ledger(doc: GameDocument) -> tuple[GameLedger, Dict[int, str]]:
     # persisted (categories/CategoryLedger stay exactly as M1 shipped them);
     # this exists purely so recap.py can attribute an anchor play's category
     # without re-querying or re-deriving from raw plays.
-    play_category_map: Dict[int, str] = {} # exists 
+    play_category_map: Dict[int, str] = {}
 
     for cat in LEDGER_CATEGORIES:
         cat_plays = [p for p in plays if id(p) not in claimed and cat.play_filter(p)]

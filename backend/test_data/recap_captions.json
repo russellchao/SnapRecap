@@ -1,0 +1,27 @@
+[
+  {
+    "play_id": 3863,
+    "seen": "Josh Allen appeared to power in for a touchdown, but the call on the field was overturned after review, stopping him just a yard short of the end zone.",
+    "said": "This was part of a red_zone sequence where the reversed touchdown call changed the down-and-distance math inside the 1-yard line, directly affecting how Buffalo's scoring possession played out."
+  },
+  {
+    "play_id": 3994,
+    "seen": "Trevor Lawrence's pass over the middle was picked off, killing a Jacksonville drive late in the fourth quarter.",
+    "said": "This interception was part of the turnovers category, ending a Jacksonville possession in the closing minute and taking away any chance to answer on the scoreboard."
+  },
+  {
+    "play_id": 3500,
+    "seen": "Lawrence uncorked a deep strike down the middle that Parker Washington hauled in for a 31-yard gain, flipping field position in Buffalo territory.",
+    "said": "This play is tagged as an explosive_play because the 31-yard completion created a chunk gain that dramatically improved Jacksonville's field position in the fourth quarter."
+  },
+  {
+    "play_id": 3269,
+    "seen": "Josh Allen found Dalton Kincaid for a 15-yard touchdown, extending Buffalo's lead.",
+    "said": "Classified under red_zone, this scoring play capped an efficient trip inside scoring territory, converting the opportunity into six points for Buffalo."
+  },
+  {
+    "play_id": 564,
+    "seen": "Lawrence's pass intended for Parker Washington was picked off early in the game, giving Buffalo the ball in good field position.",
+    "said": "This first-quarter play falls under turnovers, as the interception halted a Jacksonville drive and handed Buffalo a favorable field-position swing early in the game."
+  }
+]
