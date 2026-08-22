@@ -200,17 +200,26 @@ def _sum_plays(plays: List[Play], home_team: str, away_team: str, credit_defense
     )
 
 
-def build_ledger(doc: GameDocument) -> GameLedger:
+def build_ledger(doc: GameDocument) -> tuple[GameLedger, Dict[int, str]]:
     home = doc.header.home_team
     away = doc.header.away_team
     plays = doc.plays
 
     claimed: set = set()
     categories: Dict[str, CategoryLedger] = {}
+    
+    # Ephemeral, request-scoped play_id -> category name lookup. Never
+    # persisted (categories/CategoryLedger stay exactly as M1 shipped them);
+    # this exists purely so recap.py can attribute an anchor play's category
+    # without re-querying or re-deriving from raw plays.
+    play_category_map: Dict[int, str] = {} # exists 
 
     for cat in LEDGER_CATEGORIES:
         cat_plays = [p for p in plays if id(p) not in claimed and cat.play_filter(p)]
         claimed.update(id(p) for p in cat_plays)
+        play_category_map.update(
+            {p.play_id: cat.name for p in cat_plays if p.play_id is not None}
+        )
         ledger = _sum_plays(cat_plays, home, away, cat.credit_defense)
         ledger.category = cat.name
         categories[cat.name] = ledger
@@ -225,6 +234,9 @@ def build_ledger(doc: GameDocument) -> GameLedger:
     other_ledger = _sum_plays(other_plays, home, away, credit_defense=False)
     other_ledger.category = "other"
     categories["other"] = other_ledger
+    play_category_map.update(
+        {p.play_id: "other" for p in other_plays if p.play_id is not None}
+    )
 
     categorized_diff = sum(c.diff for c in categories.values())
 
@@ -241,7 +253,7 @@ def build_ledger(doc: GameDocument) -> GameLedger:
         actual_margin = doc.header.home_score - doc.header.away_score
         epa_vs_score_gap = total_epa_diff - actual_margin
 
-    return GameLedger(
+    ledger = GameLedger(
         game_id=doc.header.game_id,
         away_team=away,
         home_team=home,
@@ -252,6 +264,7 @@ def build_ledger(doc: GameDocument) -> GameLedger:
         total_epa_diff=total_epa_diff,
         epa_vs_score_gap=epa_vs_score_gap,
     )
+    return ledger, play_category_map
 
 
 
@@ -279,7 +292,7 @@ if __name__ == "__main__":
         setattr(h, k, v)
     doc.header = h
 
-    ledger = build_ledger(doc)  # type: ignore[arg-type]
+    ledger, play_category_map = build_ledger(doc)  # type: ignore[arg-type]
 
     print(f"{away} @ {home}\n")
     for name, c in ledger.categories.items():
