@@ -42,11 +42,12 @@ from typing import Dict, List
 import anthropic
 
 try:
+    from .game_ledger import GameLedger
     from .selection import SelectedPlay
 except ImportError:
     sys.path.insert(0, os.path.dirname(__file__))
+    from game_ledger import GameLedger
     from selection import SelectedPlay
-
 
 
 # --- Cache identity constants -------------------------------------------
@@ -67,15 +68,31 @@ class RecapValidationError(Exception):
 
 # --- Payload construction -------------------------------------------------
 
-def _anchor_payload(anchor: SelectedPlay, category: str) -> Dict:
+def _anchor_payload(anchor: SelectedPlay, category: str, ledger: GameLedger) -> Dict:
     """Builds the per-anchor JSON object handed to the LLM.
 
-    Deliberately excludes anchor_wpa and any other selection-time metric —
-    those drove *which* plays were chosen, not what the LLM should say
-    about them. Including them would blur the significance/phrasing
-    boundary by tempting the LLM to reason about magnitude itself.
+    Deliberately excludes anchor_wpa — that's the play's own selection-time
+    ranking metric, used to decide WHICH plays became anchors, not part of
+    the significance being explained. The category-level diff/play_count
+    below is a different thing: it's game_ledger.py's actual M1 output —
+    the category's real point-value contribution to the margin — so handing
+    it to the LLM is Python-owned significance data being phrased, not the
+    LLM doing its own analysis.
     """
     p = anchor.play
+    cat_ledger = ledger.categories.get(category)
+
+    category_point_margin = None
+    category_play_count = None
+    category_favors_team = None
+    if cat_ledger is not None:
+        category_point_margin = round(abs(cat_ledger.diff), 2)
+        category_play_count = cat_ledger.away_plays + cat_ledger.home_plays
+        if cat_ledger.diff > 0:
+            category_favors_team = ledger.home_team
+        elif cat_ledger.diff < 0:
+            category_favors_team = ledger.away_team
+
     return {
         "play_id": p.play_id,
         "desc": p.desc,
@@ -83,14 +100,17 @@ def _anchor_payload(anchor: SelectedPlay, category: str) -> Dict:
         "qtr": p.qtr,
         "game_seconds_remaining": p.game_seconds_remaining,
         "category": category,
+        "category_point_margin": category_point_margin,
+        "category_play_count": category_play_count,
+        "category_favors_team": category_favors_team,
     }
 
 
 def build_payloads(
-    anchors: List[SelectedPlay], play_category_map: Dict[int, str]
+    anchors: List[SelectedPlay], play_category_map: Dict[int, str], ledger: GameLedger
 ) -> List[Dict]:
     return [
-        _anchor_payload(a, play_category_map.get(a.play.play_id, "other"))
+        _anchor_payload(a, play_category_map.get(a.play.play_id, "other"), ledger)
         for a in anchors
     ]
 
@@ -104,13 +124,32 @@ deciding what matters, only how to describe it.
 
 For each anchor play, write two short strings:
 
-- "seen": the surface-level story a casual viewer would take away from this \
-play in isolation — what a broadcast announcer might say in the moment. \
-Base this only on the play description and situational context given.
-- "said": the analytically-grounded explanation of why this play mattered, \
-referencing its "category" field explicitly (e.g. "this was part of a \
-pass_protection breakdown that swung the game"). Do not invent statistics \
-not present in the input.
+"seen" — one crisp sentence describing ONLY the visible action and its \
+immediate, on-field result: what happened on the snap. Do NOT mention field \
+position value, momentum, game impact, or anything the viewer wouldn't \
+perceive in that instant. If you find yourself writing "giving," "which set \
+up," "flipping," or explaining why something mattered, that belongs in \
+"said" instead — cut it from "seen."
+
+"said" — one or two sentences explaining WHY this play mattered, grounded in \
+its "category" field and the accompanying numbers: "category_point_margin" \
+(how many points that category swung the game by, game-wide), \
+"category_play_count" (how many plays made up that swing), and \
+"category_favors_team" (which team that category's margin benefited). These \
+numbers are verified facts — use them naturally to make the explanation \
+concrete instead of vague. Do NOT open the sentence by naming or classifying \
+the category (never start with "This was part of," "This play is tagged \
+as," "Classified under," or similar) — the category is context you draw on, \
+not the subject of the sentence.
+
+Bad "said" (do not imitate this structure): "This interception was part of \
+the turnovers category, ending a Jacksonville possession." Better: "The pick \
+was one of several turnovers that tilted the game Buffalo's way — as a \
+group, turnovers were worth a real points swing across the four takeaways \
+in this one."
+
+Vary sentence structure across anchors in the same response — do not reuse \
+the same grammatical opening twice.
 
 Do not reorder, drop, merge, or invent anchor plays. Return exactly one \
 object per input anchor, echoing its play_id unchanged.
@@ -175,7 +214,7 @@ def _parse_and_validate(raw_text: str, input_play_ids: List[int]) -> List[Dict]:
 # --- Entry point -------------------------------------------
 
 def generate_captions(
-    anchors: List[SelectedPlay], play_category_map: Dict[int, str]
+    anchors: List[SelectedPlay], play_category_map: Dict[int, str], ledger: GameLedger
 ) -> List[Dict]:
     """Returns [{play_id, seen, said}, ...] for the given anchor plays.
 
@@ -185,7 +224,7 @@ def generate_captions(
     on a failed validation; callers must not write to cache in that case.
     """
     input_play_ids = [a.play.play_id for a in anchors]
-    payloads = build_payloads(anchors, play_category_map)
+    payloads = build_payloads(anchors, play_category_map, ledger)
     raw_text = _call_llm(payloads)
     return _parse_and_validate(raw_text, input_play_ids)
 
@@ -248,7 +287,7 @@ if __name__ == "__main__":
 
     # ------- Step 1: Anchors and the play -> category attribution -------
     anchors = RecapSelection.build(document).anchors
-    _, play_category_map = build_ledger(document)
+    ledger, play_category_map = build_ledger(document)
     print(f"\n{len(anchors)} anchor(s) to caption:\n")
     for a in anchors:
         p = a.play
@@ -258,7 +297,7 @@ if __name__ == "__main__":
     # ------- Step 2: Generate and validate the captions -------
     print(f"\nCalling {MODEL} (prompt {PROMPT_VERSION})...\n")
     try:
-        captions = generate_captions(anchors, play_category_map)
+        captions = generate_captions(anchors, play_category_map, ledger)
     except RecapValidationError as e:
         print(f"Validation failed, no captions returned: {e}")
         sys.exit(1)

@@ -107,7 +107,7 @@ def build_recap(
 
         try:
             _captions = recap.generate_captions(
-                _recap_selection.anchors, _play_category_map
+                _recap_selection.anchors, _play_category_map, _ledger_obj
             )
         except recap.RecapValidationError as e:
             print(f"Error: recap generation for {game_id} failed validation ({e}), cache not written")
