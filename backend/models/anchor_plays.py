@@ -12,20 +12,20 @@ from game_document import GameDocument, GameHeader, TeamSignals
 # ------- Output Dataclasses -------
 
 @dataclass
-class SelectedPlay:
+class AnchorPlay:
     """An anchor play chosen for the prompt."""
     play: Play
     anchor_wpa: float
 
 @dataclass
-class RecapSelection:
+class AnchorPlayList:
     """Selected, prompt-ready projection of a GameDocument."""
     header: GameHeader
-    anchors: list[SelectedPlay] = field(default_factory=list)
+    anchors: list[AnchorPlay] = field(default_factory=list)
 
     @classmethod
-    def build(cls, document: GameDocument, max_anchors: int | None = None) -> "RecapSelection":
-        """Project a GameDocument into its anchor selection."""
+    def build(cls, document: GameDocument, max_anchors: int | None = None) -> "AnchorPlayList":
+        """Project a GameDocument into its anchor play selection."""
         anchors = _select_anchors(
             document, max_anchors=max_anchors if max_anchors is not None else MAX_ANCHORS,
         )
@@ -87,9 +87,9 @@ def _priority(play: Play) -> float:
     return abs(play.wpa) * _recency_weight(play.qtr, play.game_seconds_remaining)
 
 
-# ------- Anchor selection -------
+# ------- Anchor play selection -------
 
-def _select_anchors(document: GameDocument, max_anchors: int = MAX_ANCHORS) -> list[SelectedPlay]:
+def _select_anchors(document: GameDocument, max_anchors: int = MAX_ANCHORS) -> list[AnchorPlay]:
     """Top-`max_anchors` plays by composite priority, one candidate per drive. Ungated by garbage time, by design."""
     swings = [p for p in document.plays if p.wpa is not None]
 
@@ -103,7 +103,7 @@ def _select_anchors(document: GameDocument, max_anchors: int = MAX_ANCHORS) -> l
     candidates = sorted(by_drive.values(), key=_priority, reverse=True)
     top = candidates[:max_anchors]
 
-    return [SelectedPlay(play=p, anchor_wpa=p.wpa) for p in top]
+    return [AnchorPlay(play=p, anchor_wpa=p.wpa) for p in top]
 
 
 
@@ -156,16 +156,16 @@ if __name__ == "__main__":
 
     # ------- Step 1: Anchors -------
     anchors = _select_anchors(document)
-    print(f"\n{len(anchors)} anchor(s) selected (cap {MAX_ANCHORS}):\n")
+    print(f"\n{len(anchors)} anchor play(s) selected (cap {MAX_ANCHORS}):\n")
     for sp in anchors:
         p = sp.play
         print(f"  WPA {sp.anchor_wpa:+.3f}  priority {_priority(p):.3f}  "
               f"q{p.qtr} {(p.desc or '')[:80]}")
 
     # ------- Step 2: Full build and save to a JSON-serializable dict for inspection -------
-    selection = RecapSelection.build(document)
-    selection_dict = selection.to_dict()
-    selection_json_filename = "../test_data/selection.json"
-    with open(selection_json_filename, "w") as f:
-        json.dump(selection_dict, f, indent=2)
-    print(f"\nSelection layer saved to {selection_json_filename}")
+    anchor_list = AnchorPlayList.build(document)
+    anchor_dict = anchor_list.to_dict()
+    anchor_json_filename = "../test_data/anchor_plays.json"
+    with open(anchor_json_filename, "w") as f:
+        json.dump(anchor_dict, f, indent=2)
+    print(f"\nAnchor play list saved to {anchor_json_filename}")

@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 from pathlib import Path
 
-from models import game_document, game_ledger, selection
+from models import game_document, game_ledger, anchor_plays
 from get_data import get_raw_data, preprocess_data
 
 
@@ -52,10 +52,10 @@ def build_game_doc(game_id: str, season: str, week: str, away_team: str, home_te
 
 def build_recap(
         game_id: str, season: str, week: str, away_team: str, home_team: str, away_score: int, home_score: int,
-        game_ledgers_exist: bool, selected_plays_exist: bool, team_signals_exist: bool
+        game_ledgers_exist: bool, anchor_plays_exist: bool, team_signals_exist: bool
     ):
 
-    _game_ledger, _selected_plays, _team_signals = None, None, None
+    _game_ledger, _anchor_plays, _team_signals = None, None, None
 
     # Build the GameDocument for the requested game
     game_doc = build_game_doc(game_id, season, week, away_team, home_team, away_score, home_score)
@@ -69,11 +69,11 @@ def build_recap(
         supabase.table("game_ledgers").insert(_game_ledger).execute()
         print(f"Inserted game ledger for {game_id} into the DB")
 
-    if not selected_plays_exist:
-        recap_selection = selection.RecapSelection.build(game_doc)
-        _selected_plays = recap_selection.to_db_item()
-        supabase.table("selected_plays").insert(_selected_plays).execute()
-        print(f"Inserted selected plays for {game_id} into the DB")
+    if not anchor_plays_exist:
+        recap_selection = anchor_plays.AnchorPlayList.build(game_doc)
+        _anchor_plays = recap_selection.to_db_item()
+        supabase.table("anchor_plays").insert(_anchor_plays).execute()
+        print(f"Inserted anchor plays for {game_id} into the DB")
 
     if not team_signals_exist:
         game_doc_dict = game_doc.to_dict()
@@ -99,7 +99,7 @@ def build_recap(
             home_team: home_signals_db_row
         }
 
-    return _game_ledger, _selected_plays, _team_signals
+    return _game_ledger, _anchor_plays, _team_signals
 
 
 # ------ Main function ------
@@ -108,8 +108,8 @@ def get_recap(game_id: str, season: str, week: str, away_team: str, home_team: s
     # Get the game ledgers, anchor plays, and team signals for the requested game ID from the DB,
     # and build the components if they don't exist
 
-    game_ledgers_exist, selected_plays_exist, team_signals_exist = False, False, False
-    _game_ledger, _selected_plays, _team_signals = None, None, None
+    game_ledgers_exist, anchor_plays_exist, team_signals_exist = False, False, False
+    _game_ledger, _anchor_plays, _team_signals = None, None, None
 
     # Check if each of the three components exist in the DB
     try:
@@ -133,20 +133,20 @@ def get_recap(game_id: str, season: str, week: str, away_team: str, home_team: s
 
     try:
         response = (
-            supabase.table("selected_plays")
+            supabase.table("anchor_plays")
             .select("*")
             .eq("game_id", game_id)
             .execute()
         )
-        selected_plays_rows = response.data or []
-        if selected_plays_rows:
-            _selected_plays = selected_plays_rows
-            selected_plays_exist = True
-            print(f"Found cached selected plays for {game_id}")
+        anchor_plays_rows = response.data or []
+        if anchor_plays_rows:
+            _anchor_plays = anchor_plays_rows
+            anchor_plays_exist = True
+            print(f"Found cached anchor plays for {game_id}")
         else:
-            print(f"No selected plays found for {game_id}, they will be built")
+            print(f"No anchor plays found for {game_id}, they will be built")
     except Exception as e:
-        print(f"Error: selected plays lookup for {game_id} failed ({e}), they will be built")
+        print(f"Error: anchor plays lookup for {game_id} failed ({e}), they will be built")
 
     try:
         response = (
@@ -166,13 +166,13 @@ def get_recap(game_id: str, season: str, week: str, away_team: str, home_team: s
     except Exception as e:
         print(f"Error: team signals lookup for {game_id} failed ({e}), they will be built")
 
-    if False in [game_ledgers_exist, selected_plays_exist, team_signals_exist]:
-        built_ledger, built_selected_plays, built_signals = build_recap(
+    if False in [game_ledgers_exist, anchor_plays_exist, team_signals_exist]:
+        built_ledger, built_anchor_plays, built_signals = build_recap(
             game_id, season, week, away_team, home_team, away_score, home_score,
-            game_ledgers_exist, selected_plays_exist, team_signals_exist
+            game_ledgers_exist, anchor_plays_exist, team_signals_exist
         )
         _game_ledger = _game_ledger if game_ledgers_exist else built_ledger
-        _selected_plays = _selected_plays if selected_plays_exist else built_selected_plays
+        _anchor_plays = _anchor_plays if anchor_plays_exist else built_anchor_plays
         _team_signals = _team_signals if team_signals_exist else built_signals
 
-    return _game_ledger, _selected_plays, _team_signals
+    return _game_ledger, _anchor_plays, _team_signals
