@@ -35,19 +35,36 @@ class AnchorPlayList:
         """JSON-serializable form for the prompt step and cache."""
         return asdict(self)
 
-    def to_db_item(self) -> dict:
-        return [
-            {
-                "game_id": self.header.game_id,
-                "play_id": sp.play.play_id,
-                "wpa": sp.play.wpa,
-                "quarter": sp.play.qtr,
-                "game_seconds_remaining": sp.play.game_seconds_remaining,
-                "description": sp.play.desc,
-                "posteam": sp.play.posteam
-            }
-            for sp in self.anchors
-        ]
+    # Full on-field descriptive field set for downstream Q&A retrieval, plus
+    # wpa (kept for internal/debugging use — never exposed in the Q&A payload,
+    # which whitelist-filters it back out at shaping time in game_qa.py).
+    # No category field: on-field flags (interception, third_down_converted,
+    # is_special, qb_dropback, etc.) already identify play type without one.
+    _DB_ITEM_FIELDS = [
+        "play_id", "posteam", "defteam", "qtr", "game_seconds_remaining",
+        "down", "ydstogo", "yardline_100", "goal_to_go", "score_differential",
+        "posteam_timeouts_remaining", "defteam_timeouts_remaining", "drive",
+        "fixed_drive_result", "play_type", "is_special", "shotgun", "no_huddle",
+        "qb_dropback", "qb_scramble", "offense_personnel_package",
+        "offense_formation", "defenders_in_box", "number_of_pass_rushers",
+        "defense_coverage_type", "defense_man_zone_type", "pass_location",
+        "pass_length", "air_yards", "yards_after_catch", "run_location",
+        "run_gap", "route", "time_to_throw", "was_pressure", "yards_gained",
+        "success", "first_down", "third_down_converted", "third_down_failed",
+        "fourth_down_converted", "fourth_down_failed", "complete_pass",
+        "touchdown", "sack", "qb_hit", "interception", "fumble_lost",
+        "penalty", "passer", "rusher", "receiver", "description", "wpa",
+    ]
+
+    def to_db_item(self) -> list[dict]:
+        """DB rows for the anchor_plays table. game_id + play_id form the
+        composite key, so game_id is placed first in each row."""
+        rows = []
+        for sp in self.anchors:
+            row = {"game_id": self.header.game_id}
+            row.update({field: getattr(sp.play, field, None) for field in self._DB_ITEM_FIELDS})
+            rows.append(row)
+        return rows
 
 
 # ------- Configuration -------
@@ -160,7 +177,7 @@ if __name__ == "__main__":
     for sp in anchors:
         p = sp.play
         print(f"  WPA {sp.anchor_wpa:+.3f}  priority {_priority(p):.3f}  "
-              f"q{p.qtr} {(p.desc or '')[:80]}")
+              f"q{p.qtr} {(p.description or '')[:80]}")
 
     # ------- Step 2: Full build and save to a JSON-serializable dict for inspection -------
     anchor_list = AnchorPlayList.build(document)

@@ -78,7 +78,7 @@
         "passer": null,
         "rusher": "Josh Allen",
         "receiver": null,
-        "desc": "(1:10) 70-A.Anderson reported in as eligible. 17-J.Allen up the middle for 11 yards, TOUCHDOWN. The Replay Official reviewed the runner broke the plane ruling, and the play was REVERSED. 70-A.Anderson reported in as eligible. 17-J.Allen up the middle to JAX 1 for 10 yards (26-An.Johnson; 91-A.Armstead)."
+        "description": "(1:10) 70-A.Anderson reported in as eligible. 17-J.Allen up the middle for 11 yards, TOUCHDOWN. The Replay Official reviewed the runner broke the plane ruling, and the play was REVERSED. 70-A.Anderson reported in as eligible. 17-J.Allen up the middle to JAX 1 for 10 yards (26-An.Johnson; 91-A.Armstead)."
       },
       "anchor_wpa": 0.2392522096633911
     },
@@ -151,7 +151,7 @@
         "passer": "Trevor Lawrence",
         "rusher": null,
         "receiver": "Jakobi Meyers",
-        "desc": "(:59) (Shotgun) 16-T.Lawrence pass short middle intended for 3-J.Meyers INTERCEPTED by 24-C.Bishop (27-T.White) at JAX 37. 24-C.Bishop to JAX 35 for 2 yards."
+        "description": "(:59) (Shotgun) 16-T.Lawrence pass short middle intended for 3-J.Meyers INTERCEPTED by 24-C.Bishop (27-T.White) at JAX 37. 24-C.Bishop to JAX 35 for 2 yards."
       },
       "anchor_wpa": -0.1928483247756958
     },
@@ -224,7 +224,7 @@
         "passer": "Trevor Lawrence",
         "rusher": null,
         "receiver": "Parker Washington",
-        "desc": "(7:05) (Shotgun) 16-T.Lawrence pass deep middle to 11-P.Washington to BUF 25 for 31 yards (24-C.Bishop)."
+        "description": "(7:05) (Shotgun) 16-T.Lawrence pass deep middle to 11-P.Washington to BUF 25 for 31 yards (24-C.Bishop)."
       },
       "anchor_wpa": 0.1489820480346679
     },
@@ -297,7 +297,7 @@
         "passer": "Josh Allen",
         "rusher": null,
         "receiver": "Dalton Kincaid",
-        "desc": "(9:01) (Shotgun) 17-J.Allen pass short left to 86-D.Kincaid for 15 yards, TOUCHDOWN."
+        "description": "(9:01) (Shotgun) 17-J.Allen pass short left to 86-D.Kincaid for 15 yards, TOUCHDOWN."
       },
       "anchor_wpa": 0.1123591672559969
     },
@@ -370,7 +370,7 @@
         "passer": "Trevor Lawrence",
         "rusher": null,
         "receiver": "Parker Washington",
-        "desc": "(5:25) (Shotgun) 16-T.Lawrence pass short middle intended for 11-P.Washington INTERCEPTED by 45-S.Thompson at BUF 48. 45-S.Thompson to JAX 33 for 19 yards (16-T.Lawrence)."
+        "description": "(5:25) (Shotgun) 16-T.Lawrence pass short middle intended for 11-P.Washington INTERCEPTED by 45-S.Thompson at BUF 48. 45-S.Thompson to JAX 33 for 19 yards (16-T.Lawrence)."
       },
       "anchor_wpa": -0.1597569584846496
     }
