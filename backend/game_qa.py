@@ -1,5 +1,4 @@
-"""
-Q&A phrasing layer for game recaps.
+"""Q&A phrasing layer for game recaps. Replaces recap.py's one-shot recap generation.
 
 Python owns retrieval scope and factual grounding; the LLM owns phrasing only.
 """
@@ -81,3 +80,55 @@ def route_question(question: str, client: anthropic.Anthropic | None = None) -> 
         raise RoutingValidationError(f"Router returned invalid components: {invalid}")
 
     return list(raw_components)
+
+
+OUT_OF_SCOPE_RESPONSE = (
+    "I can only answer questions about this game's plays, situational tendencies, "
+    "and team stats."
+)
+
+_ANSWER_SYSTEM_PROMPT = """You answer a user's question about a single NFL game using \
+only the structured data provided below. You are a phrasing layer, not an analyst: every \
+factual claim you make must be directly traceable to a field in the provided data.
+
+Rules:
+- Only cite facts present in the data below. Never introduce outside knowledge about \
+players, teams, or the league.
+- Do not speculate about causes not evidenced in the data (e.g. motivation, coaching \
+intent, injuries) unless a field explicitly states it.
+- team_signals rates are this-game tendency stats, each paired with an "attempts" or "n" \
+count. Treat any rate with a small attempts/n (roughly single digits) as a weak signal — \
+mention the sample size or hedge the claim rather than stating the rate as a strong pattern.
+- If the provided data does not contain enough to answer the question, say so plainly \
+rather than guessing.
+- Write 2-4 sentences in plain, casual language for a fan who did not watch the game \
+closely. No headers, no bullet points, no restating the question."""
+
+
+def answer_question(
+    question: str,
+    payload: dict,
+    client: anthropic.Anthropic | None = None,
+) -> str:
+    """Phrase an answer to a question using only the Python-fetched, routed payload.
+
+    payload contains only the components route_question() selected, each already
+    shaped per the ledger/anchor_plays/team_signals contracts (selection metrics like
+    wpa/epa/cpoe/wp excluded upstream).
+    """
+    client = client or anthropic.Anthropic()
+
+    response = client.messages.create(
+        model=MODEL,
+        max_tokens=400,
+        system=_ANSWER_SYSTEM_PROMPT,
+        messages=[
+            {
+                "role": "user",
+                "content": f"Game data:\n{payload}\n\nQuestion: {question}",
+            }
+        ],
+    )
+
+    text_blocks = [b.text for b in response.content if b.type == "text"]
+    return "".join(text_blocks).strip()
