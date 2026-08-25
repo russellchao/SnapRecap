@@ -1,7 +1,5 @@
-"""Selection layer: projects a lossless GameDocument into a selected, prompt-ready structure.
-
-Anchor-only. Category attribution (the margin decomposition ledger) lives in
-game_ledger.py; this layer's sole job is picking the plays that mattered most.
+"""
+Anchor Play Selection layer: this layer's job is picking the plays that mattered most.
 """
 
 from dataclasses import dataclass, field, asdict
