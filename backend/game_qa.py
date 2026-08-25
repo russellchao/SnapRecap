@@ -3,10 +3,11 @@
 Python owns retrieval scope and factual grounding; the LLM owns phrasing only.
 """
 
+import json
 import anthropic
 
 MODEL = "claude-sonnet-5"
-PROMPT_VERSION = "qa-v1"
+PROMPT_VERSION = "v1"
 
 VALID_COMPONENTS = {"ledger", "anchor_plays", "team_signals"}
 
@@ -125,7 +126,7 @@ def answer_question(
         messages=[
             {
                 "role": "user",
-                "content": f"Game data:\n{payload}\n\nQuestion: {question}",
+                "content": f"Game data:\n{json.dumps(payload, indent=2)}\n\nQuestion: {question}",
             }
         ],
     )
