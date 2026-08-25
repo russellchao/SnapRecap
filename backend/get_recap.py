@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 from pathlib import Path
 
-from models import game_document, game_ledger, selection, recap
+from models import game_document, game_ledger, selection
 from get_data import get_raw_data, preprocess_data
 
 
@@ -52,22 +52,19 @@ def build_game_doc(game_id: str, season: str, week: str, away_team: str, home_te
 
 def build_recap(
         game_id: str, season: str, week: str, away_team: str, home_team: str, away_score: int, home_score: int,
-        game_ledgers_exist: bool, selected_plays_exist: bool, team_signals_exist: bool, recap_cache_exist: bool
+        game_ledgers_exist: bool, selected_plays_exist: bool, team_signals_exist: bool
     ):
 
-    _game_ledger, _selected_plays, _team_signals, _recap_cache = None, None, None, None
+    _game_ledger, _selected_plays, _team_signals = None, None, None
 
     # Build the GameDocument for the requested game
     game_doc = build_game_doc(game_id, season, week, away_team, home_team, away_score, home_score)
     if not isinstance(game_doc, game_document.GameDocument):
         print(f"Error: Failed to build GameDocument for {game_id}.")
-        return None, None, None, None
-
-    # Build the GameLedger object, where it returns the main object and the play category map
-    # Occurs outside of the cehcks since both game_ledgers_exist and recap_cache_exist rely on it.
-    _ledger_obj, _play_category_map = game_ledger.build_ledger(game_doc)
+        return None, None, None
 
     if not game_ledgers_exist:
+        _ledger_obj = game_ledger.build_ledger(game_doc)
         _game_ledger = _ledger_obj.to_dict()
         supabase.table("game_ledgers").insert(_game_ledger).execute()
         print(f"Inserted game ledger for {game_id} into the DB")
@@ -102,39 +99,19 @@ def build_recap(
             home_team: home_signals_db_row
         }
 
-    if not recap_cache_exist:
-        _recap_selection = selection.RecapSelection.build(game_doc)
-
-        try:
-            _captions = recap.generate_captions(
-                _recap_selection.anchors, _play_category_map, _ledger_obj
-            )
-        except recap.RecapValidationError as e:
-            print(f"Error: recap generation for {game_id} failed validation ({e}), cache not written")
-        else:
-            _recap_cache = {
-                "game_id": game_id,
-                "captions": _captions,
-                "model": recap.MODEL,
-                "prompt_version": recap.PROMPT_VERSION,
-            }
-            supabase.table("recap_caches").upsert(_recap_cache, on_conflict="game_id").execute()
-            print(f"Inserted recap cache for {game_id} into the DB")
-
-    return _game_ledger, _selected_plays, _team_signals, _recap_cache
+    return _game_ledger, _selected_plays, _team_signals
 
 
 # ------ Main function ------
 
 def get_recap(game_id: str, season: str, week: str, away_team: str, home_team: str, away_score: int, home_score: int): 
-    # Get the game ledgers, anchor plays, team signals, and recap cache for the requested game ID from the DB,
+    # Get the game ledgers, anchor plays, and team signals for the requested game ID from the DB,
     # and build the components if they don't exist
 
-    # NOTE: Set recap_cache_exist back to False when finished testing locally
-    game_ledgers_exist, selected_plays_exist, team_signals_exist, recap_cache_exist = False, False, False, True
-    _game_ledger, _selected_plays, _team_signals, _recap_cache = None, None, None, None
+    game_ledgers_exist, selected_plays_exist, team_signals_exist = False, False, False
+    _game_ledger, _selected_plays, _team_signals = None, None, None
 
-    # Check if each of the four components exist in the DB
+    # Check if each of the three components exist in the DB
     try:
         response = (
             supabase.table("game_ledgers")
@@ -189,36 +166,13 @@ def get_recap(game_id: str, season: str, week: str, away_team: str, home_team: s
     except Exception as e:
         print(f"Error: team signals lookup for {game_id} failed ({e}), they will be built")
 
-    try:
-        response = (
-            supabase.table("recap_caches")
-            .select("*")
-            .eq("game_id", game_id)
-            .limit(1)
-            .execute()
-        )
-        recap_cache_rows = response.data or []
-        if recap_cache_rows:
-            row = recap_cache_rows[0]
-            if row.get("model") == recap.MODEL and row.get("prompt_version") == recap.PROMPT_VERSION:
-                _recap_cache = row
-                recap_cache_exist = True
-                print(f"Found current cached recap for {game_id}")
-            else:
-                print(f"Cached recap for {game_id} is stale (model/prompt_version mismatch), it will be rebuilt")
-        else:
-            print(f"No recap cache found for {game_id}, it will be built")
-    except Exception as e:
-        print(f"Error: recap cache lookup for {game_id} failed ({e}), it will be built")
-
-    if False in [game_ledgers_exist, selected_plays_exist, team_signals_exist, recap_cache_exist]:
-        built_ledger, built_selected_plays, built_signals, built_cache = build_recap(
+    if False in [game_ledgers_exist, selected_plays_exist, team_signals_exist]:
+        built_ledger, built_selected_plays, built_signals = build_recap(
             game_id, season, week, away_team, home_team, away_score, home_score,
-            game_ledgers_exist, selected_plays_exist, team_signals_exist, recap_cache_exist
+            game_ledgers_exist, selected_plays_exist, team_signals_exist
         )
         _game_ledger = _game_ledger if game_ledgers_exist else built_ledger
         _selected_plays = _selected_plays if selected_plays_exist else built_selected_plays
         _team_signals = _team_signals if team_signals_exist else built_signals
-        _recap_cache = _recap_cache if recap_cache_exist else built_cache
 
-    return _game_ledger, _selected_plays, _team_signals, _recap_cache
+    return _game_ledger, _selected_plays, _team_signals

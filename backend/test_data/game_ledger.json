@@ -1,0 +1,76 @@
+{
+  "game_id": "2025_19_BUF_JAX",
+  "away_team": "BUF",
+  "home_team": "JAX",
+  "away_score": 27,
+  "home_score": 24,
+  "categories": {
+    "turnovers": {
+      "category": "turnovers",
+      "away_ep": 7.59,
+      "home_ep": 4.55,
+      "diff": -3.04,
+      "away_plays": 2,
+      "home_plays": 1
+    },
+    "pass_protection": {
+      "category": "pass_protection",
+      "away_ep": -2.4,
+      "home_ep": 2.14,
+      "diff": 4.54,
+      "away_plays": 10,
+      "home_plays": 11
+    },
+    "penalties": {
+      "category": "penalties",
+      "away_ep": -2.9,
+      "home_ep": 1.6,
+      "diff": 4.51,
+      "away_plays": 5,
+      "home_plays": 4
+    },
+    "special_teams": {
+      "category": "special_teams",
+      "away_ep": 4.56,
+      "home_ep": 1.65,
+      "diff": -2.92,
+      "away_plays": 12,
+      "home_plays": 13
+    },
+    "red_zone": {
+      "category": "red_zone",
+      "away_ep": 8.84,
+      "home_ep": 1.35,
+      "diff": -7.49,
+      "away_plays": 9,
+      "home_plays": 12
+    },
+    "third_down": {
+      "category": "third_down",
+      "away_ep": 3.4,
+      "home_ep": -0.34,
+      "diff": -3.74,
+      "away_plays": 11,
+      "home_plays": 5
+    },
+    "explosive_plays": {
+      "category": "explosive_plays",
+      "away_ep": 5.16,
+      "home_ep": 6.5,
+      "diff": 1.34,
+      "away_plays": 3,
+      "home_plays": 5
+    },
+    "other": {
+      "category": "other",
+      "away_ep": -2.3,
+      "home_ep": -0.83,
+      "diff": 1.47,
+      "away_plays": 29,
+      "home_plays": 22
+    }
+  },
+  "categorized_diff": -5.34,
+  "total_epa_diff": -5.34,
+  "epa_vs_score_gap": -2.34
+}

@@ -55,7 +55,7 @@ def refresh_players_endpoint(
 def get_recap_endpoint(season: str, week: str, away_team: str, home_team: str, away_score: str, home_score: str):
 
     game_id = f"{season}_{int(week) < 10 and '0' + str(week) or str(week)}_{away_team}_{home_team}"
-    _game_ledger, _selected_plays, _team_signals, _recap_cache = get_recap(
+    _game_ledger, _selected_plays, _team_signals = get_recap(
         game_id, season, week, away_team, home_team, int(away_score), int(home_score) 
     )
 
@@ -63,7 +63,6 @@ def get_recap_endpoint(season: str, week: str, away_team: str, home_team: str, a
         "game_ledger": _game_ledger,
         "selected_plays": _selected_plays,
         "team_signals": _team_signals,
-        "recap_cache": _recap_cache,
     }
 
 

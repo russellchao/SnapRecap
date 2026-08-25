@@ -200,26 +200,17 @@ def _sum_plays(plays: List[Play], home_team: str, away_team: str, credit_defense
     )
 
 
-def build_ledger(doc: GameDocument) -> tuple[GameLedger, Dict[int, str]]:
+def build_ledger(doc: GameDocument) -> GameLedger:
     home = doc.header.home_team
     away = doc.header.away_team
     plays = doc.plays
 
     claimed: set = set()
     categories: Dict[str, CategoryLedger] = {}
-    
-    # Ephemeral, request-scoped play_id -> category name lookup. Never
-    # persisted (categories/CategoryLedger stay exactly as M1 shipped them);
-    # this exists purely so recap.py can attribute an anchor play's category
-    # without re-querying or re-deriving from raw plays.
-    play_category_map: Dict[int, str] = {}
 
     for cat in LEDGER_CATEGORIES:
         cat_plays = [p for p in plays if id(p) not in claimed and cat.play_filter(p)]
         claimed.update(id(p) for p in cat_plays)
-        play_category_map.update(
-            {p.play_id: cat.name for p in cat_plays if p.play_id is not None}
-        )
         ledger = _sum_plays(cat_plays, home, away, cat.credit_defense)
         ledger.category = cat.name
         categories[cat.name] = ledger
@@ -234,9 +225,6 @@ def build_ledger(doc: GameDocument) -> tuple[GameLedger, Dict[int, str]]:
     other_ledger = _sum_plays(other_plays, home, away, credit_defense=False)
     other_ledger.category = "other"
     categories["other"] = other_ledger
-    play_category_map.update(
-        {p.play_id: "other" for p in other_plays if p.play_id is not None}
-    )
 
     categorized_diff = sum(c.diff for c in categories.values())
 
@@ -253,7 +241,7 @@ def build_ledger(doc: GameDocument) -> tuple[GameLedger, Dict[int, str]]:
         actual_margin = doc.header.home_score - doc.header.away_score
         epa_vs_score_gap = total_epa_diff - actual_margin
 
-    ledger = GameLedger(
+    return GameLedger(
         game_id=doc.header.game_id,
         away_team=away,
         home_team=home,
@@ -264,7 +252,6 @@ def build_ledger(doc: GameDocument) -> tuple[GameLedger, Dict[int, str]]:
         total_epa_diff=total_epa_diff,
         epa_vs_score_gap=epa_vs_score_gap,
     )
-    return ledger, play_category_map
 
 
 
@@ -292,7 +279,7 @@ if __name__ == "__main__":
         setattr(h, k, v)
     doc.header = h
 
-    ledger, play_category_map = build_ledger(doc)  # type: ignore[arg-type]
+    ledger = build_ledger(doc)  # type: ignore[arg-type]
 
     print(f"{away} @ {home}\n")
     for name, c in ledger.categories.items():
@@ -307,3 +294,9 @@ if __name__ == "__main__":
     print(f"total_epa_diff:    {ledger.total_epa_diff:+.2f}  (should match categorized_diff exactly)")
     print(f"epa_vs_score_gap:  {ledger.epa_vs_score_gap:+.2f}  (diagnostic only — expected to be nonzero)")
     print(f"actual margin:     {header['home_score'] - header['away_score']:+d}")
+
+    # Save the game ledger to a JSON file for inspection
+    ledger_json_filename = "../test_data/game_ledger.json"
+    with open(ledger_json_filename, "w") as f:
+        json.dump(ledger.to_dict(), f, indent=2)
+    print(f"\nGame ledger saved to {ledger_json_filename}")
