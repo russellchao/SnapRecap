@@ -27,9 +27,13 @@ export default function Recap() {
     const game = state?.game;
     const status = game?.status || "Unknown";
 
-    const [recap, setRecap] = useState(null);
     const [recapStatus, setRecapStatus] = useState(null);
     const [loading, setLoading] = useState(false);
+
+    const [gameLedger, setGameLedger] = useState(null);
+    const [anchorPlays, setAnchorPlays] = useState(null);
+    const [teamSignals, setTeamSignals] = useState(null);
+
 
     useEffect(() => {
         if (!game) return;
@@ -41,7 +45,10 @@ export default function Recap() {
             .then(({ status, data }) => {
                 if (!stale) {
                     setRecapStatus(status);
-                    setRecap(data);
+                    // `data` is null when the request failed or never reached the server.
+                    setGameLedger(data?.game_ledger ?? null);
+                    setAnchorPlays(data?.anchor_plays ?? null);
+                    setTeamSignals(data?.team_signals ?? null);
                     console.log("Fetched recap data:", data);
                 }
             })
@@ -60,7 +67,7 @@ export default function Recap() {
     if (!game) {
         return (
             <div className="recap recap-empty">
-                <p>No recap data available for this game.</p>
+                <p>Recap not available for this game.</p>
                 <Link className="recap-back" to="/games">← Back to games</Link>
             </div>
         );
@@ -127,9 +134,9 @@ export default function Recap() {
                 </div>
             ) : (
                 <p className="recap-placeholder">
-                    {recapStatus === 200
-                        ? "PBP Data exists for this game. Placeholder for Recap."
-                        : "Recap not available for this game yet."}
+                    {[gameLedger, anchorPlays, teamSignals].some((part) => part == null)
+                        ? "Recap not available for this game yet."
+                        : "PBP Data exists for this game. Placeholder for Recap."}
                 </p>
             )}
         </div>
