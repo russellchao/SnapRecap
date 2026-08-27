@@ -1,0 +1,108 @@
+/* Team Signals — both teams' offensive and defensive signal chips, side by side. */
+
+/* Both columns sit straight on the section's card frame, split by a single
+   divider rather than boxed in panels of their own. */
+.team-signals .signals-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.team-signals .signals-col {
+    padding: 4px 0 0;
+}
+
+.team-signals .signals-col + .signals-col {
+    border-left: 1px solid var(--rc-panel-line);
+    padding-left: 26px;
+}
+
+.team-signals .signals-col:first-child {
+    padding-right: 26px;
+}
+
+.team-signals .signals-col-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.team-signals .signals-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.team-signals .signals-col.home .signals-dot { background: var(--rc-home); }
+.team-signals .signals-col.away .signals-dot { background: var(--rc-away); }
+
+.team-signals .signals-col-head h3 {
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0;
+    color: var(--rc-ink);
+}
+
+.team-signals .signal-group {
+    margin-bottom: 22px;
+}
+
+.team-signals .signal-group:last-child {
+    margin-bottom: 0;
+}
+
+.team-signals .signal-group-label {
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--rc-ink-faint);
+    margin-bottom: 10px;
+}
+
+.team-signals .signal-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.team-signals .chip {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 14.5px;
+    padding: 7px 12px;
+    border: 1px solid var(--rc-panel-line);
+    color: var(--rc-ink-dim);
+    background: var(--rc-bg);
+    line-height: 1.25;
+}
+
+.team-signals .chip-value {
+    font-size: 16.5px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--rc-ink);
+}
+
+.team-signals .signals-col.home .chip-value { color: var(--rc-home); }
+.team-signals .signals-col.away .chip-value { color: var(--rc-away); }
+
+@media (max-width: 640px) {
+    .team-signals .signals-grid { grid-template-columns: 1fr; }
+    .team-signals .signals-col:first-child { padding-right: 0; padding-bottom: 22px; }
+
+    /* Stacked, so the divider runs across rather than down. */
+    .team-signals .signals-col + .signals-col {
+        border-left: none;
+        border-top: 1px solid var(--rc-panel-line);
+        padding-left: 0;
+        padding-top: 22px;
+    }
+
+    .team-signals .chip { font-size: 13.5px; padding: 6px 10px; }
+    .team-signals .chip-value { font-size: 15px; }
+}

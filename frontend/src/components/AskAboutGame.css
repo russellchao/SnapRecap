@@ -1,0 +1,60 @@
+/* Ask About This Game — the Q&A prompt box.
+   Sits straight on the section's card frame (RecapSection.css); only the input
+   is given a surface of its own. */
+
+.ask-about-game .qa-hint {
+    font-size: 15.5px;
+    color: var(--rc-ink-faint);
+    margin: 0 0 18px;
+}
+
+.ask-about-game .qa-input-row {
+    display: flex;
+    gap: 12px;
+}
+
+.ask-about-game .qa-input {
+    flex: 1;
+    min-width: 0;
+    background: var(--rc-bg);
+    border: 1px solid var(--rc-panel-line);
+    color: var(--rc-ink);
+    font-family: var(--sans);
+    font-size: 16.5px;
+    padding: 14px 16px;
+    outline: none;
+}
+
+.ask-about-game .qa-input::placeholder { color: var(--rc-ink-faint); }
+.ask-about-game .qa-input:focus { border-color: var(--rc-home-dim); }
+
+.ask-about-game .qa-submit {
+    font-family: var(--sans);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 16px;
+    font-weight: 700;
+    background: var(--rc-home);
+    color: #12150C;
+    border: none;
+    padding: 0 28px;
+    cursor: pointer;
+}
+
+.ask-about-game .qa-submit:hover { background: #D9FF6E; }
+
+.ask-about-game .qa-input:focus-visible,
+.ask-about-game .qa-submit:focus-visible {
+    outline: 2px solid var(--rc-home);
+    outline-offset: 2px;
+}
+
+.ask-about-game .qa-submit:disabled {
+    background: var(--rc-ink-faint);
+    cursor: default;
+}
+
+@media (max-width: 640px) {
+    .ask-about-game .qa-input-row { flex-direction: column; }
+    .ask-about-game .qa-submit { padding: 13px; }
+}

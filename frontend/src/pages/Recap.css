@@ -232,3 +232,17 @@
         font-size: 2.5rem;
     }
 }
+
+/* --- Recap body ---
+   Column the recap sections sit in. Each section's own look lives with its
+   component in src/components (GameLedger, AnchorPlays, TeamSignals,
+   AskAboutGame); the shared card frame, palette, and heading strip come from
+   components/RecapSection.css. */
+
+.recap-body {
+    /* Matches the header's width so the sections line up under it. */
+    max-width: 1100px;
+    margin: 0 auto;
+    padding-bottom: 4rem;
+    text-align: left;
+}

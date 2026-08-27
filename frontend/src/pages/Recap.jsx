@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useLocation, useParams, Link } from 'react-router-dom'
 import { fetchRecap } from '../api/fetch_recap'
+import GameLedger from '../components/GameLedger'
+import AnchorPlays from '../components/AnchorPlays'
+import TeamSignals from '../components/TeamSignals'
+import AskAboutGame from '../components/AskAboutGame'
 import './Recap.css'
 
 // Eagerly load every team logo. Files are named by full displayName, e.g. "Dallas Cowboys.png",
@@ -20,6 +24,7 @@ function splitTeamName(displayName) {
     const city = parts.join(' ');
     return { city, team_name };
 }
+
 
 export default function Recap() {
     const { season, week, away_team, home_team } = useParams();
@@ -82,6 +87,10 @@ export default function Recap() {
     const awayWon = awayScore >= homeScore;
     const homeWon = homeScore >= awayScore;
 
+    // Any one component is enough to show the recap body; each section renders
+    // only if its own data made it back.
+    const hasRecap = [gameLedger, anchorPlays, teamSignals].some((part) => part != null);
+
     return (
         <div className="recap">
             <header className="recap-header">
@@ -126,18 +135,32 @@ export default function Recap() {
                 </div>
             </header>
 
-            {/* Additional recap details can be added here */}
             {loading ? (
                 <div className="recap-loading" role="status" aria-live="polite">
                     <span className="recap-spinner" aria-hidden="true" />
                     <span>Loading recap…</span>
                 </div>
+            ) : hasRecap ? (
+                <div className="recap-body">
+                    {gameLedger && (
+                        <GameLedger ledger={gameLedger} awayAbbr={away_team} homeAbbr={home_team} />
+                    )}
+                    {anchorPlays?.length > 0 && (
+                        <AnchorPlays plays={anchorPlays} homeAbbr={home_team} />
+                    )}
+                    {teamSignals && (
+                        <TeamSignals
+                            signals={teamSignals}
+                            awayName={away.city}
+                            homeName={home.city}
+                            awayAbbr={away_team}
+                            homeAbbr={home_team}
+                        />
+                    )}
+                    <AskAboutGame />
+                </div>
             ) : (
-                <p className="recap-placeholder">
-                    {[gameLedger, anchorPlays, teamSignals].some((part) => part == null)
-                        ? "Recap not available for this game yet."
-                        : "PBP Data exists for this game. Placeholder for Recap."}
-                </p>
+                <p className="recap-placeholder">Recap not available for this game yet.</p>
             )}
         </div>
     );

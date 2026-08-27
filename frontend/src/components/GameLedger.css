@@ -1,0 +1,112 @@
+/* Game Ledger — per-category expected-points margin, diverging from a center axis.
+   The rows sit directly on the section's own card frame (see RecapSection.css),
+   so nothing in here paints a background of its own. */
+
+.game-ledger .ledger-teams {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.game-ledger .ledger-teams .tag {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.game-ledger .ledger-teams .home { color: var(--rc-home); }
+.game-ledger .ledger-teams .away { color: var(--rc-away); }
+
+/* Away (negative diff) grows left of the axis, home (positive) grows right,
+   with the category label pinned in the middle column. */
+.game-ledger .ledger-row {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 200px 1fr;
+    align-items: center;
+    height: 44px;
+    margin-bottom: 3px;
+}
+
+.game-ledger .ledger-axis {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--rc-panel-line);
+}
+
+.game-ledger .ledger-bar-track {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    position: relative;
+}
+
+.game-ledger .ledger-bar-track.left { justify-content: flex-end; }
+.game-ledger .ledger-bar-track.right { justify-content: flex-start; }
+
+.game-ledger .ledger-bar {
+    height: 18px;
+    border-radius: 1px;
+    flex-shrink: 0;
+}
+
+.game-ledger .ledger-bar.home { background: var(--rc-home); }
+.game-ledger .ledger-bar.away { background: var(--rc-away); }
+.game-ledger .ledger-bar.other { background: var(--rc-ink-faint); }
+
+.game-ledger .ledger-label {
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--rc-ink-dim);
+    padding: 0 8px;
+}
+
+.game-ledger .ledger-value {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--rc-ink-faint);
+    min-width: 52px;
+}
+
+/* On the left half the value sits before the bar in source order, so flip it
+   back around to keep it on the outside of the bar's end. */
+.game-ledger .ledger-bar-track.left .ledger-value {
+    text-align: right;
+    margin-right: 10px;
+    order: -1;
+}
+
+.game-ledger .ledger-bar-track.right .ledger-value {
+    text-align: left;
+    margin-left: 10px;
+}
+
+.game-ledger .ledger-foot {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--rc-panel-line);
+    font-size: 14px;
+    color: var(--rc-ink-faint);
+}
+
+.game-ledger .ledger-foot .reconcile {
+    letter-spacing: 0.03em;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--rc-ink-dim);
+}
+
+@media (max-width: 640px) {
+    .game-ledger .ledger-row { grid-template-columns: 1fr 110px 1fr; }
+    .game-ledger .ledger-label { font-size: 13px; }
+    .game-ledger .ledger-value { font-size: 14px; min-width: 42px; }
+}
