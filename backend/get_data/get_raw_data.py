@@ -12,17 +12,15 @@ import pandas as pd
 import sys
 
 
-def get_pbp_data(season, week, away_team, home_team):
+def get_pbp_data(season, game_id):
     try: 
         pbp = nfl.load_pbp(season).to_pandas()
-        filtered_pbp = pbp[
-            (pbp['week'] == week) & (pbp['home_team'] == home_team) & (pbp['away_team'] == away_team)
-        ]
+        filtered_pbp = pbp[(pbp['game_id'] == game_id)]
 
         if filtered_pbp.empty:
             return {
                 f"Error": 
-                f"Play-by-play data not available for the game: {away_team} vs. {home_team} in Week {week} of the {season} Season"
+                f"Play-by-play data not available for the game with ID: {game_id}"
             }
 
         return filtered_pbp
@@ -30,16 +28,14 @@ def get_pbp_data(season, week, away_team, home_team):
     except Exception as e:
         return {
             f"Error": 
-            f"An error occurred while fetching play-by-play data for the game: {away_team} vs. {home_team} in Week {week} of the {season} Season. Details: {str(e)}"
+            f"An error occurred while fetching play-by-play data for the game with ID: {game_id}. Details: {str(e)}"
         }
 
 
 def get_participation_data(season, game_id):
     try:
         participation = nfl.load_participation(season).to_pandas()
-        filtered_participation = participation[
-            (participation['nflverse_game_id'] == game_id)
-        ]
+        filtered_participation = participation[(participation['nflverse_game_id'] == game_id)]
 
         if filtered_participation.empty:
             return {
@@ -68,7 +64,7 @@ if __name__ == "__main__":
     
     game_id = f"{season}_{week < 10 and '0' + str(week) or str(week)}_{away_team}_{home_team}"
 
-    pbp_data = get_pbp_data(season, week, away_team, home_team)
+    pbp_data = get_pbp_data(season, game_id)
     participation_data = get_participation_data(season, game_id)
 
     if isinstance(pbp_data, pd.DataFrame):

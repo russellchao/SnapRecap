@@ -5,9 +5,6 @@ Clean the PBP and Participation data into a single dataframe
 import pandas as pd
 
 pbp_cols_to_drop = [
-    # PBP dataset is already filtered by Game ID
-    "game_id", 
-
     # Legacy identifier
     "old_game_id",
 

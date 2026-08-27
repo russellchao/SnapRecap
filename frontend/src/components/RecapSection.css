@@ -1,0 +1,85 @@
+/*
+    Shared chrome for the recap page's sections (Game Ledger, Anchor Plays,
+    Team Signals, and the Q&A card): the card frame they all sit in, the palette
+    they draw from, and the heading strip above each one.
+
+    Imported by every recap component, so the tokens are available to each of
+    them without any one owning the others' styles. Custom properties live on
+    `.recap-section` itself, which is the root element of each component, so
+    they inherit down into whatever that component renders.
+*/
+
+.recap-section {
+    /* Surfaces track the game header in Recap.css — same gradient, same border,
+       so a section reads as another panel of the same page. */
+    --rc-panel: #1a1d26;        /* raised panel inside a section (anchor cards) */
+    --rc-panel-line: #2a2e39;   /* borders and dividers — the header's border */
+    --rc-bg: #12141b;           /* inset surface (chips, the Q&A input) */
+    --rc-line: #22252e;         /* unfilled bar track */
+    --rc-ink: #e6e6e6;
+    --rc-ink-dim: #9aa0ac;
+    --rc-ink-faint: #6b7180;
+    /* Home and away default to lime/orange, but the recap page overrides them per
+       matchup with the two teams' own brand colors — see theme/team_colors.js,
+       whose palette is applied inline to each section root. */
+    --rc-home: #C7FF3D;
+    --rc-home-dim: #7C8E2E;
+    --rc-away: #FF8A3D;
+    --rc-away-dim: #5C4A2C;
+    /* The page's own accent, fixed regardless of who is playing. */
+    --rc-accent: #C7FF3D;
+    --rc-accent-dim: #7C8E2E;
+
+    background: linear-gradient(180deg, #161922 0%, #0f1117 100%);
+    border: 1px solid var(--rc-panel-line);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    padding: 1.5rem 1.75rem 1.75rem;
+    margin-top: 1.75rem;
+
+    font-family: var(--sans);
+    color: var(--rc-ink);
+    text-align: left;
+}
+
+.recap-section .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    border-bottom: 1px solid var(--rc-panel-line);
+    padding-bottom: 12px;
+    margin-bottom: 24px;
+}
+
+.recap-section .section-head h2 {
+    font-family: var(--sans);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--rc-ink);
+    margin: 0;
+}
+
+.recap-section .section-head .meta {
+    font-size: 15px;
+    color: var(--rc-ink-faint);
+    white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+    .recap-section {
+        padding: 1.25rem 1rem 1.5rem;
+    }
+
+    .recap-section .section-head {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+
+    .recap-section .section-head h2 {
+        font-size: 23px;
+    }
+}

@@ -1,5 +1,9 @@
 # SnapRecap Backend
 
+## ⚠️ NOTE
+This README.md needs to be revamped as the backend architecture changed from when it was last written.
+##
+
 The backend turns [nflverse](https://github.com/nflverse) play-by-play data into a structured,
 prompt-ready selection of a game's most narratively important plays. It is the heart of SnapRecap:
 the LLM-written recap is generated from the output of this pipeline (the final LLM generation call

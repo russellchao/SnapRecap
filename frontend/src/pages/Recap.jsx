@@ -1,6 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useLocation, useParams, Link } from 'react-router-dom'
 import { fetchRecap } from '../api/fetch_recap'
+import GameLedger from '../components/GameLedger'
+import AnchorPlays from '../components/AnchorPlays'
+import TeamSignals from '../components/TeamSignals'
+import AskAboutGame from '../components/AskAboutGame'
+import { teamPalette } from '../theme/team_colors'
 import './Recap.css'
 
 // Eagerly load every team logo. Files are named by full displayName, e.g. "Dallas Cowboys.png",
@@ -21,8 +26,9 @@ function splitTeamName(displayName) {
     return { city, team_name };
 }
 
+
 export default function Recap() {
-    const { gameId } = useParams();
+    const { season, week, away_team, home_team } = useParams();
     const { state } = useLocation();
     const game = state?.game;
     const status = game?.status || "Unknown";
@@ -30,13 +36,38 @@ export default function Recap() {
     const [recapStatus, setRecapStatus] = useState(null);
     const [loading, setLoading] = useState(false);
 
+    const [gameLedger, setGameLedger] = useState(null);
+    const [anchorPlays, setAnchorPlays] = useState(null);
+    const [teamSignals, setTeamSignals] = useState(null);
+
+
     useEffect(() => {
         if (!game) return;
+        // StrictMode runs effects twice in dev; `stale` keeps the discarded first
+        // run from writing state back after the real one has already resolved.
+        let stale = false;
         setLoading(true);
-        fetchRecap(game.season, game.week, game.away_team, game.home_team)
-            .then(({ status }) => setRecapStatus(status))
-            .finally(() => setLoading(false));
-    }, [game]);
+        fetchRecap(season, week, away_team, home_team, game.away_score, game.home_score)
+            .then(({ status, data }) => {
+                if (!stale) {
+                    // `data` is null when the request failed or never reached the server.
+                    setRecapStatus(status);
+                    console.log("Fetched recap data:", data);
+                    setGameLedger(data?.game_ledger ?? null);
+                    setAnchorPlays(data?.anchor_plays ?? null);
+                    setTeamSignals(data?.team_signals ?? null);
+                }
+            })
+            .finally(() => {
+                if (!stale) setLoading(false);
+            });
+        return () => { stale = true; };
+    }, [season, week, away_team, home_team]);
+
+    // The two teams' brand colors, as the `--rc-home` / `--rc-away` overrides each
+    // recap section paints from. Declared above the early return below so the hook
+    // order stays fixed.
+    const teamColors = useMemo(() => teamPalette(away_team, home_team), [away_team, home_team]);
 
     /*
         The game object is passed via router state from the games list.
@@ -47,7 +78,7 @@ export default function Recap() {
     if (!game) {
         return (
             <div className="recap recap-empty">
-                <p>No recap data available for this game.</p>
+                <p>Recap not available for this game.</p>
                 <Link className="recap-back" to="/games">← Back to games</Link>
             </div>
         );
@@ -61,6 +92,10 @@ export default function Recap() {
     const homeScore = Number(game.home_score);
     const awayWon = awayScore >= homeScore;
     const homeWon = homeScore >= awayScore;
+
+    // Any one component is enough to show the recap body; each section renders
+    // only if its own data made it back.
+    const hasRecap = [gameLedger, anchorPlays, teamSignals].some((part) => part != null);
 
     return (
         <div className="recap">
@@ -106,18 +141,33 @@ export default function Recap() {
                 </div>
             </header>
 
-            {/* Additional recap details can be added here */}
             {loading ? (
                 <div className="recap-loading" role="status" aria-live="polite">
                     <span className="recap-spinner" aria-hidden="true" />
                     <span>Loading recap…</span>
                 </div>
+            ) : hasRecap ? (
+                <div className="recap-body">
+                    {gameLedger && (
+                        <GameLedger ledger={gameLedger} awayAbbr={away_team} homeAbbr={home_team} colors={teamColors} />
+                    )}
+                    {anchorPlays?.length > 0 && (
+                        <AnchorPlays plays={anchorPlays} homeAbbr={home_team} colors={teamColors} />
+                    )}
+                    {teamSignals && (
+                        <TeamSignals
+                            signals={teamSignals}
+                            awayName={away.city}
+                            homeName={home.city}
+                            awayAbbr={away_team}
+                            homeAbbr={home_team}
+                            colors={teamColors}
+                        />
+                    )}
+                    <AskAboutGame ledger={gameLedger} plays={anchorPlays} signals={teamSignals} />
+                </div>
             ) : (
-                <p className="recap-placeholder">
-                    {recapStatus === 200
-                        ? "PBP Data exists for this game. Placeholder for Recap."
-                        : "Recap not available for this game yet."}
-                </p>
+                <p className="recap-placeholder">Recap not available for this game yet.</p>
             )}
         </div>
     );

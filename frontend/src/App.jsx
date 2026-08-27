@@ -13,7 +13,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/games" />} /> {/* Set the default route to /games */}
         <Route path="/games" element={<Games />} />
-        <Route path="/recap/:gameId" element={<Recap />} />
+        <Route path="/recap/:season/:week/:away_team/:home_team" element={<Recap />} />
         <Route path="/about" element={<About />} />
         <Route path="*" element={<Navigate to="/games" />} /> {/* Redirect any unknown routes to /games */}
       </Routes>

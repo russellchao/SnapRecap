@@ -74,6 +74,9 @@ class Play:
     is_pass: Optional[bool]
     is_rush: Optional[bool]
     is_special: Optional[bool]
+    extra_point_attempt: Optional[bool]
+    two_point_attempt: Optional[bool]
+    field_goal_attempt: Optional[bool]
     shotgun: Optional[bool]
     no_huddle: Optional[bool]
     qb_dropback: Optional[bool]
@@ -131,7 +134,7 @@ class Play:
     passer: Optional[str]
     rusher: Optional[str]
     receiver: Optional[str]
-    desc: Optional[str]
+    description: Optional[str]
 
     @classmethod
     def from_row(cls, row) -> "Play":
@@ -159,6 +162,9 @@ class Play:
             is_pass=_bool(g("pass")),
             is_rush=_bool(g("rush")),
             is_special=_bool(g("special")),
+            extra_point_attempt=_bool(g("extra_point_attempt")),
+            two_point_attempt=_bool(g("two_point_attempt")),
+            field_goal_attempt=_bool(g("field_goal_attempt")),
             shotgun=_bool(g("shotgun")),
             no_huddle=_bool(g("no_huddle")),
             qb_dropback=_bool(g("qb_dropback")),
@@ -211,7 +217,7 @@ class Play:
             rusher=get_player_full_name(_str(g("rusher_player_id"))),
             receiver=get_player_full_name(_str(g("receiver_player_id"))),
 
-            desc=_str(g("desc")),
+            description=_str(g("desc")),
         )
 
 
@@ -277,7 +283,7 @@ if __name__ == "__main__":
             f"[{p.play_id}] {clock} {p.posteam or '?'} vs {p.defteam or '?'} "
             f"{dd:>5} @{p.yardline_100 if p.yardline_100 is not None else '?'} "
             f"{(p.play_type or '?'):<10} {p.yards_gained if p.yards_gained is not None else '?':>3} yds "
-            f"| {p.desc or ''}"
+            f"| {p.description or ''}"
         )
 
     csv_file = "../test_data/preprocessed_data.csv"

@@ -306,6 +306,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": null,
+      "two_point_attempt": null,
+      "field_goal_attempt": null,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": null,
@@ -351,7 +354,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "GAME"
+      "description": "GAME"
     },
     {
       "play_id": 39,
@@ -373,6 +376,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": true,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -418,7 +424,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "19-M.Wishnowsky kicks 57 yards from BUF 35 to JAX 8. 36-L.Allen to JAX 34 for 26 yards (44-J.Andreessen)."
+      "description": "19-M.Wishnowsky kicks 57 yards from BUF 35 to JAX 8. 36-L.Allen to JAX 34 for 26 yards (44-J.Andreessen)."
     },
     {
       "play_id": 62,
@@ -440,6 +446,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -485,7 +494,7 @@
       "passer": null,
       "rusher": "Parker Washington",
       "receiver": null,
-      "desc": "(14:56) 11-P.Washington right end to JAX 31 for -3 yards (58-M.Milano)."
+      "description": "(14:56) 11-P.Washington right end to JAX 31 for -3 yards (58-M.Milano)."
     },
     {
       "play_id": 84,
@@ -507,6 +516,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -552,7 +564,7 @@
       "passer": "Trevor Lawrence",
       "rusher": null,
       "receiver": "Travis Etienne",
-      "desc": "(14:15) (Shotgun) 16-T.Lawrence pass short left to 1-T.Etienne to JAX 36 for 5 yards (50-G.Rousseau; 96-D.Walker)."
+      "description": "(14:15) (Shotgun) 16-T.Lawrence pass short left to 1-T.Etienne to JAX 36 for 5 yards (50-G.Rousseau; 96-D.Walker)."
     },
     {
       "play_id": 109,
@@ -574,6 +586,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": true,
       "qb_dropback": true,
@@ -619,7 +634,7 @@
       "passer": "Trevor Lawrence",
       "rusher": null,
       "receiver": "Jakobi Meyers",
-      "desc": "(13:47) (No Huddle, Shotgun) 16-T.Lawrence pass incomplete short left to 3-J.Meyers."
+      "description": "(13:47) (No Huddle, Shotgun) 16-T.Lawrence pass incomplete short left to 3-J.Meyers."
     },
     {
       "play_id": 132,
@@ -641,6 +656,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": true,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -686,7 +704,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "(13:42) 9-L.Cooke punts 58 yards to BUF 6, Center-46-R.Matiscik, downed by JAX-25-R.Lane."
+      "description": "(13:42) 9-L.Cooke punts 58 yards to BUF 6, Center-46-R.Matiscik, downed by JAX-25-R.Lane."
     },
     {
       "play_id": 152,
@@ -708,6 +726,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -753,7 +774,7 @@
       "passer": null,
       "rusher": "James Cook",
       "receiver": null,
-      "desc": "(13:29) 4-J.Cook right guard to BUF 9 for 3 yards (44-T.Walker)."
+      "description": "(13:29) 4-J.Cook right guard to BUF 9 for 3 yards (44-T.Walker)."
     },
     {
       "play_id": 174,
@@ -775,6 +796,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": true,
@@ -820,7 +844,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": "Khalil Shakir",
-      "desc": "(12:49) 17-J.Allen pass short left to 10-K.Shakir to BUF 9 for no gain (6-G.Newsome; 29-E.Murray)."
+      "description": "(12:49) 17-J.Allen pass short left to 10-K.Shakir to BUF 9 for no gain (6-G.Newsome; 29-E.Murray)."
     },
     {
       "play_id": 199,
@@ -842,6 +866,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -887,7 +914,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": "Tyrell Shavers",
-      "desc": "(12:04) (Shotgun) 17-J.Allen pass short left to 14-T.Shavers pushed ob at BUF 23 for 14 yards (29-E.Murray)."
+      "description": "(12:04) (Shotgun) 17-J.Allen pass short left to 14-T.Shavers pushed ob at BUF 23 for 14 yards (29-E.Murray)."
     },
     {
       "play_id": 229,
@@ -909,6 +936,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -954,7 +984,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "(11:27) 4-J.Cook right tackle to BUF 27 for 4 yards (30-M.Brown). PENALTY on BUF-14-T.Shavers, Offensive Holding, 10 yards, enforced at BUF 23 - No Play."
+      "description": "(11:27) 4-J.Cook right tackle to BUF 27 for 4 yards (30-M.Brown). PENALTY on BUF-14-T.Shavers, Offensive Holding, 10 yards, enforced at BUF 23 - No Play."
     },
     {
       "play_id": 262,
@@ -976,6 +1006,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -1021,7 +1054,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": "Khalil Shakir",
-      "desc": "(11:17) (Shotgun) 17-J.Allen pass short left to 10-K.Shakir to BUF 25 for 12 yards (29-E.Murray)."
+      "description": "(11:17) (Shotgun) 17-J.Allen pass short left to 10-K.Shakir to BUF 25 for 12 yards (29-E.Murray)."
     },
     {
       "play_id": 292,
@@ -1043,6 +1076,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -1088,7 +1124,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": "Brandin Cooks",
-      "desc": "(10:34) (Shotgun) 17-J.Allen pass short right to 18-B.Cooks ran ob at BUF 35 for 10 yards (30-M.Brown)."
+      "description": "(10:34) (Shotgun) 17-J.Allen pass short right to 18-B.Cooks ran ob at BUF 35 for 10 yards (30-M.Brown)."
     },
     {
       "play_id": 322,
@@ -1110,6 +1146,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -1155,7 +1194,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "(9:54) PENALTY on BUF-85-J.Hawes, False Start, 5 yards, enforced at BUF 35 - No Play."
+      "description": "(9:54) PENALTY on BUF-85-J.Hawes, False Start, 5 yards, enforced at BUF 35 - No Play."
     },
     {
       "play_id": 346,
@@ -1177,6 +1216,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -1222,7 +1264,7 @@
       "passer": null,
       "rusher": "Josh Allen",
       "receiver": null,
-      "desc": "(9:31) (Shotgun) 17-J.Allen scrambles left end to BUF 38 for 8 yards (0-D.Lloyd)."
+      "description": "(9:31) (Shotgun) 17-J.Allen scrambles left end to BUF 38 for 8 yards (0-D.Lloyd)."
     },
     {
       "play_id": 368,
@@ -1244,6 +1286,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -1289,7 +1334,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": "Khalil Shakir",
-      "desc": "(8:47) (Shotgun) 17-J.Allen pass short right to 10-K.Shakir to BUF 38 for no gain (22-J.Jones)."
+      "description": "(8:47) (Shotgun) 17-J.Allen pass short right to 10-K.Shakir to BUF 38 for no gain (22-J.Jones)."
     },
     {
       "play_id": 393,
@@ -1311,6 +1356,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -1356,7 +1404,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": "Dalton Kincaid",
-      "desc": "(8:02) (Shotgun) 17-J.Allen pass incomplete short middle to 86-D.Kincaid."
+      "description": "(8:02) (Shotgun) 17-J.Allen pass incomplete short middle to 86-D.Kincaid."
     },
     {
       "play_id": 416,
@@ -1378,6 +1426,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": true,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -1423,7 +1474,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "(7:58) 19-M.Wishnowsky punts 42 yards to JAX 20, Center-69-R.Ferguson, fair catch by 11-P.Washington."
+      "description": "(7:58) 19-M.Wishnowsky punts 42 yards to JAX 20, Center-69-R.Ferguson, fair catch by 11-P.Washington."
     },
     {
       "play_id": 436,
@@ -1445,6 +1496,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -1490,7 +1544,7 @@
       "passer": null,
       "rusher": "Travis Etienne",
       "receiver": null,
-      "desc": "(7:51) 1-T.Etienne up the middle to JAX 23 for 3 yards (57-A.Epenesa)."
+      "description": "(7:51) 1-T.Etienne up the middle to JAX 23 for 3 yards (57-A.Epenesa)."
     },
     {
       "play_id": 465,
@@ -1512,6 +1566,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": false,
@@ -1557,7 +1614,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "(7:05) (Shotgun) PENALTY on JAX-72-W.Little, False Start, 5 yards, enforced at JAX 23 - No Play."
+      "description": "(7:05) (Shotgun) PENALTY on JAX-72-W.Little, False Start, 5 yards, enforced at JAX 23 - No Play."
     },
     {
       "play_id": 489,
@@ -1579,6 +1636,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -1624,7 +1684,7 @@
       "passer": "Trevor Lawrence",
       "rusher": null,
       "receiver": "Travis Etienne",
-      "desc": "(6:45) (Shotgun) 16-T.Lawrence pass short left to 1-T.Etienne pushed ob at JAX 28 for 10 yards (45-S.Thompson)."
+      "description": "(6:45) (Shotgun) 16-T.Lawrence pass short left to 1-T.Etienne pushed ob at JAX 28 for 10 yards (45-S.Thompson)."
     },
     {
       "play_id": 519,
@@ -1646,6 +1706,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": false,
@@ -1691,7 +1754,7 @@
       "passer": null,
       "rusher": "Travis Etienne",
       "receiver": null,
-      "desc": "(6:00) (Shotgun) 1-T.Etienne up the middle to JAX 40 for 12 yards (21-J.Poyer)."
+      "description": "(6:00) (Shotgun) 1-T.Etienne up the middle to JAX 40 for 12 yards (21-J.Poyer)."
     },
     {
       "play_id": 541,
@@ -1713,6 +1776,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": true,
       "qb_dropback": true,
@@ -1758,7 +1824,7 @@
       "passer": "Trevor Lawrence",
       "rusher": null,
       "receiver": "Parker Washington",
-      "desc": "(5:30) (No Huddle, Shotgun) 16-T.Lawrence pass incomplete short middle to 11-P.Washington."
+      "description": "(5:30) (No Huddle, Shotgun) 16-T.Lawrence pass incomplete short middle to 11-P.Washington."
     },
     {
       "play_id": 564,
@@ -1780,6 +1846,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -1825,7 +1894,7 @@
       "passer": "Trevor Lawrence",
       "rusher": null,
       "receiver": "Parker Washington",
-      "desc": "(5:25) (Shotgun) 16-T.Lawrence pass short middle intended for 11-P.Washington INTERCEPTED by 45-S.Thompson at BUF 48. 45-S.Thompson to JAX 33 for 19 yards (16-T.Lawrence)."
+      "description": "(5:25) (Shotgun) 16-T.Lawrence pass short middle intended for 11-P.Washington INTERCEPTED by 45-S.Thompson at BUF 48. 45-S.Thompson to JAX 33 for 19 yards (16-T.Lawrence)."
     },
     {
       "play_id": 591,
@@ -1847,6 +1916,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -1892,7 +1964,7 @@
       "passer": null,
       "rusher": "James Cook",
       "receiver": null,
-      "desc": "(5:15) 4-J.Cook right tackle to JAX 30 for 3 yards (91-A.Armstead)."
+      "description": "(5:15) 4-J.Cook right tackle to JAX 30 for 3 yards (91-A.Armstead)."
     },
     {
       "play_id": 613,
@@ -1914,6 +1986,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": true,
@@ -1959,7 +2034,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": "James Cook",
-      "desc": "(4:35) 17-J.Allen pass short right to 4-J.Cook to JAX 29 for 1 yard (0-D.Lloyd)."
+      "description": "(4:35) 17-J.Allen pass short right to 4-J.Cook to JAX 29 for 1 yard (0-D.Lloyd)."
     },
     {
       "play_id": 638,
@@ -1981,6 +2056,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": false,
@@ -2026,7 +2104,7 @@
       "passer": null,
       "rusher": "Josh Allen",
       "receiver": null,
-      "desc": "(3:51) (Shotgun) 17-J.Allen up the middle to JAX 27 for 2 yards (41-J.Hines-Allen; 44-T.Walker)."
+      "description": "(3:51) (Shotgun) 17-J.Allen up the middle to JAX 27 for 2 yards (41-J.Hines-Allen; 44-T.Walker)."
     },
     {
       "play_id": 660,
@@ -2048,6 +2126,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -2093,7 +2174,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "(3:07) (Field Goal formation) PENALTY on BUF, Delay of Game, 5 yards, enforced at JAX 27 - No Play."
+      "description": "(3:07) (Field Goal formation) PENALTY on BUF, Delay of Game, 5 yards, enforced at JAX 27 - No Play."
     },
     {
       "play_id": 684,
@@ -2115,6 +2196,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": true,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": true,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -2160,7 +2244,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "(3:00) 15-M.Prater 50 yard field goal is GOOD, Center-69-R.Ferguson, Holder-19-M.Wishnowsky."
+      "description": "(3:00) 15-M.Prater 50 yard field goal is GOOD, Center-69-R.Ferguson, Holder-19-M.Wishnowsky."
     },
     {
       "play_id": 704,
@@ -2182,6 +2266,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": true,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -2227,7 +2314,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "19-M.Wishnowsky kicks 65 yards from BUF 35 to end zone, Touchback to the JAX 35."
+      "description": "19-M.Wishnowsky kicks 65 yards from BUF 35 to end zone, Touchback to the JAX 35."
     },
     {
       "play_id": 728,
@@ -2249,6 +2336,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": true,
@@ -2294,7 +2384,7 @@
       "passer": "Trevor Lawrence",
       "rusher": null,
       "receiver": "Brenton Strange",
-      "desc": "(2:54) 16-T.Lawrence pass short left to 85-B.Strange to JAX 44 for 9 yards (58-M.Milano)."
+      "description": "(2:54) 16-T.Lawrence pass short left to 85-B.Strange to JAX 44 for 9 yards (58-M.Milano)."
     },
     {
       "play_id": 753,
@@ -2316,6 +2406,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -2361,7 +2454,7 @@
       "passer": "Trevor Lawrence",
       "rusher": null,
       "receiver": "Travis Etienne",
-      "desc": "(2:12) (Shotgun) 16-T.Lawrence pass short left to 1-T.Etienne to 50 for 6 yards (42-D.Williams)."
+      "description": "(2:12) (Shotgun) 16-T.Lawrence pass short left to 1-T.Etienne to 50 for 6 yards (42-D.Williams)."
     },
     {
       "play_id": 778,
@@ -2383,6 +2476,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -2428,7 +2524,7 @@
       "passer": null,
       "rusher": "Bhayshul Tuten",
       "receiver": null,
-      "desc": "(1:32) 33-B.Tuten right end to BUF 30 for 20 yards (58-M.Milano)."
+      "description": "(1:32) 33-B.Tuten right end to BUF 30 for 20 yards (58-M.Milano)."
     },
     {
       "play_id": 800,
@@ -2450,6 +2546,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": true,
       "qb_dropback": false,
@@ -2495,7 +2594,7 @@
       "passer": null,
       "rusher": "Bhayshul Tuten",
       "receiver": null,
-      "desc": "(:56) (No Huddle) 33-B.Tuten right tackle to BUF 16 for 14 yards (21-J.Poyer)."
+      "description": "(:56) (No Huddle) 33-B.Tuten right tackle to BUF 16 for 14 yards (21-J.Poyer)."
     },
     {
       "play_id": 822,
@@ -2517,6 +2616,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -2562,7 +2664,7 @@
       "passer": null,
       "rusher": "Bhayshul Tuten",
       "receiver": null,
-      "desc": "(:10) 33-B.Tuten left end pushed ob at BUF 3 for 13 yards (27-T.White)."
+      "description": "(:10) 33-B.Tuten left end pushed ob at BUF 3 for 13 yards (27-T.White)."
     },
     {
       "play_id": 849,
@@ -2584,6 +2686,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": null,
+      "two_point_attempt": null,
+      "field_goal_attempt": null,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": null,
@@ -2629,7 +2734,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "END QUARTER 1"
+      "description": "END QUARTER 1"
     },
     {
       "play_id": 869,
@@ -2651,6 +2756,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -2696,7 +2804,7 @@
       "passer": "Trevor Lawrence",
       "rusher": null,
       "receiver": "Brenton Strange",
-      "desc": "(15:00) (Shotgun) 16-T.Lawrence pass short middle to 85-B.Strange to BUF 3 for no gain (50-G.Rousseau)."
+      "description": "(15:00) (Shotgun) 16-T.Lawrence pass short middle to 85-B.Strange to BUF 3 for no gain (50-G.Rousseau)."
     },
     {
       "play_id": 894,
@@ -2718,6 +2826,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -2763,7 +2874,7 @@
       "passer": "Trevor Lawrence",
       "rusher": null,
       "receiver": "Brian Thomas Jr.",
-      "desc": "(14:18) (Shotgun) 16-T.Lawrence pass short left to 7-B.Thomas for 3 yards, TOUCHDOWN."
+      "description": "(14:18) (Shotgun) 16-T.Lawrence pass short left to 7-B.Thomas for 3 yards, TOUCHDOWN."
     },
     {
       "play_id": 920,
@@ -2785,6 +2896,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": true,
+      "extra_point_attempt": true,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -2830,7 +2944,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "39-C.Little extra point is GOOD, Center-46-R.Matiscik, Holder-9-L.Cooke."
+      "description": "39-C.Little extra point is GOOD, Center-46-R.Matiscik, Holder-9-L.Cooke."
     },
     {
       "play_id": 935,
@@ -2852,6 +2966,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": true,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -2897,7 +3014,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "39-C.Little kicks 65 yards from JAX 35 to BUF 0. 22-R.Davis to BUF 34 for 34 yards (36-L.Allen; 30-M.Brown). FUMBLES (36-L.Allen), RECOVERED by JAX-0-D.Lloyd at BUF 36. BUF-22-R.Davis was injured during the play."
+      "description": "39-C.Little kicks 65 yards from JAX 35 to BUF 0. 22-R.Davis to BUF 34 for 34 yards (36-L.Allen; 30-M.Brown). FUMBLES (36-L.Allen), RECOVERED by JAX-0-D.Lloyd at BUF 36. BUF-22-R.Davis was injured during the play."
     },
     {
       "play_id": 984,
@@ -2919,6 +3036,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": false,
@@ -2964,7 +3084,7 @@
       "passer": null,
       "rusher": "Travis Etienne",
       "receiver": null,
-      "desc": "(14:05) (Shotgun) 1-T.Etienne right end to BUF 29 for 7 yards (7-Ta.Johnson)."
+      "description": "(14:05) (Shotgun) 1-T.Etienne right end to BUF 29 for 7 yards (7-Ta.Johnson)."
     },
     {
       "play_id": 1006,
@@ -2986,6 +3106,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -3031,7 +3154,7 @@
       "passer": "Trevor Lawrence",
       "rusher": null,
       "receiver": "Jakobi Meyers",
-      "desc": "(13:21) (Shotgun) 16-T.Lawrence pass short left to 3-J.Meyers to BUF 17 for 12 yards (7-Ta.Johnson) [50-G.Rousseau]."
+      "description": "(13:21) (Shotgun) 16-T.Lawrence pass short left to 3-J.Meyers to BUF 17 for 12 yards (7-Ta.Johnson) [50-G.Rousseau]."
     },
     {
       "play_id": 1031,
@@ -3053,6 +3176,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": true,
       "qb_dropback": true,
@@ -3098,7 +3224,7 @@
       "passer": "Trevor Lawrence",
       "rusher": null,
       "receiver": "Jakobi Meyers",
-      "desc": "(12:54) (No Huddle, Shotgun) 16-T.Lawrence pass incomplete short left to 3-J.Meyers (58-M.Milano)."
+      "description": "(12:54) (No Huddle, Shotgun) 16-T.Lawrence pass incomplete short left to 3-J.Meyers (58-M.Milano)."
     },
     {
       "play_id": 1054,
@@ -3120,6 +3246,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -3165,7 +3294,7 @@
       "passer": "Trevor Lawrence",
       "rusher": null,
       "receiver": null,
-      "desc": "(12:50) (Shotgun) 16-T.Lawrence sacked at BUF 19 for -2 yards (50-G.Rousseau)."
+      "description": "(12:50) (Shotgun) 16-T.Lawrence sacked at BUF 19 for -2 yards (50-G.Rousseau)."
     },
     {
       "play_id": 1083,
@@ -3187,6 +3316,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -3232,7 +3364,7 @@
       "passer": null,
       "rusher": "Trevor Lawrence",
       "receiver": null,
-      "desc": "(12:06) (Shotgun) 16-T.Lawrence scrambles left tackle to BUF 9 for 10 yards (92-D.Jones)."
+      "description": "(12:06) (Shotgun) 16-T.Lawrence scrambles left tackle to BUF 9 for 10 yards (92-D.Jones)."
     },
     {
       "play_id": 1117,
@@ -3254,6 +3386,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -3299,7 +3434,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "Timeout #1 by JAX at 11:21."
+      "description": "Timeout #1 by JAX at 11:21."
     },
     {
       "play_id": 1105,
@@ -3321,6 +3456,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": false,
@@ -3366,7 +3504,7 @@
       "passer": null,
       "rusher": "Trevor Lawrence",
       "receiver": null,
-      "desc": "(11:21) (Shotgun) 16-T.Lawrence left end to BUF 7 for 2 yards (45-S.Thompson). (Virtual Measurement). Buffalo challenged the first down ruling, and the play was REVERSED. (Shotgun) 16-T.Lawrence left end to BUF 8 for 1 yard (45-S.Thompson)."
+      "description": "(11:21) (Shotgun) 16-T.Lawrence left end to BUF 7 for 2 yards (45-S.Thompson). (Virtual Measurement). Buffalo challenged the first down ruling, and the play was REVERSED. (Shotgun) 16-T.Lawrence left end to BUF 8 for 1 yard (45-S.Thompson)."
     },
     {
       "play_id": 1143,
@@ -3388,6 +3526,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -3433,7 +3574,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": "Khalil Shakir",
-      "desc": "(11:19) (Shotgun) 17-J.Allen pass short right to 10-K.Shakir to BUF 12 for 4 yards (30-M.Brown)."
+      "description": "(11:19) (Shotgun) 17-J.Allen pass short right to 10-K.Shakir to BUF 12 for 4 yards (30-M.Brown)."
     },
     {
       "play_id": 1199,
@@ -3455,6 +3596,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -3500,7 +3644,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": "Khalil Shakir",
-      "desc": "(10:42) (Shotgun) 17-J.Allen pass short left to 10-K.Shakir pushed ob at BUF 27 for 15 yards (23-F.Oluokun)."
+      "description": "(10:42) (Shotgun) 17-J.Allen pass short left to 10-K.Shakir pushed ob at BUF 27 for 15 yards (23-F.Oluokun)."
     },
     {
       "play_id": 1229,
@@ -3522,6 +3666,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": true,
@@ -3567,7 +3714,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": "Frank Gore Jr.",
-      "desc": "(10:07) 17-J.Allen pass short left to 20-F.Gore pushed ob at BUF 33 for 6 yards (0-D.Lloyd)."
+      "description": "(10:07) 17-J.Allen pass short left to 20-F.Gore pushed ob at BUF 33 for 6 yards (0-D.Lloyd)."
     },
     {
       "play_id": 1259,
@@ -3589,6 +3736,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -3634,7 +3784,7 @@
       "passer": null,
       "rusher": "James Cook",
       "receiver": null,
-      "desc": "(9:29) 4-J.Cook left tackle to BUF 44 for 11 yards (42-A.Wingard). JAX-42-A.Wingard was injured during the play."
+      "description": "(9:29) 4-J.Cook left tackle to BUF 44 for 11 yards (42-A.Wingard). JAX-42-A.Wingard was injured during the play."
     },
     {
       "play_id": 1284,
@@ -3656,6 +3806,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": true,
@@ -3701,7 +3854,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": "Brandin Cooks",
-      "desc": "(8:59) 17-J.Allen pass short left to 18-B.Cooks to JAX 44 for 12 yards (22-J.Jones). ** Injury Update: BUF-22-R.Davis has returned to the game. Penalty on JAX-22-J.Jones, Defensive Pass Interference, declined."
+      "description": "(8:59) 17-J.Allen pass short left to 18-B.Cooks to JAX 44 for 12 yards (22-J.Jones). ** Injury Update: BUF-22-R.Davis has returned to the game. Penalty on JAX-22-J.Jones, Defensive Pass Interference, declined."
     },
     {
       "play_id": 1330,
@@ -3723,6 +3876,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -3768,7 +3924,7 @@
       "passer": null,
       "rusher": "James Cook",
       "receiver": null,
-      "desc": "(8:32) 4-J.Cook left end to JAX 44 for no gain (44-T.Walker)."
+      "description": "(8:32) 4-J.Cook left end to JAX 44 for no gain (44-T.Walker)."
     },
     {
       "play_id": 1367,
@@ -3790,6 +3946,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -3835,7 +3994,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "Timeout #1 by BUF at 07:47."
+      "description": "Timeout #1 by BUF at 07:47."
     },
     {
       "play_id": 1355,
@@ -3857,6 +4016,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -3902,7 +4064,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": "Keon Coleman",
-      "desc": "(7:47) (Shotgun) 17-J.Allen pass deep right to 0-K.Coleman pushed ob at JAX 8 for 36 yards (0-D.Lloyd)."
+      "description": "(7:47) (Shotgun) 17-J.Allen pass deep right to 0-K.Coleman pushed ob at JAX 8 for 36 yards (0-D.Lloyd)."
     },
     {
       "play_id": 1392,
@@ -3924,6 +4086,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -3969,7 +4134,7 @@
       "passer": null,
       "rusher": "James Cook",
       "receiver": null,
-      "desc": "(7:04) 4-J.Cook right end pushed ob at JAX 2 for 6 yards (30-M.Brown)."
+      "description": "(7:04) 4-J.Cook right end pushed ob at JAX 2 for 6 yards (30-M.Brown)."
     },
     {
       "play_id": 1419,
@@ -3991,6 +4156,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -4036,7 +4204,7 @@
       "passer": null,
       "rusher": "James Cook",
       "receiver": null,
-      "desc": "(6:22) 4-J.Cook right guard to JAX 2 for no gain (26-An.Johnson; 23-F.Oluokun)."
+      "description": "(6:22) 4-J.Cook right guard to JAX 2 for no gain (26-An.Johnson; 23-F.Oluokun)."
     },
     {
       "play_id": 1441,
@@ -4058,6 +4226,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": false,
@@ -4103,7 +4274,7 @@
       "passer": null,
       "rusher": "Josh Allen",
       "receiver": null,
-      "desc": "(5:42) (Shotgun) 17-J.Allen right tackle for 2 yards, TOUCHDOWN."
+      "description": "(5:42) (Shotgun) 17-J.Allen right tackle for 2 yards, TOUCHDOWN."
     },
     {
       "play_id": 1469,
@@ -4125,6 +4296,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": true,
+      "extra_point_attempt": true,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -4170,7 +4344,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "15-M.Prater extra point is GOOD, Center-69-R.Ferguson, Holder-19-M.Wishnowsky. ** Injury Update: JAX-42-A.Wingard has returned to the game."
+      "description": "15-M.Prater extra point is GOOD, Center-69-R.Ferguson, Holder-19-M.Wishnowsky. ** Injury Update: JAX-42-A.Wingard has returned to the game."
     },
     {
       "play_id": 1484,
@@ -4192,6 +4366,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": true,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -4237,7 +4414,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "19-M.Wishnowsky kicks 59 yards from BUF 35 to JAX 6. 33-B.Tuten to JAX 26 for 20 yards (28-S.Franklin; 54-B.Spector)."
+      "description": "19-M.Wishnowsky kicks 59 yards from BUF 35 to JAX 6. 33-B.Tuten to JAX 26 for 20 yards (28-S.Franklin; 54-B.Spector)."
     },
     {
       "play_id": 1517,
@@ -4259,6 +4436,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": false,
@@ -4304,7 +4484,7 @@
       "passer": null,
       "rusher": "Bhayshul Tuten",
       "receiver": null,
-      "desc": "(5:33) (Shotgun) 33-B.Tuten left end to JAX 30 for 4 yards (45-S.Thompson)."
+      "description": "(5:33) (Shotgun) 33-B.Tuten left end to JAX 30 for 4 yards (45-S.Thompson)."
     },
     {
       "play_id": 1539,
@@ -4326,6 +4506,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": true,
@@ -4371,7 +4554,7 @@
       "passer": "Trevor Lawrence",
       "rusher": null,
       "receiver": "Brenton Strange",
-      "desc": "(4:51) 16-T.Lawrence pass incomplete deep left to 85-B.Strange (96-D.Walker)."
+      "description": "(4:51) 16-T.Lawrence pass incomplete deep left to 85-B.Strange (96-D.Walker)."
     },
     {
       "play_id": 1574,
@@ -4393,6 +4576,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -4438,7 +4624,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "Timeout #2 by JAX at 04:46."
+      "description": "Timeout #2 by JAX at 04:46."
     },
     {
       "play_id": 1562,
@@ -4460,6 +4646,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -4505,7 +4694,7 @@
       "passer": "Trevor Lawrence",
       "rusher": null,
       "receiver": "Parker Washington",
-      "desc": "(4:46) (Shotgun) 16-T.Lawrence pass incomplete deep middle to 11-P.Washington."
+      "description": "(4:46) (Shotgun) 16-T.Lawrence pass incomplete deep middle to 11-P.Washington."
     },
     {
       "play_id": 1592,
@@ -4527,6 +4716,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": true,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -4572,7 +4764,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "(4:41) 9-L.Cooke punts 42 yards to BUF 28, Center-46-R.Matiscik, out of bounds. BUF-14-T.Shavers was injured during the play."
+      "description": "(4:41) 9-L.Cooke punts 42 yards to BUF 28, Center-46-R.Matiscik, out of bounds. BUF-14-T.Shavers was injured during the play."
     },
     {
       "play_id": 1614,
@@ -4594,6 +4786,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": true,
@@ -4639,7 +4834,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": "Brandin Cooks",
-      "desc": "(4:35) 17-J.Allen pass incomplete deep right to 18-B.Cooks."
+      "description": "(4:35) 17-J.Allen pass incomplete deep right to 18-B.Cooks."
     },
     {
       "play_id": 1644,
@@ -4661,6 +4856,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -4706,7 +4904,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": "Gabe Davis",
-      "desc": "(4:29) (Shotgun) 17-J.Allen pass short middle to 13-G.Davis to BUF 37 for 9 yards (29-E.Murray)."
+      "description": "(4:29) (Shotgun) 17-J.Allen pass short middle to 13-G.Davis to BUF 37 for 9 yards (29-E.Murray)."
     },
     {
       "play_id": 1669,
@@ -4728,6 +4926,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -4773,7 +4974,7 @@
       "passer": null,
       "rusher": "James Cook",
       "receiver": null,
-      "desc": "(3:48) 4-J.Cook up the middle to BUF 38 for 1 yard (44-T.Walker)."
+      "description": "(3:48) 4-J.Cook up the middle to BUF 38 for 1 yard (44-T.Walker)."
     },
     {
       "play_id": 1691,
@@ -4795,6 +4996,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": true,
@@ -4840,7 +5044,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": "Dalton Kincaid",
-      "desc": "(3:07) 17-J.Allen pass short right to 86-D.Kincaid to BUF 44 for 6 yards (22-J.Jones)."
+      "description": "(3:07) 17-J.Allen pass short right to 86-D.Kincaid to BUF 44 for 6 yards (22-J.Jones)."
     },
     {
       "play_id": 1716,
@@ -4862,6 +5066,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": false,
@@ -4907,7 +5114,7 @@
       "passer": null,
       "rusher": "James Cook",
       "receiver": null,
-      "desc": "(2:27) (Shotgun) 4-J.Cook left guard to BUF 49 for 5 yards (29-E.Murray; 0-D.Lloyd)."
+      "description": "(2:27) (Shotgun) 4-J.Cook left guard to BUF 49 for 5 yards (29-E.Murray; 0-D.Lloyd)."
     },
     {
       "play_id": 1738,
@@ -4929,6 +5136,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": false,
@@ -4974,7 +5184,7 @@
       "passer": null,
       "rusher": "James Cook",
       "receiver": null,
-      "desc": "(2:00) (Shotgun) 4-J.Cook up the middle to JAX 49 for 2 yards (91-A.Armstead)."
+      "description": "(2:00) (Shotgun) 4-J.Cook up the middle to JAX 49 for 2 yards (91-A.Armstead)."
     },
     {
       "play_id": 1772,
@@ -4996,6 +5206,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -5041,7 +5254,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": "Brandin Cooks",
-      "desc": "(1:24) (Shotgun) 17-J.Allen pass deep middle to 18-B.Cooks to JAX 22 for 27 yards (30-M.Brown). The Replay Official reviewed the pass completion ruling, and the play was REVERSED. (Shotgun) 17-J.Allen pass incomplete deep middle to 18-B.Cooks."
+      "description": "(1:24) (Shotgun) 17-J.Allen pass deep middle to 18-B.Cooks to JAX 22 for 27 yards (30-M.Brown). The Replay Official reviewed the pass completion ruling, and the play was REVERSED. (Shotgun) 17-J.Allen pass incomplete deep middle to 18-B.Cooks."
     },
     {
       "play_id": 1802,
@@ -5063,6 +5276,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -5108,7 +5324,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": "Dawson Knox",
-      "desc": "(1:20) (Shotgun) 17-J.Allen pass short right to 88-D.Knox to JAX 45 for 4 yards (23-F.Oluokun)."
+      "description": "(1:20) (Shotgun) 17-J.Allen pass short right to 88-D.Knox to JAX 45 for 4 yards (23-F.Oluokun)."
     },
     {
       "play_id": 1891,
@@ -5130,6 +5346,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -5175,7 +5394,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "Timeout #3 by JAX at 01:14."
+      "description": "Timeout #3 by JAX at 01:14."
     },
     {
       "play_id": 1879,
@@ -5197,6 +5416,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": false,
@@ -5242,7 +5464,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "(1:14) (Shotgun) PENALTY on BUF, Delay of Game, 5 yards, enforced at JAX 45 - No Play."
+      "description": "(1:14) (Shotgun) PENALTY on BUF, Delay of Game, 5 yards, enforced at JAX 45 - No Play."
     },
     {
       "play_id": 1910,
@@ -5264,6 +5486,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": true,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -5309,7 +5534,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "(1:14) 19-M.Wishnowsky punts 47 yards to JAX 3, Center-69-R.Ferguson, out of bounds."
+      "description": "(1:14) 19-M.Wishnowsky punts 47 yards to JAX 3, Center-69-R.Ferguson, out of bounds."
     },
     {
       "play_id": 1929,
@@ -5331,6 +5556,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -5376,7 +5604,7 @@
       "passer": null,
       "rusher": "Trevor Lawrence",
       "receiver": null,
-      "desc": "(1:05) (Shotgun) 16-T.Lawrence scrambles left end to JAX 21 for 18 yards (45-S.Thompson; 37-J.Hancock)."
+      "description": "(1:05) (Shotgun) 16-T.Lawrence scrambles left end to JAX 21 for 18 yards (45-S.Thompson; 37-J.Hancock)."
     },
     {
       "play_id": 1951,
@@ -5398,6 +5626,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": true,
       "qb_dropback": false,
@@ -5443,7 +5674,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "(:34) (No Huddle, Shotgun) PENALTY on JAX-72-W.Little, False Start, 5 yards, enforced at JAX 21 - No Play."
+      "description": "(:34) (No Huddle, Shotgun) PENALTY on JAX-72-W.Little, False Start, 5 yards, enforced at JAX 21 - No Play."
     },
     {
       "play_id": 1975,
@@ -5465,6 +5696,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -5510,7 +5744,7 @@
       "passer": "Trevor Lawrence",
       "rusher": null,
       "receiver": "LeQuint Allen Jr.",
-      "desc": "(:22) (Shotgun) 16-T.Lawrence pass short left to 36-L.Allen pushed ob at JAX 25 for 9 yards (58-M.Milano)."
+      "description": "(:22) (Shotgun) 16-T.Lawrence pass short left to 36-L.Allen pushed ob at JAX 25 for 9 yards (58-M.Milano)."
     },
     {
       "play_id": 2005,
@@ -5532,6 +5766,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -5577,7 +5814,7 @@
       "passer": "Trevor Lawrence",
       "rusher": null,
       "receiver": "Parker Washington",
-      "desc": "(:15) (Shotgun) 16-T.Lawrence pass deep middle to 11-P.Washington to BUF 41 for 34 yards (37-J.Hancock)."
+      "description": "(:15) (Shotgun) 16-T.Lawrence pass deep middle to 11-P.Washington to BUF 41 for 34 yards (37-J.Hancock)."
     },
     {
       "play_id": 2030,
@@ -5599,6 +5836,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": true,
       "qb_dropback": false,
@@ -5644,7 +5884,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "(:01) (No Huddle) PENALTY on BUF-97-J.Bosa, Defensive Offside, 5 yards, enforced at BUF 41 - No Play."
+      "description": "(:01) (No Huddle) PENALTY on BUF-97-J.Bosa, Defensive Offside, 5 yards, enforced at BUF 41 - No Play."
     },
     {
       "play_id": 2064,
@@ -5666,6 +5906,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": true,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": true,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -5711,7 +5954,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "(:01) 39-C.Little 54 yard field goal is No Good, Hit Left Upright, Center-46-R.Matiscik, Holder-9-L.Cooke."
+      "description": "(:01) 39-C.Little 54 yard field goal is No Good, Hit Left Upright, Center-46-R.Matiscik, Holder-9-L.Cooke."
     },
     {
       "play_id": 2085,
@@ -5733,6 +5976,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": null,
+      "two_point_attempt": null,
+      "field_goal_attempt": null,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": null,
@@ -5778,7 +6024,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "END QUARTER 2"
+      "description": "END QUARTER 2"
     },
     {
       "play_id": 2105,
@@ -5800,6 +6046,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": true,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -5845,7 +6094,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "39-C.Little kicks 64 yards from JAX 35 to BUF 1. 22-R.Davis to BUF 26 for 25 yards (47-D.Gardeck)."
+      "description": "39-C.Little kicks 64 yards from JAX 35 to BUF 1. 22-R.Davis to BUF 26 for 25 yards (47-D.Gardeck)."
     },
     {
       "play_id": 2129,
@@ -5867,6 +6116,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -5912,7 +6164,7 @@
       "passer": null,
       "rusher": "James Cook",
       "receiver": null,
-      "desc": "(14:54) 4-J.Cook up the middle to BUF 28 for 2 yards (52-D.Hamilton). ** Injury Update: BUF-14-T.Shavers has returned to the game."
+      "description": "(14:54) 4-J.Cook up the middle to BUF 28 for 2 yards (52-D.Hamilton). ** Injury Update: BUF-14-T.Shavers has returned to the game."
     },
     {
       "play_id": 2156,
@@ -5934,6 +6186,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -5979,7 +6234,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": "Tyrell Shavers",
-      "desc": "(14:13) (Shotgun) 17-J.Allen pass incomplete short right to 14-T.Shavers [44-T.Walker]."
+      "description": "(14:13) (Shotgun) 17-J.Allen pass incomplete short right to 14-T.Shavers [44-T.Walker]."
     },
     {
       "play_id": 2179,
@@ -6001,6 +6256,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -6046,7 +6304,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": "Khalil Shakir",
-      "desc": "(14:09) (Shotgun) 17-J.Allen pass short right to 10-K.Shakir to BUF 37 for 9 yards (29-E.Murray)."
+      "description": "(14:09) (Shotgun) 17-J.Allen pass short right to 10-K.Shakir to BUF 37 for 9 yards (29-E.Murray)."
     },
     {
       "play_id": 2207,
@@ -6068,6 +6326,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -6113,7 +6374,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": "Khalil Shakir",
-      "desc": "(13:30) (Shotgun) 17-J.Allen pass deep middle to 10-K.Shakir to JAX 45 for 18 yards (30-M.Brown) [41-J.Hines-Allen]."
+      "description": "(13:30) (Shotgun) 17-J.Allen pass deep middle to 10-K.Shakir to JAX 45 for 18 yards (30-M.Brown) [41-J.Hines-Allen]."
     },
     {
       "play_id": 2235,
@@ -6135,6 +6396,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": true,
@@ -6180,7 +6444,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": "James Cook",
-      "desc": "(12:49) 17-J.Allen pass short left to 4-J.Cook to JAX 41 for 4 yards (6-G.Newsome)."
+      "description": "(12:49) 17-J.Allen pass short left to 4-J.Cook to JAX 41 for 4 yards (6-G.Newsome)."
     },
     {
       "play_id": 2260,
@@ -6202,6 +6466,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": false,
@@ -6247,7 +6514,7 @@
       "passer": null,
       "rusher": "James Cook",
       "receiver": null,
-      "desc": "(12:08) (Shotgun) 4-J.Cook left guard to JAX 40 for 1 yard (52-D.Hamilton)."
+      "description": "(12:08) (Shotgun) 4-J.Cook left guard to JAX 40 for 1 yard (52-D.Hamilton)."
     },
     {
       "play_id": 2282,
@@ -6269,6 +6536,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -6314,7 +6584,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": "Gabe Davis",
-      "desc": "(11:23) (Shotgun) 17-J.Allen pass short left to 13-G.Davis pushed ob at JAX 35 for 5 yards (6-G.Newsome)."
+      "description": "(11:23) (Shotgun) 17-J.Allen pass short left to 13-G.Davis pushed ob at JAX 35 for 5 yards (6-G.Newsome)."
     },
     {
       "play_id": 2312,
@@ -6336,6 +6606,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -6381,7 +6654,7 @@
       "passer": null,
       "rusher": "Josh Allen",
       "receiver": null,
-      "desc": "(10:48) (Shotgun) 17-J.Allen scrambles up the middle to JAX 33 for 2 yards (41-J.Hines-Allen). ** Injury Update: JAX-92-D.Striggow has returned to the game."
+      "description": "(10:48) (Shotgun) 17-J.Allen scrambles up the middle to JAX 33 for 2 yards (41-J.Hines-Allen). ** Injury Update: JAX-92-D.Striggow has returned to the game."
     },
     {
       "play_id": 2334,
@@ -6403,6 +6676,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": false,
@@ -6448,7 +6724,7 @@
       "passer": null,
       "rusher": "James Cook",
       "receiver": null,
-      "desc": "(10:06) (Shotgun) 4-J.Cook up the middle to JAX 30 for 3 yards (99-Au.Johnson)."
+      "description": "(10:06) (Shotgun) 4-J.Cook up the middle to JAX 30 for 3 yards (99-Au.Johnson)."
     },
     {
       "play_id": 2359,
@@ -6470,6 +6746,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": false,
@@ -6515,7 +6794,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "(9:22) (Shotgun) PENALTY on BUF-88-D.Knox, False Start, 4 yards, enforced at JAX 30 - No Play."
+      "description": "(9:22) (Shotgun) PENALTY on BUF-88-D.Knox, False Start, 4 yards, enforced at JAX 30 - No Play."
     },
     {
       "play_id": 2383,
@@ -6537,6 +6816,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -6582,7 +6864,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": "Khalil Shakir",
-      "desc": "(8:59) (Shotgun) 17-J.Allen pass short left to 10-K.Shakir to JAX 29 for 5 yards (42-A.Wingard)."
+      "description": "(8:59) (Shotgun) 17-J.Allen pass short left to 10-K.Shakir to JAX 29 for 5 yards (42-A.Wingard)."
     },
     {
       "play_id": 2408,
@@ -6604,6 +6886,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": true,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": true,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -6649,7 +6934,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "(8:16) 15-M.Prater 47 yard field goal is GOOD, Center-69-R.Ferguson, Holder-19-M.Wishnowsky."
+      "description": "(8:16) 15-M.Prater 47 yard field goal is GOOD, Center-69-R.Ferguson, Holder-19-M.Wishnowsky."
     },
     {
       "play_id": 2428,
@@ -6671,6 +6956,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": true,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -6716,7 +7004,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "19-M.Wishnowsky kicks 65 yards from BUF 35 to end zone, Touchback to the JAX 35."
+      "description": "19-M.Wishnowsky kicks 65 yards from BUF 35 to end zone, Touchback to the JAX 35."
     },
     {
       "play_id": 2452,
@@ -6738,6 +7026,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -6783,7 +7074,7 @@
       "passer": "Trevor Lawrence",
       "rusher": null,
       "receiver": "Parker Washington",
-      "desc": "(8:12) (Shotgun) 16-T.Lawrence pass short left to 11-P.Washington pushed ob at JAX 48 for 13 yards (47-C.Benford)."
+      "description": "(8:12) (Shotgun) 16-T.Lawrence pass short left to 11-P.Washington pushed ob at JAX 48 for 13 yards (47-C.Benford)."
     },
     {
       "play_id": 2482,
@@ -6805,6 +7096,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -6850,7 +7144,7 @@
       "passer": null,
       "rusher": "Travis Etienne",
       "receiver": null,
-      "desc": "(7:34) 1-T.Etienne right tackle to BUF 26 for 26 yards (27-T.White)."
+      "description": "(7:34) 1-T.Etienne right tackle to BUF 26 for 26 yards (27-T.White)."
     },
     {
       "play_id": 2504,
@@ -6872,6 +7166,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -6917,7 +7214,7 @@
       "passer": "Trevor Lawrence",
       "rusher": null,
       "receiver": "Brenton Strange",
-      "desc": "(6:48) (Shotgun) 16-T.Lawrence pass incomplete short right to 85-B.Strange (27-T.White)."
+      "description": "(6:48) (Shotgun) 16-T.Lawrence pass incomplete short right to 85-B.Strange (27-T.White)."
     },
     {
       "play_id": 2527,
@@ -6939,6 +7236,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": false,
@@ -6984,7 +7284,7 @@
       "passer": null,
       "rusher": "Trevor Lawrence",
       "receiver": null,
-      "desc": "(6:44) (Shotgun) 16-T.Lawrence up the middle to BUF 25 for 1 yard (96-D.Walker; 50-G.Rousseau)."
+      "description": "(6:44) (Shotgun) 16-T.Lawrence up the middle to BUF 25 for 1 yard (96-D.Walker; 50-G.Rousseau)."
     },
     {
       "play_id": 2549,
@@ -7006,6 +7306,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -7051,7 +7354,7 @@
       "passer": "Trevor Lawrence",
       "rusher": null,
       "receiver": "Brenton Strange",
-      "desc": "(5:57) (Shotgun) 16-T.Lawrence pass incomplete deep right to 85-B.Strange (27-T.White)."
+      "description": "(5:57) (Shotgun) 16-T.Lawrence pass incomplete deep right to 85-B.Strange (27-T.White)."
     },
     {
       "play_id": 2572,
@@ -7073,6 +7376,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": true,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": true,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -7118,7 +7424,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "(5:52) 39-C.Little 43 yard field goal is GOOD, Center-46-R.Matiscik, Holder-9-L.Cooke."
+      "description": "(5:52) 39-C.Little 43 yard field goal is GOOD, Center-46-R.Matiscik, Holder-9-L.Cooke."
     },
     {
       "play_id": 2592,
@@ -7140,6 +7446,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": true,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -7185,7 +7494,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "39-C.Little kicks 64 yards from JAX 35 to BUF 1. 22-R.Davis to BUF 31 for 30 yards (50-B.Combs)."
+      "description": "39-C.Little kicks 64 yards from JAX 35 to BUF 1. 22-R.Davis to BUF 31 for 30 yards (50-B.Combs)."
     },
     {
       "play_id": 2622,
@@ -7207,6 +7516,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -7252,7 +7564,7 @@
       "passer": null,
       "rusher": "James Cook",
       "receiver": null,
-      "desc": "(5:41) 4-J.Cook up the middle to BUF 33 for 2 yards (93-M.Dickerson)."
+      "description": "(5:41) 4-J.Cook up the middle to BUF 33 for 2 yards (93-M.Dickerson)."
     },
     {
       "play_id": 2644,
@@ -7274,6 +7586,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -7319,7 +7634,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": null,
-      "desc": "(4:57) (Shotgun) 17-J.Allen sacked at BUF 21 for -12 yards (41-J.Hines-Allen)."
+      "description": "(4:57) (Shotgun) 17-J.Allen sacked at BUF 21 for -12 yards (41-J.Hines-Allen)."
     },
     {
       "play_id": 2664,
@@ -7341,6 +7656,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -7386,7 +7704,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": "Dalton Kincaid",
-      "desc": "(4:11) (Shotgun) 17-J.Allen pass incomplete short right to 86-D.Kincaid."
+      "description": "(4:11) (Shotgun) 17-J.Allen pass incomplete short right to 86-D.Kincaid."
     },
     {
       "play_id": 2687,
@@ -7408,6 +7726,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": true,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -7453,7 +7774,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "(4:05) 19-M.Wishnowsky punts 41 yards to JAX 38, Center-69-R.Ferguson, out of bounds."
+      "description": "(4:05) 19-M.Wishnowsky punts 41 yards to JAX 38, Center-69-R.Ferguson, out of bounds."
     },
     {
       "play_id": 2706,
@@ -7475,6 +7796,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -7520,7 +7844,7 @@
       "passer": null,
       "rusher": "Travis Etienne",
       "receiver": null,
-      "desc": "(3:58) 1-T.Etienne left guard to JAX 43 for 5 yards (42-D.Williams)."
+      "description": "(3:58) 1-T.Etienne left guard to JAX 43 for 5 yards (42-D.Williams)."
     },
     {
       "play_id": 2735,
@@ -7542,6 +7866,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": false,
@@ -7587,7 +7914,7 @@
       "passer": null,
       "rusher": "Travis Etienne",
       "receiver": null,
-      "desc": "(3:24) (Shotgun) 1-T.Etienne up the middle to JAX 44 for 1 yard (75-A.Jones)."
+      "description": "(3:24) (Shotgun) 1-T.Etienne up the middle to JAX 44 for 1 yard (75-A.Jones)."
     },
     {
       "play_id": 2757,
@@ -7609,6 +7936,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -7654,7 +7984,7 @@
       "passer": "Trevor Lawrence",
       "rusher": null,
       "receiver": "Brian Thomas Jr.",
-      "desc": "(2:45) (Shotgun) 16-T.Lawrence pass deep right to 7-B.Thomas to BUF 38 for 18 yards (37-J.Hancock)."
+      "description": "(2:45) (Shotgun) 16-T.Lawrence pass deep right to 7-B.Thomas to BUF 38 for 18 yards (37-J.Hancock)."
     },
     {
       "play_id": 2782,
@@ -7676,6 +8006,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": true,
       "qb_dropback": false,
@@ -7721,7 +8054,7 @@
       "passer": null,
       "rusher": "LeQuint Allen Jr.",
       "receiver": null,
-      "desc": "(2:18) (No Huddle, Shotgun) 36-L.Allen right end to BUF 35 for 3 yards (58-M.Milano)."
+      "description": "(2:18) (No Huddle, Shotgun) 36-L.Allen right end to BUF 35 for 3 yards (58-M.Milano)."
     },
     {
       "play_id": 2804,
@@ -7743,6 +8076,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -7788,7 +8124,7 @@
       "passer": null,
       "rusher": "Travis Etienne",
       "receiver": null,
-      "desc": "(1:34) 1-T.Etienne right end to BUF 30 for 5 yards (45-S.Thompson; 37-J.Hancock)."
+      "description": "(1:34) 1-T.Etienne right end to BUF 30 for 5 yards (45-S.Thompson; 37-J.Hancock)."
     },
     {
       "play_id": 2826,
@@ -7810,6 +8146,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": true,
@@ -7855,7 +8194,7 @@
       "passer": "Trevor Lawrence",
       "rusher": null,
       "receiver": "Parker Washington",
-      "desc": "(:51) 55-C.Edoga reported in as eligible. 16-T.Lawrence pass short right to 11-P.Washington to BUF 16 for 14 yards (37-J.Hancock)."
+      "description": "(:51) 55-C.Edoga reported in as eligible. 16-T.Lawrence pass short right to 11-P.Washington to BUF 16 for 14 yards (37-J.Hancock)."
     },
     {
       "play_id": 2853,
@@ -7877,6 +8216,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -7922,7 +8264,7 @@
       "passer": "Trevor Lawrence",
       "rusher": null,
       "receiver": "Parker Washington",
-      "desc": "(:05) (Shotgun) 16-T.Lawrence pass short left to 11-P.Washington pushed ob at BUF 12 for 4 yards (47-C.Benford)."
+      "description": "(:05) (Shotgun) 16-T.Lawrence pass short left to 11-P.Washington pushed ob at BUF 12 for 4 yards (47-C.Benford)."
     },
     {
       "play_id": 2883,
@@ -7944,6 +8286,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": null,
+      "two_point_attempt": null,
+      "field_goal_attempt": null,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": null,
@@ -7989,7 +8334,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "END QUARTER 3"
+      "description": "END QUARTER 3"
     },
     {
       "play_id": 2903,
@@ -8011,6 +8356,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -8056,7 +8404,7 @@
       "passer": "Trevor Lawrence",
       "rusher": null,
       "receiver": "Parker Washington",
-      "desc": "(15:00) (Shotgun) 16-T.Lawrence pass short right to 11-P.Washington to BUF 7 for 5 yards (45-S.Thompson)."
+      "description": "(15:00) (Shotgun) 16-T.Lawrence pass short right to 11-P.Washington to BUF 7 for 5 yards (45-S.Thompson)."
     },
     {
       "play_id": 2928,
@@ -8078,6 +8426,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -8123,7 +8474,7 @@
       "passer": null,
       "rusher": "Trevor Lawrence",
       "receiver": null,
-      "desc": "(14:15) 16-T.Lawrence right guard to BUF 5 for 2 yards (50-G.Rousseau)."
+      "description": "(14:15) 16-T.Lawrence right guard to BUF 5 for 2 yards (50-G.Rousseau)."
     },
     {
       "play_id": 2950,
@@ -8145,6 +8496,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": false,
@@ -8190,7 +8544,7 @@
       "passer": null,
       "rusher": "Trevor Lawrence",
       "receiver": null,
-      "desc": "(13:33) (Shotgun) 16-T.Lawrence right end to BUF 6 for -1 yards (50-G.Rousseau, 37-J.Hancock)."
+      "description": "(13:33) (Shotgun) 16-T.Lawrence right end to BUF 6 for -1 yards (50-G.Rousseau, 37-J.Hancock)."
     },
     {
       "play_id": 2972,
@@ -8212,6 +8566,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -8257,7 +8614,7 @@
       "passer": "Trevor Lawrence",
       "rusher": null,
       "receiver": "Parker Washington",
-      "desc": "(13:01) (Shotgun) 16-T.Lawrence pass short middle to 11-P.Washington for 6 yards, TOUCHDOWN. JAX-77-A.Harrison was injured during the play."
+      "description": "(13:01) (Shotgun) 16-T.Lawrence pass short middle to 11-P.Washington for 6 yards, TOUCHDOWN. JAX-77-A.Harrison was injured during the play."
     },
     {
       "play_id": 3006,
@@ -8279,6 +8636,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": true,
+      "extra_point_attempt": true,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -8324,7 +8684,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "39-C.Little extra point is GOOD, Center-46-R.Matiscik, Holder-9-L.Cooke."
+      "description": "39-C.Little extra point is GOOD, Center-46-R.Matiscik, Holder-9-L.Cooke."
     },
     {
       "play_id": 3021,
@@ -8346,6 +8706,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": true,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -8391,7 +8754,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "39-C.Little kicks 65 yards from JAX 35 to end zone, Touchback to the BUF 35."
+      "description": "39-C.Little kicks 65 yards from JAX 35 to end zone, Touchback to the BUF 35."
     },
     {
       "play_id": 3045,
@@ -8413,6 +8776,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -8458,7 +8824,7 @@
       "passer": null,
       "rusher": "James Cook",
       "receiver": null,
-      "desc": "(12:55) 4-J.Cook right tackle to BUF 41 for 6 yards (93-M.Dickerson)."
+      "description": "(12:55) 4-J.Cook right tackle to BUF 41 for 6 yards (93-M.Dickerson)."
     },
     {
       "play_id": 3067,
@@ -8480,6 +8846,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": true,
@@ -8525,7 +8894,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": "James Cook",
-      "desc": "(12:14) 17-J.Allen pass incomplete short right to 4-J.Cook."
+      "description": "(12:14) 17-J.Allen pass incomplete short right to 4-J.Cook."
     },
     {
       "play_id": 3090,
@@ -8547,6 +8916,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -8592,7 +8964,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": "Dalton Kincaid",
-      "desc": "(12:09) (Shotgun) 17-J.Allen pass short left to 86-D.Kincaid pushed ob at BUF 48 for 7 yards (26-An.Johnson)."
+      "description": "(12:09) (Shotgun) 17-J.Allen pass short left to 86-D.Kincaid pushed ob at BUF 48 for 7 yards (26-An.Johnson)."
     },
     {
       "play_id": 3120,
@@ -8614,6 +8986,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": true,
@@ -8659,7 +9034,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": "Dawson Knox",
-      "desc": "(11:32) 17-J.Allen pass deep middle to 88-D.Knox to JAX 28 for 24 yards (42-A.Wingard)."
+      "description": "(11:32) 17-J.Allen pass deep middle to 88-D.Knox to JAX 28 for 24 yards (42-A.Wingard)."
     },
     {
       "play_id": 3145,
@@ -8681,6 +9056,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -8726,7 +9104,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": "Gabe Davis",
-      "desc": "(10:47) (Shotgun) 17-J.Allen pass incomplete short middle to 13-G.Davis. BUF-13-G.Davis was injured during the play."
+      "description": "(10:47) (Shotgun) 17-J.Allen pass incomplete short middle to 13-G.Davis. BUF-13-G.Davis was injured during the play."
     },
     {
       "play_id": 3171,
@@ -8748,6 +9126,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -8793,7 +9174,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": "Khalil Shakir",
-      "desc": "(10:41) (Shotgun) 17-J.Allen pass short middle to 10-K.Shakir to JAX 24 for 4 yards (42-A.Wingard; 44-T.Walker)."
+      "description": "(10:41) (Shotgun) 17-J.Allen pass short middle to 10-K.Shakir to JAX 24 for 4 yards (42-A.Wingard; 44-T.Walker)."
     },
     {
       "play_id": 3196,
@@ -8815,6 +9196,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -8860,7 +9244,7 @@
       "passer": null,
       "rusher": "Josh Allen",
       "receiver": null,
-      "desc": "(9:56) (Shotgun) 17-J.Allen scrambles up the middle to JAX 18 for 6 yards (26-An.Johnson). Jacksonville challenged the first down ruling, and the play was REVERSED. (Shotgun) 17-J.Allen scrambles up the middle to JAX 19 for 5 yards (26-An.Johnson)."
+      "description": "(9:56) (Shotgun) 17-J.Allen scrambles up the middle to JAX 18 for 6 yards (26-An.Johnson). Jacksonville challenged the first down ruling, and the play was REVERSED. (Shotgun) 17-J.Allen scrambles up the middle to JAX 19 for 5 yards (26-An.Johnson)."
     },
     {
       "play_id": 3218,
@@ -8882,6 +9266,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -8927,7 +9314,7 @@
       "passer": null,
       "rusher": "Josh Allen",
       "receiver": null,
-      "desc": "(9:42) 70-A.Anderson reported in as eligible. 17-J.Allen left guard to JAX 15 for 4 yards (47-D.Gardeck)."
+      "description": "(9:42) 70-A.Anderson reported in as eligible. 17-J.Allen left guard to JAX 15 for 4 yards (47-D.Gardeck)."
     },
     {
       "play_id": 3269,
@@ -8949,6 +9336,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -8994,7 +9384,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": "Dalton Kincaid",
-      "desc": "(9:01) (Shotgun) 17-J.Allen pass short left to 86-D.Kincaid for 15 yards, TOUCHDOWN."
+      "description": "(9:01) (Shotgun) 17-J.Allen pass short left to 86-D.Kincaid for 15 yards, TOUCHDOWN."
     },
     {
       "play_id": 3295,
@@ -9016,6 +9406,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": true,
+      "extra_point_attempt": true,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -9061,7 +9454,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "15-M.Prater extra point is GOOD, Center-69-R.Ferguson, Holder-19-M.Wishnowsky."
+      "description": "15-M.Prater extra point is GOOD, Center-69-R.Ferguson, Holder-19-M.Wishnowsky."
     },
     {
       "play_id": 3310,
@@ -9083,6 +9476,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": true,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -9128,7 +9524,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "19-M.Wishnowsky kicks 50 yards from BUF 35 to JAX 15. 33-B.Tuten to JAX 23 for 8 yards (23-D.Jackson)."
+      "description": "19-M.Wishnowsky kicks 50 yards from BUF 35 to JAX 15. 33-B.Tuten to JAX 23 for 8 yards (23-D.Jackson)."
     },
     {
       "play_id": 3345,
@@ -9150,6 +9546,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": true,
@@ -9195,7 +9594,7 @@
       "passer": "Trevor Lawrence",
       "rusher": null,
       "receiver": "Parker Washington",
-      "desc": "(8:50) 16-T.Lawrence pass incomplete short right to 11-P.Washington (50-G.Rousseau). ** Injury Update: JAX-77-A.Harrison has returned to the game."
+      "description": "(8:50) 16-T.Lawrence pass incomplete short right to 11-P.Washington (50-G.Rousseau). ** Injury Update: JAX-77-A.Harrison has returned to the game."
     },
     {
       "play_id": 3368,
@@ -9217,6 +9616,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -9262,7 +9664,7 @@
       "passer": "Trevor Lawrence",
       "rusher": null,
       "receiver": "Travis Etienne",
-      "desc": "(8:45) (Shotgun) 16-T.Lawrence pass short middle to 1-T.Etienne to JAX 37 for 14 yards (24-C.Bishop)."
+      "description": "(8:45) (Shotgun) 16-T.Lawrence pass short middle to 1-T.Etienne to JAX 37 for 14 yards (24-C.Bishop)."
     },
     {
       "play_id": 3396,
@@ -9284,6 +9686,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -9329,7 +9734,7 @@
       "passer": null,
       "rusher": "Travis Etienne",
       "receiver": null,
-      "desc": "(8:04) 1-T.Etienne up the middle to JAX 39 for 2 yards (45-S.Thompson)."
+      "description": "(8:04) 1-T.Etienne up the middle to JAX 39 for 2 yards (45-S.Thompson)."
     },
     {
       "play_id": 3418,
@@ -9351,6 +9756,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -9396,7 +9804,7 @@
       "passer": "Trevor Lawrence",
       "rusher": null,
       "receiver": "Parker Washington",
-      "desc": "(7:21) (Shotgun) 16-T.Lawrence pass incomplete short left to 11-P.Washington (47-C.Benford)."
+      "description": "(7:21) (Shotgun) 16-T.Lawrence pass incomplete short left to 11-P.Washington (47-C.Benford)."
     },
     {
       "play_id": 3441,
@@ -9418,6 +9826,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": false,
@@ -9463,7 +9874,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "(7:17) (Shotgun) 16-T.Lawrence pass incomplete short right to 85-B.Strange [45-S.Thompson]. PENALTY on BUF-47-C.Benford, Defensive Holding, 5 yards, enforced at JAX 39 - No Play."
+      "description": "(7:17) (Shotgun) 16-T.Lawrence pass incomplete short right to 85-B.Strange [45-S.Thompson]. PENALTY on BUF-47-C.Benford, Defensive Holding, 5 yards, enforced at JAX 39 - No Play."
     },
     {
       "play_id": 3475,
@@ -9485,6 +9896,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": true,
@@ -9530,7 +9944,7 @@
       "passer": "Trevor Lawrence",
       "rusher": null,
       "receiver": "Tim Patrick",
-      "desc": "(7:10) 55-C.Edoga reported in as eligible. 16-T.Lawrence pass incomplete deep left to 17-T.Patrick [97-J.Bosa]."
+      "description": "(7:10) 55-C.Edoga reported in as eligible. 16-T.Lawrence pass incomplete deep left to 17-T.Patrick [97-J.Bosa]."
     },
     {
       "play_id": 3500,
@@ -9552,6 +9966,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -9597,7 +10014,7 @@
       "passer": "Trevor Lawrence",
       "rusher": null,
       "receiver": "Parker Washington",
-      "desc": "(7:05) (Shotgun) 16-T.Lawrence pass deep middle to 11-P.Washington to BUF 25 for 31 yards (24-C.Bishop)."
+      "description": "(7:05) (Shotgun) 16-T.Lawrence pass deep middle to 11-P.Washington to BUF 25 for 31 yards (24-C.Bishop)."
     },
     {
       "play_id": 3525,
@@ -9619,6 +10036,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": false,
@@ -9664,7 +10084,7 @@
       "passer": null,
       "rusher": "Parker Washington",
       "receiver": null,
-      "desc": "(6:20) (Shotgun) 11-P.Washington left end ran ob at BUF 20 for 5 yards (45-S.Thompson)."
+      "description": "(6:20) (Shotgun) 11-P.Washington left end ran ob at BUF 20 for 5 yards (45-S.Thompson)."
     },
     {
       "play_id": 3552,
@@ -9686,6 +10106,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -9731,7 +10154,7 @@
       "passer": null,
       "rusher": "Travis Etienne",
       "receiver": null,
-      "desc": "(5:36) 1-T.Etienne left end pushed ob at BUF 16 for 4 yards (47-C.Benford)."
+      "description": "(5:36) 1-T.Etienne left end pushed ob at BUF 16 for 4 yards (47-C.Benford)."
     },
     {
       "play_id": 3579,
@@ -9753,6 +10176,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": false,
@@ -9798,7 +10224,7 @@
       "passer": null,
       "rusher": "Travis Etienne",
       "receiver": null,
-      "desc": "(4:52) (Shotgun) 55-C.Edoga reported in as eligible. Direct snap to 1-T.Etienne. 1-T.Etienne up the middle to BUF 14 for 2 yards (96-D.Walker)."
+      "description": "(4:52) (Shotgun) 55-C.Edoga reported in as eligible. Direct snap to 1-T.Etienne. 1-T.Etienne up the middle to BUF 14 for 2 yards (96-D.Walker)."
     },
     {
       "play_id": 3605,
@@ -9820,6 +10246,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": true,
@@ -9865,7 +10294,7 @@
       "passer": "Trevor Lawrence",
       "rusher": null,
       "receiver": "Travis Etienne",
-      "desc": "(4:10) 16-T.Lawrence pass short right to 1-T.Etienne for 14 yards, TOUCHDOWN."
+      "description": "(4:10) 16-T.Lawrence pass short right to 1-T.Etienne for 14 yards, TOUCHDOWN."
     },
     {
       "play_id": 3631,
@@ -9887,6 +10316,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": true,
+      "extra_point_attempt": true,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -9932,7 +10364,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "39-C.Little extra point is GOOD, Center-46-R.Matiscik, Holder-9-L.Cooke."
+      "description": "39-C.Little extra point is GOOD, Center-46-R.Matiscik, Holder-9-L.Cooke."
     },
     {
       "play_id": 3646,
@@ -9954,6 +10386,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": true,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -9999,7 +10434,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "39-C.Little kicks 61 yards from JAX 35 to BUF 4. 22-R.Davis to BUF 34 for 30 yards (47-D.Gardeck)."
+      "description": "39-C.Little kicks 61 yards from JAX 35 to BUF 4. 22-R.Davis to BUF 34 for 30 yards (47-D.Gardeck)."
     },
     {
       "play_id": 3676,
@@ -10021,6 +10456,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -10066,7 +10504,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": "Khalil Shakir",
-      "desc": "(3:58) (Shotgun) 17-J.Allen pass short left to 10-K.Shakir to BUF 42 for 8 yards (0-D.Lloyd)."
+      "description": "(3:58) (Shotgun) 17-J.Allen pass short left to 10-K.Shakir to BUF 42 for 8 yards (0-D.Lloyd)."
     },
     {
       "play_id": 3701,
@@ -10088,6 +10526,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -10133,7 +10574,7 @@
       "passer": null,
       "rusher": "James Cook",
       "receiver": null,
-      "desc": "(3:19) 4-J.Cook up the middle to BUF 43 for 1 yard (52-D.Hamilton; 91-A.Armstead)."
+      "description": "(3:19) 4-J.Cook up the middle to BUF 43 for 1 yard (52-D.Hamilton; 91-A.Armstead)."
     },
     {
       "play_id": 3723,
@@ -10155,6 +10596,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": true,
       "qb_dropback": false,
@@ -10200,7 +10644,7 @@
       "passer": null,
       "rusher": "Josh Allen",
       "receiver": null,
-      "desc": "(3:00) (No Huddle) 17-J.Allen left tackle to BUF 44 for 1 yard (29-E.Murray; 23-F.Oluokun). (Virtual Measurement)."
+      "description": "(3:00) (No Huddle) 17-J.Allen left tackle to BUF 44 for 1 yard (29-E.Murray; 23-F.Oluokun). (Virtual Measurement)."
     },
     {
       "play_id": 3749,
@@ -10222,6 +10666,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -10267,7 +10714,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": "Brandin Cooks",
-      "desc": "(2:27) (Shotgun) 17-J.Allen pass deep left to 18-B.Cooks to JAX 20 for 36 yards (26-An.Johnson)."
+      "description": "(2:27) (Shotgun) 17-J.Allen pass deep left to 18-B.Cooks to JAX 20 for 36 yards (26-An.Johnson)."
     },
     {
       "play_id": 3774,
@@ -10289,6 +10736,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -10334,7 +10784,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": "Dawson Knox",
-      "desc": "(2:00) (Shotgun) 17-J.Allen pass short middle to 88-D.Knox to JAX 18 for 2 yards (23-F.Oluokun)."
+      "description": "(2:00) (Shotgun) 17-J.Allen pass short middle to 88-D.Knox to JAX 18 for 2 yards (23-F.Oluokun)."
     },
     {
       "play_id": 3806,
@@ -10356,6 +10806,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -10401,7 +10854,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": "Khalil Shakir",
-      "desc": "(1:21) (Shotgun) 17-J.Allen pass short left to 10-K.Shakir to JAX 14 for 4 yards (41-J.Hines-Allen)."
+      "description": "(1:21) (Shotgun) 17-J.Allen pass short left to 10-K.Shakir to JAX 14 for 4 yards (41-J.Hines-Allen)."
     },
     {
       "play_id": 3843,
@@ -10423,6 +10876,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -10468,7 +10924,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "Timeout #1 by JAX at 01:16."
+      "description": "Timeout #1 by JAX at 01:16."
     },
     {
       "play_id": 3831,
@@ -10490,6 +10946,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -10535,7 +10994,7 @@
       "passer": "Josh Allen",
       "rusher": null,
       "receiver": "Khalil Shakir",
-      "desc": "(1:16) (Shotgun) 17-J.Allen pass short right to 10-K.Shakir to JAX 11 for 3 yards (26-An.Johnson; 30-M.Brown)."
+      "description": "(1:16) (Shotgun) 17-J.Allen pass short right to 10-K.Shakir to JAX 11 for 3 yards (26-An.Johnson; 30-M.Brown)."
     },
     {
       "play_id": 3875,
@@ -10557,6 +11016,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -10602,7 +11064,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "Timeout #2 by JAX at 01:10."
+      "description": "Timeout #2 by JAX at 01:10."
     },
     {
       "play_id": 3863,
@@ -10624,6 +11086,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -10669,7 +11134,7 @@
       "passer": null,
       "rusher": "Josh Allen",
       "receiver": null,
-      "desc": "(1:10) 70-A.Anderson reported in as eligible. 17-J.Allen up the middle for 11 yards, TOUCHDOWN. The Replay Official reviewed the runner broke the plane ruling, and the play was REVERSED. 70-A.Anderson reported in as eligible. 17-J.Allen up the middle to JAX 1 for 10 yards (26-An.Johnson; 91-A.Armstead)."
+      "description": "(1:10) 70-A.Anderson reported in as eligible. 17-J.Allen up the middle for 11 yards, TOUCHDOWN. The Replay Official reviewed the runner broke the plane ruling, and the play was REVERSED. 70-A.Anderson reported in as eligible. 17-J.Allen up the middle to JAX 1 for 10 yards (26-An.Johnson; 91-A.Armstead)."
     },
     {
       "play_id": 3938,
@@ -10691,6 +11156,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -10736,7 +11204,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "Timeout #3 by JAX at 01:05."
+      "description": "Timeout #3 by JAX at 01:05."
     },
     {
       "play_id": 3924,
@@ -10758,6 +11226,9 @@
       "is_pass": false,
       "is_rush": true,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -10803,7 +11274,7 @@
       "passer": null,
       "rusher": "Josh Allen",
       "receiver": null,
-      "desc": "(1:05) 70-A.Anderson reported in as eligible. 17-J.Allen left guard for 1 yard, TOUCHDOWN."
+      "description": "(1:05) 70-A.Anderson reported in as eligible. 17-J.Allen left guard for 1 yard, TOUCHDOWN."
     },
     {
       "play_id": 3956,
@@ -10825,6 +11296,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": true,
+      "extra_point_attempt": true,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -10870,7 +11344,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "15-M.Prater extra point is GOOD, Center-69-R.Ferguson, Holder-19-M.Wishnowsky."
+      "description": "15-M.Prater extra point is GOOD, Center-69-R.Ferguson, Holder-19-M.Wishnowsky."
     },
     {
       "play_id": 3971,
@@ -10892,6 +11366,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": true,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -10937,7 +11414,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "19-M.Wishnowsky kicks 63 yards from BUF 35 to JAX 2. 33-B.Tuten to JAX 23 for 21 yards (56-J.Solomon)."
+      "description": "19-M.Wishnowsky kicks 63 yards from BUF 35 to JAX 2. 33-B.Tuten to JAX 23 for 21 yards (56-J.Solomon)."
     },
     {
       "play_id": 3994,
@@ -10959,6 +11436,9 @@
       "is_pass": true,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": true,
       "no_huddle": false,
       "qb_dropback": true,
@@ -11004,7 +11484,7 @@
       "passer": "Trevor Lawrence",
       "rusher": null,
       "receiver": "Jakobi Meyers",
-      "desc": "(:59) (Shotgun) 16-T.Lawrence pass short middle intended for 3-J.Meyers INTERCEPTED by 24-C.Bishop (27-T.White) at JAX 37. 24-C.Bishop to JAX 35 for 2 yards."
+      "description": "(:59) (Shotgun) 16-T.Lawrence pass short middle intended for 3-J.Meyers INTERCEPTED by 24-C.Bishop (27-T.White) at JAX 37. 24-C.Bishop to JAX 35 for 2 yards."
     },
     {
       "play_id": 4021,
@@ -11026,6 +11506,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -11071,7 +11554,7 @@
       "passer": null,
       "rusher": "Josh Allen",
       "receiver": null,
-      "desc": "(:54) 17-J.Allen kneels to JAX 36 for -1 yards."
+      "description": "(:54) 17-J.Allen kneels to JAX 36 for -1 yards."
     },
     {
       "play_id": 4043,
@@ -11093,6 +11576,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": false,
+      "two_point_attempt": false,
+      "field_goal_attempt": false,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": false,
@@ -11138,7 +11624,7 @@
       "passer": null,
       "rusher": "Josh Allen",
       "receiver": null,
-      "desc": "(:36) 17-J.Allen kneels to JAX 37 for -1 yards."
+      "description": "(:36) 17-J.Allen kneels to JAX 37 for -1 yards."
     },
     {
       "play_id": 4065,
@@ -11160,6 +11646,9 @@
       "is_pass": false,
       "is_rush": false,
       "is_special": false,
+      "extra_point_attempt": null,
+      "two_point_attempt": null,
+      "field_goal_attempt": null,
       "shotgun": false,
       "no_huddle": false,
       "qb_dropback": null,
@@ -11205,7 +11694,7 @@
       "passer": null,
       "rusher": null,
       "receiver": null,
-      "desc": "END GAME"
+      "description": "END GAME"
     }
   ]
 }
