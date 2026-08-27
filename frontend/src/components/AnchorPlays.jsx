@@ -46,7 +46,7 @@ function formatWpa(wpa) {
     return `${wpa >= 0 ? "+" : "−"}${Math.abs(wpa).toFixed(2).replace(/^0/, '')}`;
 }
 
-export default function AnchorPlays({ plays, homeAbbr }) {
+export default function AnchorPlays({ plays, homeAbbr, colors }) {
     // The backend ranks anchors by |WPA| x recency, but that composite weight isn't
     // stored on the row, so they're re-sorted here by the magnitude alone.
     const anchors = (plays ?? [])
@@ -58,7 +58,7 @@ export default function AnchorPlays({ plays, homeAbbr }) {
     const maxAbs = Math.max(...anchors.map((play) => Math.abs(play.wpa)));
 
     return (
-        <section className="recap-section anchor-plays" id="anchor-plays">
+        <section className="recap-section anchor-plays" id="anchor-plays" style={colors}>
             <div className="section-head">
                 <h2>Anchor Plays</h2>
                 <span className="meta">Ranked by |WPA|</span>

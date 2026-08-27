@@ -65,7 +65,7 @@ function LedgerRow({ name, category, maxAbs }) {
     );
 }
 
-export default function GameLedger({ ledger, awayAbbr, homeAbbr }) {
+export default function GameLedger({ ledger, awayAbbr, homeAbbr, colors }) {
     const categories = orderedCategories(ledger?.categories);
     if (!categories.length) return null;
 
@@ -74,7 +74,7 @@ export default function GameLedger({ ledger, awayAbbr, homeAbbr }) {
     const maxAbs = Math.max(...categories.map(([, c]) => Math.abs(Number(c?.diff ?? 0))), 0);
 
     return (
-        <section className="recap-section game-ledger" id="ledger">
+        <section className="recap-section game-ledger" id="ledger" style={colors}>
             <div className="section-head">
                 <h2>Game Margin Ledger</h2>
                 <span className="meta">Expected points, by category</span>

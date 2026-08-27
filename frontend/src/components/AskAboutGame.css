@@ -26,7 +26,7 @@
 }
 
 .ask-about-game .qa-input::placeholder { color: var(--rc-ink-faint); }
-.ask-about-game .qa-input:focus { border-color: var(--rc-home-dim); }
+.ask-about-game .qa-input:focus { border-color: var(--rc-accent-dim); }
 
 .ask-about-game .qa-submit {
     font-family: var(--sans);
@@ -34,7 +34,7 @@
     letter-spacing: 0.05em;
     font-size: 16px;
     font-weight: 700;
-    background: var(--rc-home);
+    background: var(--rc-accent);
     color: #12150C;
     border: none;
     padding: 0 28px;
@@ -45,7 +45,7 @@
 
 .ask-about-game .qa-input:focus-visible,
 .ask-about-game .qa-submit:focus-visible {
-    outline: 2px solid var(--rc-home);
+    outline: 2px solid var(--rc-accent);
     outline-offset: 2px;
 }
 

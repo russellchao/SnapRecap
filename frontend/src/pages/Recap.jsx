@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useLocation, useParams, Link } from 'react-router-dom'
 import { fetchRecap } from '../api/fetch_recap'
 import GameLedger from '../components/GameLedger'
 import AnchorPlays from '../components/AnchorPlays'
 import TeamSignals from '../components/TeamSignals'
 import AskAboutGame from '../components/AskAboutGame'
+import { teamPalette } from '../theme/team_colors'
 import './Recap.css'
 
 // Eagerly load every team logo. Files are named by full displayName, e.g. "Dallas Cowboys.png",
@@ -62,6 +63,11 @@ export default function Recap() {
             });
         return () => { stale = true; };
     }, [season, week, away_team, home_team]);
+
+    // The two teams' brand colors, as the `--rc-home` / `--rc-away` overrides each
+    // recap section paints from. Declared above the early return below so the hook
+    // order stays fixed.
+    const teamColors = useMemo(() => teamPalette(away_team, home_team), [away_team, home_team]);
 
     /*
         The game object is passed via router state from the games list.
@@ -143,10 +149,10 @@ export default function Recap() {
             ) : hasRecap ? (
                 <div className="recap-body">
                     {gameLedger && (
-                        <GameLedger ledger={gameLedger} awayAbbr={away_team} homeAbbr={home_team} />
+                        <GameLedger ledger={gameLedger} awayAbbr={away_team} homeAbbr={home_team} colors={teamColors} />
                     )}
                     {anchorPlays?.length > 0 && (
-                        <AnchorPlays plays={anchorPlays} homeAbbr={home_team} />
+                        <AnchorPlays plays={anchorPlays} homeAbbr={home_team} colors={teamColors} />
                     )}
                     {teamSignals && (
                         <TeamSignals
@@ -155,6 +161,7 @@ export default function Recap() {
                             homeName={home.city}
                             awayAbbr={away_team}
                             homeAbbr={home_team}
+                            colors={teamColors}
                         />
                     )}
                     <AskAboutGame />

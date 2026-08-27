@@ -94,7 +94,7 @@ function SignalGroup({ label, signals }) {
     );
 }
 
-export default function TeamSignals({ signals, awayName, homeName, awayAbbr, homeAbbr }) {
+export default function TeamSignals({ signals, awayName, homeName, awayAbbr, homeAbbr, colors }) {
     const columns = [
         { side: "away", name: awayName || awayAbbr, signals: signals?.[awayAbbr] },
         { side: "home", name: homeName || homeAbbr, signals: signals?.[homeAbbr] },
@@ -102,7 +102,7 @@ export default function TeamSignals({ signals, awayName, homeName, awayAbbr, hom
     if (!columns.length) return null;
 
     return (
-        <section className="recap-section team-signals" id="team-signals">
+        <section className="recap-section team-signals" id="team-signals" style={colors}>
             <div className="section-head">
                 <h2>Team Signals</h2>
                 <span className="meta">Situational tendencies, both sides</span>

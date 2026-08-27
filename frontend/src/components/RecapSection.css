@@ -19,11 +19,16 @@
     --rc-ink: #e6e6e6;
     --rc-ink-dim: #9aa0ac;
     --rc-ink-faint: #6b7180;
-    /* Home team reads lime, away team orange, throughout the recap. */
+    /* Home and away default to lime/orange, but the recap page overrides them per
+       matchup with the two teams' own brand colors — see theme/team_colors.js,
+       whose palette is applied inline to each section root. */
     --rc-home: #C7FF3D;
     --rc-home-dim: #7C8E2E;
     --rc-away: #FF8A3D;
     --rc-away-dim: #5C4A2C;
+    /* The page's own accent, fixed regardless of who is playing. */
+    --rc-accent: #C7FF3D;
+    --rc-accent-dim: #7C8E2E;
 
     background: linear-gradient(180deg, #161922 0%, #0f1117 100%);
     border: 1px solid var(--rc-panel-line);
