@@ -1,0 +1,8 @@
+-------- Text file to draft prompts for Claude Code --------
+
+Can you please edit Recap.jsx and Recap.css such that it looks like the recap_page_mockup file? Several things to note:
+
+- The Margin Ledger can be obtained from gameLedger.categories. Each category in the ledger contains the home and away team's total EP from plays in that category, and the difference between them. If the difference is negative, the away team had the advantage in that category, and vice versa.
+- The Anchor Plays can be obtained from anchorPlays, which is an array of objects. Each object represents a play. While each play contains a lot of information, it is only necessary that you show the info as described in the boxes. If "qtr" is >= 5, then the quarter should be displayed as OT. 
+- The Team Signals can be obtained from teamSignals, which has an object for both teams. Each object contains two arrays for offensive and defensive signals. For now, instead of splitting by Efficiency, Negative, and Situational signals like the mockup, just split by the provided offensive and defensive signals.
+- When implementing the text box for the "Ask about this game" section, don't worry about implementing the question suggestion boxes. Just implement the text box with the placeholder and the ask button that doesn't do anything yet. 
