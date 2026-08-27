@@ -50,12 +50,12 @@ export default function Recap() {
         fetchRecap(season, week, away_team, home_team, game.away_score, game.home_score)
             .then(({ status, data }) => {
                 if (!stale) {
-                    setRecapStatus(status);
                     // `data` is null when the request failed or never reached the server.
+                    setRecapStatus(status);
+                    console.log("Fetched recap data:", data);
                     setGameLedger(data?.game_ledger ?? null);
                     setAnchorPlays(data?.anchor_plays ?? null);
                     setTeamSignals(data?.team_signals ?? null);
-                    console.log("Fetched recap data:", data);
                 }
             })
             .finally(() => {
@@ -164,7 +164,7 @@ export default function Recap() {
                             colors={teamColors}
                         />
                     )}
-                    <AskAboutGame />
+                    <AskAboutGame ledger={gameLedger} plays={anchorPlays} signals={teamSignals} />
                 </div>
             ) : (
                 <p className="recap-placeholder">Recap not available for this game yet.</p>

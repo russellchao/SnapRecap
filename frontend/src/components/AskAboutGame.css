@@ -58,3 +58,41 @@
     .ask-about-game .qa-input-row { flex-direction: column; }
     .ask-about-game .qa-submit { padding: 13px; }
 }
+
+/* The answer block below the input row: the question it belongs to, then the
+   response (or the pending / failed state in its place). */
+
+.ask-about-game .qa-response {
+    margin-top: 20px;
+    border-top: 1px solid var(--rc-panel-line);
+    padding-top: 18px;
+}
+
+.ask-about-game .qa-asked {
+    font-size: 15px;
+    color: var(--rc-ink-dim);
+    border-left: 2px solid var(--rc-accent-dim);
+    padding-left: 12px;
+    margin: 0 0 14px;
+}
+
+.ask-about-game .qa-answer {
+    font-size: 16.5px;
+    line-height: 1.65;
+    color: var(--rc-ink);
+    /* Answers come back as plain text; keep whatever line breaks the model wrote. */
+    white-space: pre-wrap;
+    margin: 0;
+}
+
+.ask-about-game .qa-thinking {
+    font-size: 16px;
+    color: var(--rc-ink-faint);
+    margin: 0;
+}
+
+.ask-about-game .qa-error {
+    font-size: 16px;
+    color: #FF8A3D;
+    margin: 0;
+}
