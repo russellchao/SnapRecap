@@ -1,5 +1,13 @@
+import SectionHead from './SectionHead'
 import './RecapSection.css'
 import './TeamSignals.css'
+
+const ABOUT = (
+    <p>
+        A side-by-side look at how each team actually played — third-down conversions, red zone
+        trips, turnovers, and other tendencies — beyond what the box score shows.
+    </p>
+);
 
 const SIGNAL_LABELS = {
     // Offense
@@ -103,10 +111,7 @@ export default function TeamSignals({ signals, awayName, homeName, awayAbbr, hom
 
     return (
         <section className="recap-section team-signals" id="team-signals" style={colors}>
-            <div className="section-head">
-                <h2>Team Signals</h2>
-                <span className="meta">Situational tendencies, both sides</span>
-            </div>
+            <SectionHead title="Team Signals" about={ABOUT} />
 
             <div className="signals-grid">
                 {columns.map((column) => (

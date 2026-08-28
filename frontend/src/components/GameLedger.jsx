@@ -1,3 +1,4 @@
+import SectionHead from './SectionHead'
 import './RecapSection.css'
 import './GameLedger.css'
 
@@ -39,6 +40,29 @@ function formatDiff(diff) {
     return `${diff >= 0 ? "+" : "−"}${Math.abs(diff).toFixed(2)}`;
 }
 
+// Second half of the About banner: what the scoreboard said versus what the EPA
+// margin would have said. Both halves are game-specific, and the whole sentence
+// is dropped when the scores aren't known (an unplayed or in-progress game).
+function aboutComparison({ totalEpaDiff, awayAbbr, homeAbbr, awayScore, homeScore }) {
+    const away = Number(awayScore);
+    const home = Number(homeScore);
+    if (!Number.isFinite(away) || !Number.isFinite(home)) return null;
+
+    const margin = Math.abs(away - home);
+    const scoreClause = margin === 0
+        ? "the game ended in a tie"
+        : `${away > home ? awayAbbr : homeAbbr} won by ${margin}`;
+
+    // Floored, so the comparison is stated in whole points like a real margin.
+    const diff = Number(totalEpaDiff ?? 0);
+    const epaMargin = Math.floor(Math.abs(diff));
+    const epaClause = epaMargin === 0
+        ? "the EPA margins came out essentially even"
+        : `the EPA margins act as if ${diff > 0 ? homeAbbr : awayAbbr} won by ${epaMargin}`;
+
+    return `While ${scoreClause}, ${epaClause}.`;
+}
+
 function LedgerRow({ name, category, maxAbs }) {
     const diff = Number(category?.diff ?? 0);
     // A positive diff means the home team gained in this category, so its bar
@@ -65,9 +89,29 @@ function LedgerRow({ name, category, maxAbs }) {
     );
 }
 
-export default function GameLedger({ ledger, awayAbbr, homeAbbr, colors }) {
+export default function GameLedger({ ledger, awayAbbr, homeAbbr, awayScore, homeScore, colors }) {
     const categories = orderedCategories(ledger?.categories);
     if (!categories.length) return null;
+
+    const comparison = aboutComparison({
+        totalEpaDiff: ledger?.total_epa_diff,
+        awayAbbr,
+        homeAbbr,
+        awayScore,
+        homeScore,
+    });
+
+    const about = (
+        <>
+            <p>
+                Breaks down where the final score actually came from, using EPA (expected points
+                added) to value every play. Each play's value gets sorted into a category —
+                explosive plays, turnovers, red zone trips, and more — so you can see which parts
+                of the game decided the outcome, not just who scored when.
+            </p>
+            {comparison && <p>{comparison}</p>}
+        </>
+    );
 
     // Bars are scaled against the game's largest swing, so their widths read
     // relative to each other rather than against an absolute EP scale.
@@ -75,10 +119,7 @@ export default function GameLedger({ ledger, awayAbbr, homeAbbr, colors }) {
 
     return (
         <section className="recap-section game-ledger" id="ledger" style={colors}>
-            <div className="section-head">
-                <h2>Game Margin Ledger</h2>
-                <span className="meta">Expected points, by category</span>
-            </div>
+            <SectionHead title="Game Margin Ledger" about={about} />
 
             <div className="ledger-teams">
                 <span className="tag away">{awayAbbr}</span>

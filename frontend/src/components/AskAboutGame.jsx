@@ -47,7 +47,6 @@ export default function AskAboutGame({ ledger, plays, signals }) {
         <section className="recap-section ask-about-game" id="ask">
             <div className="section-head">
                 <h2>Ask About This Game</h2>
-                <span className="meta">Routed &amp; grounded in the data above</span>
             </div>
 
             <p className="qa-hint">

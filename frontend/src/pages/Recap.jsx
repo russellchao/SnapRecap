@@ -149,7 +149,14 @@ export default function Recap() {
             ) : hasRecap ? (
                 <div className="recap-body">
                     {gameLedger && (
-                        <GameLedger ledger={gameLedger} awayAbbr={away_team} homeAbbr={home_team} colors={teamColors} />
+                        <GameLedger
+                            ledger={gameLedger}
+                            awayAbbr={away_team}
+                            homeAbbr={home_team}
+                            awayScore={awayScore}
+                            homeScore={homeScore}
+                            colors={teamColors}
+                        />
                     )}
                     {anchorPlays?.length > 0 && (
                         <AnchorPlays plays={anchorPlays} homeAbbr={home_team} colors={teamColors} />
