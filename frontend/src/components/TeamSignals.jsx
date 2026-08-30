@@ -96,7 +96,7 @@ export default function TeamSignals({ signals, awayName, homeName, awayAbbr, hom
                             <span className="signals-dot" />
                             <h3>{column.name}</h3>
                         </div>
-                        <SignalChips signals={column.signals} />
+                        <SignalChips signals={column.signals.signals} />
                     </div>
                 ))}
             </div>
