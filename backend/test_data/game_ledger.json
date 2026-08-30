@@ -15,11 +15,11 @@
     },
     "pass_protection": {
       "category": "pass_protection",
-      "away_ep": -2.4,
-      "home_ep": 2.14,
-      "diff": 4.54,
-      "away_plays": 10,
-      "home_plays": 11
+      "away_ep": 1.19,
+      "home_ep": 2.01,
+      "diff": 0.82,
+      "away_plays": 1,
+      "home_plays": 1
     },
     "penalties": {
       "category": "penalties",
@@ -39,35 +39,35 @@
     },
     "red_zone": {
       "category": "red_zone",
-      "away_ep": 8.84,
-      "home_ep": 1.35,
-      "diff": -7.49,
-      "away_plays": 9,
-      "home_plays": 12
+      "away_ep": 8.5,
+      "home_ep": 3.05,
+      "diff": -5.45,
+      "away_plays": 10,
+      "home_plays": 14
     },
     "third_down": {
       "category": "third_down",
-      "away_ep": 3.4,
-      "home_ep": -0.34,
-      "diff": -3.74,
-      "away_plays": 11,
-      "home_plays": 5
+      "away_ep": 2.39,
+      "home_ep": 1.2,
+      "diff": -1.19,
+      "away_plays": 12,
+      "home_plays": 6
     },
     "explosive_plays": {
       "category": "explosive_plays",
-      "away_ep": 5.16,
+      "away_ep": 7.49,
       "home_ep": 6.5,
-      "diff": 1.34,
-      "away_plays": 3,
+      "diff": -0.99,
+      "away_plays": 4,
       "home_plays": 5
     },
     "other": {
       "category": "other",
-      "away_ep": -2.3,
-      "home_ep": -0.83,
-      "diff": 1.47,
-      "away_plays": 29,
-      "home_plays": 22
+      "away_ep": -3.41,
+      "home_ep": -0.49,
+      "diff": 2.92,
+      "away_plays": 36,
+      "home_plays": 28
     }
   },
   "categorized_diff": -5.34,

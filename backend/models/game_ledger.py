@@ -68,9 +68,10 @@ def _is_turnover(play: Play) -> bool:
     return bool(play.interception or play.fumble_lost)
 
 def _is_protection_play(play: Play) -> bool:
-    # Matches sack_rate/pressure_rate's population: dropbacks, not all
-    # pass plays (a screen with no dropback shouldn't count here).
-    return bool(play.qb_dropback and (play.sack or play.was_pressure))
+    # Matches sack_rate's population: dropbacks, not all pass plays
+    # (a screen with no dropback shouldn't count here). Sacks alone —
+    # pressures aren't in the play-by-play data.
+    return bool(play.qb_dropback and play.sack)
 
 def _is_penalty(play: Play) -> bool:
     # epa already reflects the penalty's net effect on posteam correctly

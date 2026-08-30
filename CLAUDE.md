@@ -18,19 +18,19 @@ The pipeline is a linear sequence of transforms, orchestrated by
 [generate_recap.py](backend/generate_recap.py). Each stage has a single responsibility and a
 locked output shape, so a downstream stage only ever depends on the previous stage's dataclass:
 
-1. **`get_data/get_raw_data.py`** — downloads play-by-play + participation data for one game from
+1. **`get_data/get_raw_data.py`** — downloads play-by-play data for one game from
    `nflreadpy`, filtered by season/week/teams. Returns a DataFrame, or an `{"Error": ...}` dict
    when data isn't available yet (callers check `isinstance(x, pd.DataFrame)`).
-2. **`get_data/preprocess_data.py`** — drops the long lists of unused columns, merges PBP +
-   participation on `play_id`, and derives the normalized offensive personnel package (e.g. "11
-   Personnel"). One merged DataFrame out.
+2. **`get_data/preprocess_data.py`** — drops the long lists of unused columns. One cleaned
+   DataFrame out.
 3. **`models/play.py`** — `Play` dataclass, one per row. Holds **raw contextual values only**;
    every coercion is NaN-safe (`_int`/`_float`/`_bool`/`_str`). Situational labels are derived
    downstream, never stored here.
 4. **`models/signals.py`** — reductions over a list of `Play` (`f(plays) -> value`). Returns
    `RateSignal`/`MeanSignal` (which carry `n`/attempts so small samples aren't mistaken for
-   meaningful ones) or distribution dicts. `offensive_signals`/`defensive_signals` produce the
-   per-team records. The same reduction works on one game or a whole season (league baseline).
+   meaningful ones). `team_signals` produces one flat record per team — the team's own offense
+   plus `sacks_forced`, the single defensive reduction kept. The same reduction works on one game
+   or a whole season (league baseline).
 5. **`models/game_document.py`** — `GameDocument` = header + per-team signals + all plays. This is
    the **lossless intermediate** and the handoff boundary: it filters nothing; everything
    downstream works from this object, never the source DataFrame.
@@ -84,7 +84,7 @@ writing its own. **These blocks use relative paths (`../test_data/...`) and impo
 directly, so they must be run from inside their own directory:**
 
 - From `backend/get_data/`: `python get_raw_data.py <season> <week> <away> <home>` → writes
-  `pbp_data.csv` + `participation_data.csv`; then `python preprocess_data.py` → `preprocessed_data.csv`.
+  `pbp_data.csv`; then `python preprocess_data.py` → `preprocessed_data.csv`.
 - From `backend/models/`: `python play.py` / `python signals.py` (read `preprocessed_data.csv`),
   `python game_document.py` → `game_document.json`, `python selection.py` → `selection.json`,
   `python projection.py` → `projected_selection.json`.

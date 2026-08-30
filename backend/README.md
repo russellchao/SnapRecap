@@ -22,11 +22,11 @@ backend/
 ├── generate_recap.py        # orchestrates the full pipeline end to end
 ├── main.py                  # FastAPI app (/health, placeholder /pbp/...)
 ├── get_data/
-│   ├── get_raw_data.py      # download PBP + participation data from nflreadpy
-│   └── preprocess_data.py   # drop unused columns, merge, derive personnel
+│   ├── get_raw_data.py      # download PBP data from nflreadpy
+│   └── preprocess_data.py   # drop unused columns
 ├── models/
 │   ├── play.py              # Play dataclass (one per PBP row, raw values only)
-│   ├── signals.py           # reductions over plays (rates/means/distributions)
+│   ├── signals.py           # reductions over plays (rates/means)
 │   ├── game_document.py     # GameDocument: header + per-team signals + plays
 │   ├── selection.py         # RecapSelection: pick prompt-relevant plays
 │   ├── projection.py        # render_selection(): flatten to LLM-ready record
@@ -43,18 +43,19 @@ The pipeline is a linear sequence of transforms orchestrated by
 shape, so a downstream stage only ever depends on the previous stage's dataclass.
 
 1. **Download raw data** — [get_data/get_raw_data.py](get_data/get_raw_data.py) downloads
-   play-by-play + participation data for one game from `nflreadpy`, filtered by season/week/teams.
+   play-by-play data for one game from `nflreadpy`, filtered by season/week/teams.
    Returns a `DataFrame`, or an `{"Error": ...}` dict when data isn't available yet (callers check
    `isinstance(x, pd.DataFrame)`).
-2. **Clean and merge** — [get_data/preprocess_data.py](get_data/preprocess_data.py) drops the long
-   lists of unused columns, merges PBP + participation on `play_id`, and derives the normalized
-   offensive personnel package (e.g. "11 Personnel"). One merged `DataFrame` out.
+2. **Clean** — [get_data/preprocess_data.py](get_data/preprocess_data.py) drops the long
+   lists of unused columns. One cleaned `DataFrame` out.
 3. **Build the GameDocument** — [models/play.py](models/play.py) defines the `Play` dataclass (one
    per row, **raw contextual values only** — every coercion is NaN-safe; situational labels are
    derived downstream, never stored here). [models/signals.py](models/signals.py) defines
    reductions over a list of `Play` (`f(plays) -> value`) returning `RateSignal`/`MeanSignal`
-   (which carry `n`/attempts so small samples aren't mistaken for meaningful ones) or distribution
-   dicts. [models/game_document.py](models/game_document.py) assembles the `GameDocument` = header
+   (which carry `n`/attempts so small samples aren't mistaken for meaningful ones); `team_signals`
+   assembles them into one flat record per team — the team's own offense plus `sacks_forced`, the
+   single defensive reduction kept.
+   [models/game_document.py](models/game_document.py) assembles the `GameDocument` = header
    + per-team signals + all plays. This is the **lossless intermediate** and the handoff boundary:
    it filters nothing; everything downstream works from this object, never the source DataFrame.
 4. **Build the RecapSelection** — [models/selection.py](models/selection.py) projects a
@@ -126,7 +127,7 @@ be run from inside their own directory:**
 - From `backend/get_data/`:
 
   ```
-  python get_raw_data.py <season> <week> <away> <home>   # → pbp_data.csv + participation_data.csv
+  python get_raw_data.py <season> <week> <away> <home>   # → pbp_data.csv
   python preprocess_data.py                              # → preprocessed_data.csv
   ```
 

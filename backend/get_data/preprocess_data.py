@@ -1,5 +1,5 @@
 '''
-Clean the PBP and Participation data into a single dataframe
+Clean the PBP data into a single dataframe
 '''
 
 import pandas as pd
@@ -87,43 +87,8 @@ pbp_cols_to_drop = [
     "stadium_id", "game_stadium", "stadium",
 ]
 
-participation_cols_to_drop = [
-    "nflverse_game_id", "old_game_id", "players_on_play", "offense_players", "defense_players", "offense_names",
-    "defense_names", "offense_positions", "defense_positions", "offense_numbers", "defense_numbers", "ngs_air_yards"
-]
-
-
-def get_off_personnel_package(df: pd.DataFrame) -> pd.DataFrame:
-    # Add a new column that represents the traditional two-number offensive personnel package format
-    # (e.g. "11 personnel", "12 personnel", etc.). Only applied to run/pass plays.
-
-    def parse_package(personnel):
-        if pd.isna(personnel):
-            return personnel
-
-        counts = {"RB": 0, "TE": 0, "WR": 0}
-        for group in personnel.split(","):
-            parts = group.strip().split(" ", 1)
-            if len(parts) != 2:
-                continue
-            count, position = parts
-            if position in counts:
-                counts[position] = int(count)
-
-        return f"{counts['RB']}{counts['TE']} Personnel"
-
-    mask = df["play_type"].isin(["run", "pass"])
-    df["offense_personnel_package"] = pd.NA
-    df.loc[mask, "offense_personnel_package"] = df.loc[mask, "offense_personnel"].apply(parse_package)
-    return df
-
-
-def clean_and_merge(pbp_df: pd.DataFrame, participation_df: pd.DataFrame) -> pd.DataFrame:
-    pbp_df = pbp_df.drop(columns=pbp_cols_to_drop, errors="ignore")
-    participation_df = participation_df.drop(columns=participation_cols_to_drop, errors="ignore")
-    merged_df = pbp_df.merge(participation_df, on="play_id", how="left")
-    merged_df = get_off_personnel_package(merged_df)
-    return merged_df
+def clean(pbp_df: pd.DataFrame) -> pd.DataFrame:
+    return pbp_df.drop(columns=pbp_cols_to_drop, errors="ignore")
 
 
 
@@ -132,15 +97,13 @@ def clean_and_merge(pbp_df: pd.DataFrame, participation_df: pd.DataFrame) -> pd.
 
 if __name__ == "__main__":
     #NOTE: For testing purposes only
-    # Clean and merge the PBP and Participation Data CSVs in the test data
+    # Clean the PBP Data CSV in the test data
 
     pbp_csv_filename = "../test_data/pbp_data.csv"
-    participation_csv_filename = "../test_data/participation_data.csv"
     pbp_df = pd.read_csv(pbp_csv_filename)
-    participation_df = pd.read_csv(participation_csv_filename)
-    merged_df = clean_and_merge(pbp_df, participation_df)
+    cleaned_df = clean(pbp_df)
 
     # Save the preprocessed dataframe to a CSV for inspection
-    merged_csv_filename = "../test_data/preprocessed_data.csv"
-    merged_df.to_csv(merged_csv_filename, index=False)
-    print(f"Preprocessed data saved to {merged_csv_filename}")
+    cleaned_csv_filename = "../test_data/preprocessed_data.csv"
+    cleaned_df.to_csv(cleaned_csv_filename, index=False)
+    print(f"Preprocessed data saved to {cleaned_csv_filename}")

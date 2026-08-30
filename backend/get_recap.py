@@ -16,20 +16,16 @@ supabase = client.create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_K
 # ------ Helper function to build the GameDocument object ------
 
 def build_game_doc(game_id: str, season: str, week: str, away_team: str, home_team: str, away_score: int, home_score: int):
-    # Get the PBP and Participation data for the requested game
+    # Get the PBP data for the requested game
     pbp_data = get_raw_data.get_pbp_data(int(season), game_id)
     if not isinstance(pbp_data, pd.DataFrame):
         print(f"Error: PBP data for {game_id} is not available.")
         return pbp_data
-    participation_data = get_raw_data.get_participation_data(int(season), game_id)
-    if not isinstance(participation_data, pd.DataFrame):
-        print(f"Error: Participation data for {game_id} is not available.")
-        return participation_data
-    print("Successfully downloaded raw PBP and Participation Data")
+    print("Successfully downloaded raw PBP Data")
 
     # Preprocess the data
-    merged_df = preprocess_data.clean_and_merge(pbp_data, participation_data)
-    print("Successfully cleaned and merged PBP and Participation Data")
+    cleaned_df = preprocess_data.clean(pbp_data)
+    print("Successfully cleaned PBP Data")
 
     # Build the GameDocument object
     header = game_document.GameHeader(
@@ -41,7 +37,7 @@ def build_game_doc(game_id: str, season: str, week: str, away_team: str, home_te
         away_score=away_score,
         home_score=home_score,
     )
-    plays = game_document.plays_from_frame(merged_df)
+    plays = game_document.plays_from_frame(cleaned_df)
     game_doc = game_document.GameDocument.build(plays, header)
     print("Successfully built GameDocument")
 
@@ -77,19 +73,16 @@ def build_recap(
 
     if not team_signals_exist:
         game_doc_dict = game_doc.to_dict()
-        away_team_signals = game_doc_dict.get("signals", {}).get(away_team, {})
-        home_team_signals = game_doc_dict.get("signals", {}).get(home_team, {})
+        all_signals = game_doc_dict.get("signals", {})
         away_signals_db_row = {
             "game_id": game_id,
             "team": away_team,
-            "offense": away_team_signals.get("offense"),
-            "defense": away_team_signals.get("defense")
+            "signals": all_signals.get(away_team, {})
         }
         home_signals_db_row = {
             "game_id": game_id,
             "team": home_team,
-            "offense": home_team_signals.get("offense"),
-            "defense": home_team_signals.get("defense")
+            "signals": all_signals.get(home_team, {})
         }
         supabase.table("team_signals").insert(away_signals_db_row).execute()
         supabase.table("team_signals").insert(home_signals_db_row).execute()

@@ -74,18 +74,7 @@ def _by_drive(plays: List[Play]) -> Dict[int, List[Play]]:
             drives.setdefault(p.drive, []).append(p)
     return drives
 
-def _distribution(keys: Iterable[Optional[str]]) -> Dict[str, float]:
-    vals = [k for k in keys if k]
-    total = len(vals)
-    if not total:
-        return {}
-    counts: Dict[str, int] = {}
-    for k in vals:
-        counts[k] = counts.get(k, 0) + 1
-    return dict(sorted(((k, n / total) for k, n in counts.items()), key=lambda kv: -kv[1]))
-
-
-# --- Offensive Signals ---
+# --- Signal Reductions ---
 
 def third_down_conversion(plays: List[Play]) -> RateSignal:
     """Third-down conversion rate."""
@@ -126,7 +115,7 @@ def explosive_play_rate(plays: List[Play]) -> RateSignal:
     return RateSignal.from_counts(successes, len(scr))
 
 def sack_rate(plays: List[Play]) -> RateSignal:
-    """Sacks per dropback (protection on offense / pass rush on defense)."""
+    """Sacks per dropback over the given view (pass rush on a defteam filter)."""
     dropbacks = [p for p in plays if p.qb_dropback]
     sacks = sum(1 for p in dropbacks if p.sack)
     return RateSignal.from_counts(sacks, len(dropbacks))
@@ -143,119 +132,51 @@ def cpoe(plays: List[Play]) -> MeanSignal:
     """Mean completion % over expected (pass attempts only)."""
     return MeanSignal.of(p.cpoe for p in plays if p.cpoe is not None)
 
-def personnel_distribution(plays: List[Play]) -> Dict[str, float]:
-    """Share of scrimmage snaps by offensive personnel package."""
-    return _distribution(
-        p.offense_personnel_package for p in plays if p.is_pass or p.is_rush
-    )
 
+# --- Main Signal Function ---
 
-# --- Defensive Signals ---
+def team_signals(plays: List[Play], team: str) -> Dict[str, object]:
+    """Per-team signal record — the locked output shape.
 
-def pressure_rate(plays: List[Play]) -> RateSignal:
-    """Pressures generated per charted dropback."""
-    dropbacks = [p for p in plays if p.qb_dropback and p.was_pressure is not None]
-    successes = sum(1 for p in dropbacks if p.was_pressure)
-    return RateSignal.from_counts(successes, len(dropbacks))
+    A flat dict of {signal_name: signal_value}, each value its own
+    reduction's return type (RateSignal or MeanSignal). Extending the
+    recap = add one entry; nothing else changes.
 
-def blitz_rate(plays: List[Play]) -> RateSignal:
-    """Dropbacks rushed with 5+ pass rushers."""
-    dropbacks = [p for p in plays if p.qb_dropback and p.number_of_pass_rushers is not None]
-    successes = sum(1 for p in dropbacks if p.number_of_pass_rushers >= 5)
-    return RateSignal.from_counts(successes, len(dropbacks))
-
-def avg_box_defenders(plays: List[Play]) -> MeanSignal:
-    """Mean defenders in the box on opponent rush plays."""
-    return MeanSignal.of(
-        p.defenders_in_box for p in plays
-        if p.is_rush and p.defenders_in_box is not None
-    )
-
-def coverage_distribution(plays: List[Play]) -> Dict[str, float]:
-    """Share of charted dropbacks by coverage shell."""
-    return _distribution(p.defense_coverage_type for p in plays if p.is_pass)
-
-def man_zone_distribution(plays: List[Play]) -> Dict[str, float]:
-    """Share of charted dropbacks by man vs zone."""
-    return _distribution(p.defense_man_zone_type for p in plays if p.is_pass)
-
-
-# --- Main Signal Functions ---
-
-def offensive_signals(plays: List[Play], team: str) -> Dict[str, object]:
-    """Per-team offensive signal record — the locked output shape.
-
-    A flat dict of {signal_name: signal_value}. Each value is its own
-    reduction's return type (RateSignal, MeanSignal, or a dict). Extending
-    the recap = add one entry; nothing else changes.
+    Every entry describes this team's own offense except `sacks_forced`,
+    which is the one defensive reduction kept: the pass rush this team
+    generated on the opponent's dropbacks. There is deliberately no
+    sacks-allowed counterpart — in a two-team game it is the same
+    population as the opponent's `sacks_forced`, read from the other side.
     """
     off = [p for p in plays if p.posteam == team]
     scrimmage = [p for p in off if p.is_pass or p.is_rush]
     passes = [p for p in off if p.is_pass]
     rushes = [p for p in off if p.is_rush]
+    defense = [p for p in plays if p.defteam == team]
     return {
         "third_down": third_down_conversion(off),
         "fourth_down": fourth_down_conversion(off),
         "red_zone_td": red_zone_touchdowns(off),
         "success_rate": success_rate(scrimmage),
         "explosive_rate": explosive_play_rate(scrimmage),
-        "sack_rate": sack_rate(off),
         "epa_per_play": epa_per_play(scrimmage),
         "epa_per_pass": epa_per_play(passes),
         "epa_per_rush": epa_per_play(rushes),
         "yards_per_play": yards_per_play(scrimmage),
         "yards_per_rush": yards_per_play(rushes),
         "cpoe": cpoe(passes),
-        "personnel": personnel_distribution(scrimmage),
+        "sacks_forced": sack_rate(defense),
     }
-
-def defensive_signals(plays: List[Play], team: str) -> Dict[str, object]:
-    """Per-team defensive signal record — the locked output shape.
-
-    'Allowed' metrics reuse the offensive reductions on the defteam
-    filter (opponent offense vs this defense); the rest are defense-only
-    reductions over the participation columns.
-    """
-    dfp = [p for p in plays if p.defteam == team]
-    scrimmage = [p for p in dfp if p.is_pass or p.is_rush]
-    passes = [p for p in dfp if p.is_pass]
-    rushes = [p for p in dfp if p.is_rush]
-    return {
-        "third_down_allowed": third_down_conversion(dfp),
-        "red_zone_td_allowed": red_zone_touchdowns(dfp),
-        "success_rate_allowed": success_rate(scrimmage),
-        "explosive_rate_allowed": explosive_play_rate(scrimmage),
-        "epa_per_play_allowed": epa_per_play(scrimmage),
-        "epa_per_pass_allowed": epa_per_play(passes),
-        "epa_per_rush_allowed": epa_per_play(rushes),
-        "yards_per_play_allowed": yards_per_play(scrimmage),
-        "yards_per_rush_allowed": yards_per_play(rushes),
-        "pressure_rate": pressure_rate(dfp),
-        "sacks": sack_rate(dfp),
-        "blitz_rate": blitz_rate(dfp),
-        "avg_box_defenders": avg_box_defenders(dfp),
-        "coverage": coverage_distribution(dfp),
-        "man_zone": man_zone_distribution(dfp),
-    }
-
-
-
-
-
-
-
 
 
 if __name__ == "__main__":
     # NOTE: For testing purposes only.
-    # Test building the offensive and defensive signals on the Preprocessed CSV in the test data
+    # Test building the signal record on the Preprocessed CSV in the test data
 
     def _print_record(title: str, record: Dict[str, object]) -> None:
         """Pretty-print a signal record (test helper)."""
         print(title)
         for name, value in record.items():
-            if isinstance(value, dict):
-                value = {k: f"{v:.1%}" for k, v in value.items()}
             print(f"  {name}: {value}")
         print()
 
@@ -266,5 +187,4 @@ if __name__ == "__main__":
     teams = teams_in(plays)
 
     for team in teams:
-        _print_record(f"Offensive signals for {team}:", offensive_signals(plays, team))
-        _print_record(f"Defensive signals for {team}:", defensive_signals(plays, team))
+        _print_record(f"Signals for {team}:", team_signals(plays, team))

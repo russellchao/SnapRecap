@@ -22,11 +22,11 @@ import os
 
 try: 
     from .play import Play, plays_from_frame, teams_in
-    from .signals import defensive_signals, offensive_signals
+    from .signals import team_signals
 except ImportError:
     sys.path.insert(0, os.path.dirname(__file__))
     from play import Play, plays_from_frame, teams_in
-    from signals import defensive_signals, offensive_signals
+    from signals import team_signals
 
 
 @dataclass
@@ -47,41 +47,28 @@ class GameHeader:
     
 
 @dataclass
-class TeamSignals:
-    """A single team's two signal records (offense + defense)."""
-    offense: Dict[str, object]
-    defense: Dict[str, object]
-
-
-@dataclass
 class GameDocument:
     """Lossless game representation: header + per-team signals + all plays."""
     header: GameHeader
-    signals: Dict[str, TeamSignals]   # keyed by team abbreviation
+    signals: Dict[str, Dict[str, object]]   # {team abbreviation: signal record}
     plays: List[Play]
 
     @classmethod
     def build(cls, plays: List[Play], header: GameHeader) -> "GameDocument":
         """Assemble the document from prebuilt plays and a header.
 
-        Resolves the two teams, computes each team's offensive and
-        defensive signal records, and packages everything. Plays are
-        stored in full and in order — nothing is filtered here.
+        Resolves the two teams, computes each team's signal record, and
+        packages everything. Plays are stored in full and in order —
+        nothing is filtered here.
         """
-        signals = {
-            team: TeamSignals(
-                offense=offensive_signals(plays, team),
-                defense=defensive_signals(plays, team),
-            )
-            for team in teams_in(plays)
-        }
+        signals = {team: team_signals(plays, team) for team in teams_in(plays)}
         return cls(header=header, signals=signals, plays=plays)
 
     def to_dict(self) -> Dict[str, object]:
         """JSON-serializable form for the prompt step and the cache.
 
         `asdict` recurses through the nested dataclasses (Play, RateSignal,
-        MeanSignal) and leaves the distribution dicts untouched.
+        MeanSignal).
         """
         return asdict(self)
     
@@ -129,13 +116,7 @@ if __name__ == "__main__":
     print(f"Teams in game: {teams}\n")
 
     # Signals for both teams (computed from the plays)
-    signals = {
-        team: TeamSignals(
-            offense=offensive_signals(plays, team),
-            defense=defensive_signals(plays, team),
-        )
-        for team in teams
-    }
+    signals = {team: team_signals(plays, team) for team in teams}
 
     # Build the game document and save it as a JSON-serializable dict for inspection
     game_doc = GameDocument(header=buf_jax_header, signals=signals, plays=plays)

@@ -1,6 +1,6 @@
 """Play record schema for Snap Recap.
 
-One `Play` instance per play in a merged PBP + participation game file.
+One `Play` instance per play in a cleaned PBP game file.
 Records hold *raw contextual values only* — situational labels
 (high-leverage, percentile bands, "explosive", etc.) are derived
 downstream so the records stay reusable.
@@ -82,14 +82,6 @@ class Play:
     qb_dropback: Optional[bool]
     qb_scramble: Optional[bool]
 
-    # --- Personnel & scheme (participation) ---
-    offense_personnel_package: Optional[str]   # normalized 11 / 12 / 21 ...
-    offense_formation: Optional[str]
-    defenders_in_box: Optional[int]
-    number_of_pass_rushers: Optional[int]
-    defense_coverage_type: Optional[str]
-    defense_man_zone_type: Optional[str]
-
     # --- Execution detail ---
     pass_location: Optional[str]
     pass_length: Optional[str]
@@ -97,9 +89,6 @@ class Play:
     yards_after_catch: Optional[float]
     run_location: Optional[str]
     run_gap: Optional[str]
-    route: Optional[str]
-    time_to_throw: Optional[float]
-    was_pressure: Optional[bool]
 
     # --- Outcome ---
     yards_gained: Optional[int]
@@ -170,22 +159,12 @@ class Play:
             qb_dropback=_bool(g("qb_dropback")),
             qb_scramble=_bool(g("qb_scramble")),
 
-            offense_personnel_package=_str(g("offense_personnel_package")),
-            offense_formation=_str(g("offense_formation")),
-            defenders_in_box=_int(g("defenders_in_box")),
-            number_of_pass_rushers=_int(g("number_of_pass_rushers")),
-            defense_coverage_type=_str(g("defense_coverage_type")),
-            defense_man_zone_type=_str(g("defense_man_zone_type")),
-
             pass_location=_str(g("pass_location")),
             pass_length=_str(g("pass_length")),
             air_yards=_float(g("air_yards")),
             yards_after_catch=_float(g("yards_after_catch")),
             run_location=_str(g("run_location")),
             run_gap=_str(g("run_gap")),
-            route=_str(g("route")),
-            time_to_throw=_float(g("time_to_throw")),
-            was_pressure=_bool(g("was_pressure")),
 
             yards_gained=_int(g("yards_gained")),
             epa=_float(g("epa")),

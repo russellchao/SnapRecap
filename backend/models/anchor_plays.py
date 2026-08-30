@@ -6,7 +6,7 @@ from dataclasses import dataclass, field, asdict
 import json
 
 from play import Play
-from game_document import GameDocument, GameHeader, TeamSignals
+from game_document import GameDocument, GameHeader
 
 
 # ------- Output Dataclasses -------
@@ -45,11 +45,9 @@ class AnchorPlayList:
         "down", "ydstogo", "yardline_100", "goal_to_go", "score_differential",
         "posteam_timeouts_remaining", "defteam_timeouts_remaining", "drive",
         "fixed_drive_result", "play_type", "is_special", "shotgun", "no_huddle",
-        "qb_dropback", "qb_scramble", "offense_personnel_package",
-        "offense_formation", "defenders_in_box", "number_of_pass_rushers",
-        "defense_coverage_type", "defense_man_zone_type", "pass_location",
+        "qb_dropback", "qb_scramble", "pass_location",
         "pass_length", "air_yards", "yards_after_catch", "run_location",
-        "run_gap", "route", "time_to_throw", "was_pressure", "yards_gained",
+        "run_gap", "yards_gained",
         "success", "first_down", "third_down_converted", "third_down_failed",
         "fourth_down_converted", "fourth_down_failed", "complete_pass",
         "touchdown", "sack", "qb_hit", "interception", "fumble_lost",
@@ -137,8 +135,8 @@ if __name__ == "__main__":
     def _signal_from_dict(value: dict):
         """Rebuild one signal value, recovering the type `asdict` erased.
 
-        RateSignal, MeanSignal, and distribution dicts (personnel/coverage/
-        man_zone, already plain str -> float) are told apart by their keys.
+        RateSignal and MeanSignal are told apart by their keys; anything
+        else is passed through as-is.
         """
         from signals import RateSignal, MeanSignal
         keys = set(value.keys())
@@ -148,17 +146,14 @@ if __name__ == "__main__":
             return MeanSignal(**value)
         return value  # distribution dict (or empty {})
 
-    def _team_signals_from_dict(value: dict) -> TeamSignals:
-        return TeamSignals(
-            offense={name: _signal_from_dict(v) for name, v in value["offense"].items()},
-            defense={name: _signal_from_dict(v) for name, v in value["defense"].items()},
-        )
+    def _record_from_dict(value: dict) -> dict:
+        return {name: _signal_from_dict(v) for name, v in value.items()}
 
     def document_from_dict(raw: dict) -> GameDocument:
         """Rebuild a GameDocument from its `to_dict()` / JSON form."""
         return GameDocument(
             header=GameHeader(**raw["header"]),
-            signals={team: _team_signals_from_dict(ts) for team, ts in raw["signals"].items()},
+            signals={team: _record_from_dict(rec) for team, rec in raw["signals"].items()},
             plays=[Play(**p) for p in raw["plays"]],
         )
 
