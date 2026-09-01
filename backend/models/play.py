@@ -192,9 +192,9 @@ class Play:
             fumbled_1_team=_str(g("fumbled_1_team")),
             fumble_recovery_1_team=_str(g("fumble_recovery_1_team")),
 
-            passer=get_player_full_name(_str(g("passer_player_id"))),
-            rusher=get_player_full_name(_str(g("rusher_player_id"))),
-            receiver=get_player_full_name(_str(g("receiver_player_id"))),
+            passer=(name := get_player_full_name(_str(g("passer_player_id")))) if name is not None else _str(g("passer")),
+            rusher=(name := get_player_full_name(_str(g("rusher_player_id")))) if name is not None else _str(g("rusher")),
+            receiver=(name := get_player_full_name(_str(g("receiver_player_id")))) if name is not None else _str(g("receiver")),
 
             description=_str(g("desc")),
         )

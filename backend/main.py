@@ -7,7 +7,6 @@ import os
 from dotenv import load_dotenv
 
 # Internal Modules
-from get_data.load_players import refresh_players
 from get_recap import get_recap
 import game_qa
 
@@ -25,34 +24,11 @@ app.add_middleware(
 )
 
 
+# ------ Check Health endpoint ------
+
 @app.get("/health")
 def health():
     return {"status": "ok"}
-
-
-# ------ Refresh Players endpoint ------
-
-@app.post("/players/refresh", status_code=202)
-def refresh_players_endpoint(
-    background_tasks: BackgroundTasks, authorization: str = Header(None),
-):
-    #TODO: Enable the pg_net extension in Supabase to run the CRON scheduler on this endpoint
-
-    # Triggered by an external scheduler (i.e. Supabase pg_cron via pg_net).
-    # Protected by a shared secret so it can't be invoked publicly.
-    expected = os.getenv("CRON_SECRET")
-    if not expected:
-        raise HTTPException(
-            status_code=503,
-            detail="CRON_SECRET is not configured on the server.",
-        )
-    if authorization != f"Bearer {expected}":
-        raise HTTPException(status_code=401, detail="Unauthorized")
-
-    # Run in the background so the request returns immediately; the download +
-    # DB write takes several seconds and the caller doesn't need to wait.
-    background_tasks.add_task(refresh_players)
-    return {"status": "accepted", "detail": "Player data refresh started."}
 
 
 # ------ Get Recap endpoint ------

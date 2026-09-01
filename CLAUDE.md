@@ -73,9 +73,11 @@ depends on the previous stage's dataclass:
    sentences from that payload alone. **Python owns retrieval and grounding; the LLM owns phrasing
    only** — selection/value metrics (`wpa`, `epa`, `qb_epa`, `cpoe`, `wp`) are whitelisted out of
    the payload by `ANCHOR_PLAY_FIELDS` and never reach the model.
-10. **`get_data/load_players.py`** — full daily refresh of the `players` table (`gsis_id`,
+10. **`get_data/load_players.py`** — full refresh of the `players` table (`gsis_id`,
     `display_name`, `headshot`) from `nflreadpy.load_players()`, TRUNCATE + append over
-    `DATABASE_URL`. Exists because PBP data carries only initials + last name; display names are
+    `DATABASE_URL`. **Run manually only** (`python load_players.py` from `backend/get_data/`),
+    typically right before the start of a season — it is not exposed as an endpoint and is not on a
+    scheduler. Exists because PBP data carries only initials + last name; display names are
     what keep player names out of hallucination territory.
 
 ### FastAPI app (`backend/main.py`)
@@ -87,9 +89,8 @@ depends on the previous stage's dataclass:
 - `POST /ask_question` — body is `{question, game_ledger, anchor_plays, team_signals}`. The
   frontend **passes the components it already holds** from the `/get_recap` call rather than having
   the backend refetch them. Routes → shapes → answers; a `RoutingValidationError` becomes a 502.
-- `POST /players/refresh` — 202 + background task, guarded by a `Bearer $CRON_SECRET`
-  `Authorization` header. Intended for an external scheduler (Supabase `pg_cron`/`pg_net`, not yet
-  enabled).
+
+There is **no** player-refresh endpoint: `load_players.py` is a manual script (see above).
 
 CORS allows the single `FRONTEND_URL` origin.
 
@@ -131,9 +132,9 @@ Signal chips read `signals[abbr].signals` — the backend returns the **DB row**
 The import style differs by entry point — **the working directory matters**:
 
 - **API server** (from `backend/`): `uvicorn main:app --reload`
-  (`main.py` imports `get_recap` and `get_data.load_players` as top-level modules, so it must run
+  (`main.py` imports `get_recap` and `game_qa` as top-level modules, so it must run
   from `backend/`, *not* the repo root.)
-- **Player refresh** (from `backend/get_data/`): `python load_players.py`.
+- **Player refresh** (from `backend/get_data/`): `python load_players.py` — manual, on demand.
 - **Frontend** (from `frontend/`): `npm install`, then `npm run dev` / `npm run build` /
   `npm run lint`.
 
@@ -175,6 +176,5 @@ you're touching.
 - Backend (`backend/.env`, loaded with `python-dotenv`; `play.py` and `load_players.py` resolve the
   path relative to `__file__` so they work from any working directory):
   `FRONTEND_URL` (CORS origin), `DATABASE_URL` (Postgres/Supabase, for the `players` table),
-  `SUPABASE_URL` + `SUPABASE_KEY` (recap component cache), `CRON_SECRET` (guards
-  `/players/refresh`), `ANTHROPIC_API_KEY` (Q&A).
+  `SUPABASE_URL` + `SUPABASE_KEY` (recap component cache), `ANTHROPIC_API_KEY` (Q&A).
 - Frontend (`frontend/.env`): `VITE_API_BASE_URL`.

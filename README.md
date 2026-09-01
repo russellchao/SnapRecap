@@ -50,7 +50,6 @@ and every one after it is fast.
 | `GET /health` | `{"status": "ok"}` |
 | `GET /get_recap/{season}/{week}/{away_team}/{home_team}/{away_score}/{home_score}/` | Returns `{game_ledger, anchor_plays, team_signals}`. Also builds any missing components. |
 | `POST /ask_question` | Body: `{question, game_ledger, anchor_plays, team_signals}`. The frontend passes back the components it already holds instead of making the backend refetch them. |
-| `POST /players/refresh` | 202 + background refresh of the `players` table. Requires `Authorization: Bearer $CRON_SECRET`. |
 
 ## Setup
 
@@ -71,7 +70,6 @@ FRONTEND_URL=http://localhost:5173
 DATABASE_URL=postgresql://...      # Supabase Postgres, for the players table
 SUPABASE_URL=...
 SUPABASE_KEY=...
-CRON_SECRET=...                    # guards /players/refresh
 ANTHROPIC_API_KEY=...
 ```
 
@@ -82,8 +80,10 @@ VITE_API_BASE_URL=http://127.0.0.1:8000
 ```
 
 Play-by-play data carries only initials + last name, so player display names come from a `players`
-table refreshed from `nflreadpy.load_players()` — populate it once with
-`python load_players.py` from `backend/get_data/` before building recaps.
+table refreshed from `nflreadpy.load_players()`. It is populated by running
+`python load_players.py` from `backend/get_data/` **manually** — do it once before building any
+recaps, and again as needed (typically right before the start of a season). There is no endpoint or
+scheduled job for it.
 
 ## Testing a layer
 
