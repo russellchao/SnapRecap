@@ -37,15 +37,10 @@ depends on the previous stage's dataclass:
    display names via `get_player_full_name()`, which queries the Supabase `players` table over
    SQLAlchemy (`DATABASE_URL`) — cached with `lru_cache`, but note this means building `Play`
    records **requires DB access**.
-4. **`models/signals.py`** — reductions over a list of `Play` (`f(plays) -> value`) returning
-   `RateSignal`/`MeanSignal` (which carry `attempts`/`n` so small samples aren't mistaken for
-   meaningful ones). `team_signals(plays, team)` produces one flat record per team — the team's own
-   offense plus `sacks_forced`, the single defensive reduction kept. The same reduction works on one
-   game or a whole season (league baseline).
-5. **`models/game_document.py`** — `GameDocument` = `GameHeader` + per-team signals + all plays.
-   This is the **lossless intermediate** and the handoff boundary: it filters nothing; everything
-   downstream works from this object, never the source DataFrame.
-6. **`models/game_ledger.py`** — `build_ledger(doc)` decomposes the game's EPA margin into fixed
+4. **`models/game_document.py`** — `GameDocument` = `GameHeader` + all plays. This is the
+   **lossless intermediate** and the handoff boundary: it filters nothing and aggregates nothing;
+   all three components are built from this object, never the source DataFrame.
+5. **`models/game_ledger.py`** — `build_ledger(doc)` decomposes the game's EPA margin into fixed
    categories (`turnovers`, `pass_protection`, `penalties`, `special_teams`, `red_zone`,
    `third_down`, `explosive_plays`, `other`). Sign convention is `diff = home_ep - away_ep`. Order
    in `LEDGER_CATEGORIES` is **claim priority**: every play with a valid `posteam` is claimed by
@@ -53,6 +48,15 @@ depends on the previous stage's dataclass:
    approximation — a mismatch is a real bug. `epa_vs_score_gap` (EPA margin vs actual score margin)
    is a **diagnostic only** and is expected to be nonzero; don't chase it to zero. Turnovers and
    pass-protection plays credit the defense (`credit_defense=True`).
+6. **`models/team_signals.py`** — holds two layers. Bottom: the signal *reductions* over a list of
+   `Play` (`f(plays) -> value`) returning `RateSignal`/`MeanSignal`, which carry `attempts`/`n` so
+   small samples aren't mistaken for meaningful ones; the same reduction works on one game or a
+   whole season (league baseline). `team_signal_record(plays, team)` collects them into one flat
+   record per team — the team's own offense plus `sacks_forced`, the single defensive reduction
+   kept. Top: `TeamSignals.build(doc)`, the component, which resolves teams from the plays
+   (`teams_in`) rather than the header and gives each one a record. `to_db_item()` emits one row
+   per team (`game_id`, `team`, `signals`), away row first. (There is no separate `signals.py` —
+   it was folded into this module; don't resurrect it from stale docs.)
 7. **`models/anchor_plays.py`** — `AnchorPlayList.build(doc)` ranks plays by `|wpa|` scaled by a
    convex recency weight (`_recency_weight`: regulation runs 0.5→1.0, OT 1.0→1.3, exponent 3), keeps
    at most one candidate per drive, and takes the top `MAX_ANCHORS` (5). Deliberately **not** gated
@@ -97,8 +101,8 @@ CORS allows the single `FRONTEND_URL` origin.
 ### Supabase tables
 
 `players` (`gsis_id`, `display_name`, `headshot`), `game_ledgers` (keyed by `game_id`),
-`anchor_plays` (composite `game_id` + `play_id`), `team_signals` (one row per team:
-`game_id`, `team`, `signals`). `players` is written via SQLAlchemy/`DATABASE_URL`; the three recap
+`anchor_plays` (composite `game_id` + `play_id`), `team_signals` (composite `game_id` + `team`,
+one row per team, written from `TeamSignals.to_db_item()`). `players` is written via SQLAlchemy/`DATABASE_URL`; the three recap
 tables via the `supabase` client (`SUPABASE_URL`/`SUPABASE_KEY`).
 
 ### Frontend (`frontend/`)
@@ -150,26 +154,25 @@ they must be run from inside their own directory:**
 
 - From `backend/get_data/`: `python get_raw_data.py <season> <week> <away> <home>` → writes
   `pbp_data.csv`; then `python preprocess_data.py` → `preprocessed_data.csv`.
-- From `backend/models/`: `python play.py` / `python signals.py` (read `preprocessed_data.csv`),
-  `python game_document.py` → `game_document.json`, `python game_ledger.py` → `game_ledger.json`,
-  `python anchor_plays.py` → `anchor_plays.json`.
+- From `backend/models/`: `python play.py` (reads `preprocessed_data.csv`),
+  `python game_document.py` → `game_document.json`, then the three component builders, which each
+  read `game_document.json`: `python game_ledger.py` → `game_ledger.json`,
+  `python anchor_plays.py` → `anchor_plays.json`, `python team_signals.py` → `team_signals.json`.
 
 Each stage consumes the artifact the previous one wrote, so regenerate them in order after changing
 an upstream layer. `play.py` hits the `players` table, so even the standalone blocks need
 `DATABASE_URL`.
 
-**Import gotcha in `models/`:** only `game_document.py` and `game_ledger.py` use the dual-import
-pattern (`try: from .play import ...` / `except ImportError:` insert `__file__`'s dir on `sys.path`).
-`signals.py` and `anchor_plays.py` use bare sibling imports (`from play import Play`), which only
-work as a package because `game_document`'s fallback already put `models/` on `sys.path`. So
-`from models import game_document, game_ledger, anchor_plays` works, but importing
-`models.anchor_plays` *first* raises `ModuleNotFoundError: No module named 'play'`. Keep
-`game_document` first in any new import of the package, or add the dual-import guard to the module
-you're touching.
+**Imports in `models/`:** every module uses the dual-import pattern (`try: from .play import ...`
+/ `except ImportError:` insert `__file__`'s dir on `sys.path`), so each one imports cleanly both as
+a package member and as a standalone script, in any order. Keep the guard on any new module here —
+the package used to depend on an accidental side effect (`game_document` importing the old
+`signals.py`, whose own bare import failed and put `models/` on `sys.path` for everyone else), and
+that prop is gone.
 
 `asdict` flattens the nested dataclasses for JSON serialization, so reloading a saved
-`GameDocument` requires rebuilding the dataclass types from dicts — see the `document_from_dict` /
-`_signal_from_dict` helpers in the `__main__` block of `anchor_plays.py`.
+`GameDocument` requires rebuilding the dataclass types from dicts — see the `document_from_dict`
+helper in the `__main__` blocks of `anchor_plays.py` and `team_signals.py`.
 
 ## Environment variables
 

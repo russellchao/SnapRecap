@@ -1,22 +1,40 @@
-"""Signal reductions for Snap Recap.
+"""
+Team signals model for Snap Recap.
 
-A *signal* is a reduction over a collection of Play records: filter to a
-view, then collapse that view to a summary value. Each reduction is a
-self-contained function `f(plays) -> value`, so the same function serves
-a single game's recap and the league baseline (run over a season's plays
-instead of one game's).
+The third recap component, alongside game_ledger and anchor_plays: the
+per-team efficiency/tendency record for one game, projected out of a
+GameDocument the same way the other two are.
+
+Two layers live here, bottom to top:
+
+1. The *reductions*. A signal is a reduction over a collection of Play
+   records: filter to a view, then collapse that view to a summary
+   value. Each one is a self-contained function `f(plays) -> value`, so
+   the same function serves a single game recap and a league baseline
+   (run over a season of plays instead of one game).
+2. The *component*. `TeamSignals` decides which teams get a record,
+   carries the game header those records belong to, and knows the
+   `team_signals` table row shape.
 """
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass, field
 from typing import Dict, Iterable, List, Optional
-import pandas as pd
+import json
+import sys
+import os
 
-from play import Play, plays_from_frame, teams_in
+try:
+    from .game_document import GameDocument, GameHeader
+    from .play import Play, teams_in
+except ImportError:
+    sys.path.insert(0, os.path.dirname(__file__))
+    from game_document import GameDocument, GameHeader
+    from play import Play, teams_in
 
 
-# --- Output Dataclasses ---
+# --- Signal Output Dataclasses ---
 
 @dataclass
 class RateSignal:
@@ -133,9 +151,9 @@ def cpoe(plays: List[Play]) -> MeanSignal:
     return MeanSignal.of(p.cpoe for p in plays if p.cpoe is not None)
 
 
-# --- Main Signal Function ---
+# --- Per-Team Signal Record ---
 
-def team_signals(plays: List[Play], team: str) -> Dict[str, object]:
+def team_signal_record(plays: List[Play], team: str) -> Dict[str, object]:
     """Per-team signal record — the locked output shape.
 
     A flat dict of {signal_name: signal_value}, each value its own
@@ -159,32 +177,93 @@ def team_signals(plays: List[Play], team: str) -> Dict[str, object]:
         "red_zone_td": red_zone_touchdowns(off),
         "success_rate": success_rate(scrimmage),
         "explosive_rate": explosive_play_rate(scrimmage),
-        "epa_per_play": epa_per_play(scrimmage),
         "epa_per_pass": epa_per_play(passes),
         "epa_per_rush": epa_per_play(rushes),
-        "yards_per_play": yards_per_play(scrimmage),
+        "yards_per_pass": yards_per_play(passes),
         "yards_per_rush": yards_per_play(rushes),
         "cpoe": cpoe(passes),
         "sacks_forced": sack_rate(defense),
     }
 
 
-if __name__ == "__main__":
-    # NOTE: For testing purposes only.
-    # Test building the signal record on the Preprocessed CSV in the test data
+# --- Component Dataclass ---
 
-    def _print_record(title: str, record: Dict[str, object]) -> None:
-        """Pretty-print a signal record (test helper)."""
-        print(title)
+@dataclass
+class TeamSignals:
+    """DB entity: one signal record per team, under the game's header."""
+    header: GameHeader
+    signals: Dict[str, Dict[str, object]] = field(default_factory=dict)   # {team abbreviation: signal record}
+
+    @classmethod
+    def build(cls, document: GameDocument) -> "TeamSignals":
+        """Project a GameDocument into a per-team signal record.
+
+        Teams are resolved from the plays rather than the header, so the
+        record set matches what actually appears in the play-by-play.
+        """
+        signals = {
+            team: team_signal_record(document.plays, team)
+            for team in teams_in(document.plays)
+        }
+        return cls(header=document.header, signals=signals)
+
+    def to_dict(self) -> dict:
+        """JSON-serializable form for the cache.
+
+        `asdict` recurses through the dict values into the nested signal
+        dataclasses (RateSignal, MeanSignal).
+        """
+        return asdict(self)
+
+    def to_db_item(self) -> List[dict]:
+        """DB rows for the team_signals table. game_id + team form the
+        composite key, so game_id is placed first in each row. Away team
+        first, then home, matching the header's reading order."""
+        records = self.to_dict()["signals"]
+
+        ordered = [t for t in (self.header.away_team, self.header.home_team) if t in records]
+        ordered += [t for t in records if t not in ordered]
+
+        return [
+            {
+                "game_id": self.header.game_id,
+                "team": team,
+                "signals": records[team],
+            }
+            for team in ordered
+        ]
+
+
+
+
+if __name__ == "__main__":
+    # NOTE: For testing purposes only
+    # Test building the team signals from the Game Document JSON file in the test data
+
+    def document_from_dict(raw: dict) -> GameDocument:
+        """(Test Helper Function) Rebuild a GameDocument from its `to_dict()` / JSON form."""
+        return GameDocument(
+            header=GameHeader(**raw["header"]),
+            plays=[Play(**p) for p in raw["plays"]],
+        )
+
+    game_doc_json = "../test_data/game_document.json"
+    with open(game_doc_json) as f:
+        raw = json.load(f)
+
+    document = document_from_dict(raw)
+    print(f"Rebuilt GameDocument for {document.header.game_id}: {len(document.plays)} plays")
+
+    team_signals = TeamSignals.build(document)
+    print(f"\nSignal records built for: {list(team_signals.signals.keys())}\n")
+    for team, record in team_signals.signals.items():
+        print(f"Signals for {team}:")
         for name, value in record.items():
             print(f"  {name}: {value}")
         print()
 
-    csv_file = "../test_data/preprocessed_data.csv"
-    df = pd.read_csv(csv_file)
-
-    plays = plays_from_frame(df)
-    teams = teams_in(plays)
-
-    for team in teams:
-        _print_record(f"Signals for {team}:", team_signals(plays, team))
+    # Save to a JSON-serializable dict for inspection
+    team_signals_json_filename = "../test_data/team_signals.json"
+    with open(team_signals_json_filename, "w") as f:
+        json.dump(team_signals.to_dict(), f, indent=2)
+    print(f"Team signals saved to {team_signals_json_filename}")

@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 from pathlib import Path
 
-from models import game_document, game_ledger, anchor_plays
+from models import game_document, game_ledger, anchor_plays, team_signals
 from get_data import get_raw_data, preprocess_data
 
 
@@ -72,25 +72,12 @@ def build_recap(
         print(f"Inserted anchor plays for {game_id} into the DB")
 
     if not team_signals_exist:
-        game_doc_dict = game_doc.to_dict()
-        all_signals = game_doc_dict.get("signals", {})
-        away_signals_db_row = {
-            "game_id": game_id,
-            "team": away_team,
-            "signals": all_signals.get(away_team, {})
-        }
-        home_signals_db_row = {
-            "game_id": game_id,
-            "team": home_team,
-            "signals": all_signals.get(home_team, {})
-        }
-        supabase.table("team_signals").insert(away_signals_db_row).execute()
-        supabase.table("team_signals").insert(home_signals_db_row).execute()
+        signals_obj = team_signals.TeamSignals.build(game_doc)
+        signals_db_rows = signals_obj.to_db_item()
+        supabase.table("team_signals").insert(signals_db_rows).execute()
         print(f"Inserted home and away team signals for {game_id} into the DB")
-        _team_signals = {
-            away_team: away_signals_db_row,
-            home_team: home_signals_db_row
-        }
+        # Keyed by team, matching the shape the cache-hit path returns.
+        _team_signals = {row["team"]: row for row in signals_db_rows}
 
     return _game_ledger, _anchor_plays, _team_signals
 

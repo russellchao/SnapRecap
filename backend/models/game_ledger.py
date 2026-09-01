@@ -4,9 +4,10 @@ Aggregation layer for Snap Recap.
 Converts a GameDocument's plays into the fixed margin-ledger categories.
 For each category, plays are summed (not averaged) by EPA per team, then
 the two totals are diffed. This is deliberately separate from the
-per-team rate signals already on GameDocument (third_down.rate, etc.) —
-those answer "how efficient was this team," the ledger answers "how many
-points did this category actually contribute to the final margin."
+per-team rate signals in the team_signals component (third_down.rate,
+etc.) — those answer "how efficient was this team," the ledger answers
+"how many points did this category actually contribute to the final
+margin."
 
 Sign convention: diff = home_ep - away_ep.
   positive -> home team advantage

@@ -100,6 +100,7 @@ cd ../models
 python game_document.py                  # → test_data/game_document.json
 python game_ledger.py                    # → test_data/game_ledger.json
 python anchor_plays.py                   # → test_data/anchor_plays.json
+python team_signals.py                   # → test_data/team_signals.json
 ```
 
 `play.py` resolves names against Supabase, so even these standalone runs need `DATABASE_URL`.

@@ -1,14 +1,15 @@
 """
 Game document assembly for Snap Recap.
 
-The GameDocument is the lossless intermediate that bundles the two layers
-— every Play record plus each team's offensive and defensive signal
-records — behind a small game header. It is the handoff boundary: once
-built, the prompt builder and the recap cache work from this object alone
-and never touch the source DataFrame again.
+The GameDocument is the lossless intermediate that bundles every Play
+record behind a small game header. It is the handoff boundary: once
+built, the three recap components (game_ledger, anchor_plays,
+team_signals) and the recap cache work from this object alone and never
+touch the source DataFrame again.
 
-Selection (surfacing high-leverage plays, baseline annotation) happens
-*downstream* of this object. The document itself filters nothing.
+Selection (surfacing high-leverage plays, per-team signal reduction,
+baseline annotation) happens *downstream* of this object. The document
+itself filters nothing and aggregates nothing.
 """
 
 from __future__ import annotations
@@ -22,11 +23,9 @@ import os
 
 try: 
     from .play import Play, plays_from_frame, teams_in
-    from .signals import team_signals
 except ImportError:
     sys.path.insert(0, os.path.dirname(__file__))
     from play import Play, plays_from_frame, teams_in
-    from signals import team_signals
 
 
 @dataclass
@@ -48,27 +47,22 @@ class GameHeader:
 
 @dataclass
 class GameDocument:
-    """Lossless game representation: header + per-team signals + all plays."""
+    """Lossless game representation: header + all plays."""
     header: GameHeader
-    signals: Dict[str, Dict[str, object]]   # {team abbreviation: signal record}
     plays: List[Play]
 
     @classmethod
     def build(cls, plays: List[Play], header: GameHeader) -> "GameDocument":
         """Assemble the document from prebuilt plays and a header.
 
-        Resolves the two teams, computes each team's signal record, and
-        packages everything. Plays are stored in full and in order —
-        nothing is filtered here.
+        Plays are stored in full and in order — nothing is filtered here.
         """
-        signals = {team: team_signals(plays, team) for team in teams_in(plays)}
-        return cls(header=header, signals=signals, plays=plays)
+        return cls(header=header, plays=plays)
 
     def to_dict(self) -> Dict[str, object]:
-        """JSON-serializable form for the prompt step and the cache.
+        """JSON-serializable form for the component builders and the cache.
 
-        `asdict` recurses through the nested dataclasses (Play, RateSignal,
-        MeanSignal).
+        `asdict` recurses through the nested dataclasses (Play).
         """
         return asdict(self)
     
@@ -115,11 +109,8 @@ if __name__ == "__main__":
     teams = teams_in(plays)
     print(f"Teams in game: {teams}\n")
 
-    # Signals for both teams (computed from the plays)
-    signals = {team: team_signals(plays, team) for team in teams}
-
     # Build the game document and save it as a JSON-serializable dict for inspection
-    game_doc = GameDocument(header=buf_jax_header, signals=signals, plays=plays)
+    game_doc = GameDocument.build(plays, buf_jax_header)
     game_doc_dict = game_doc.to_dict()
     game_doc_json_filename = "../test_data/game_document.json"
     with open(game_doc_json_filename, "w") as f:

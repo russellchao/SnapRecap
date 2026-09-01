@@ -4,9 +4,16 @@ Anchor Play Selection layer: this layer's job is picking the plays that mattered
 
 from dataclasses import dataclass, field, asdict
 import json
+import sys
+import os
 
-from play import Play
-from game_document import GameDocument, GameHeader
+try:
+    from .play import Play
+    from .game_document import GameDocument, GameHeader
+except ImportError:
+    sys.path.insert(0, os.path.dirname(__file__))
+    from play import Play
+    from game_document import GameDocument, GameHeader
 
 
 # ------- Output Dataclasses -------
@@ -132,28 +139,10 @@ if __name__ == "__main__":
     # `asdict` flattens every nested dataclass into a plain dict, so loading a
     # saved document means rebuilding those types from the dicts.
 
-    def _signal_from_dict(value: dict):
-        """Rebuild one signal value, recovering the type `asdict` erased.
-
-        RateSignal and MeanSignal are told apart by their keys; anything
-        else is passed through as-is.
-        """
-        from signals import RateSignal, MeanSignal
-        keys = set(value.keys())
-        if keys == {"attempts", "successes", "rate"}:
-            return RateSignal(**value)
-        if keys == {"n", "mean"}:
-            return MeanSignal(**value)
-        return value  # distribution dict (or empty {})
-
-    def _record_from_dict(value: dict) -> dict:
-        return {name: _signal_from_dict(v) for name, v in value.items()}
-
     def document_from_dict(raw: dict) -> GameDocument:
         """Rebuild a GameDocument from its `to_dict()` / JSON form."""
         return GameDocument(
             header=GameHeader(**raw["header"]),
-            signals={team: _record_from_dict(rec) for team, rec in raw["signals"].items()},
             plays=[Play(**p) for p in raw["plays"]],
         )
 
@@ -164,7 +153,7 @@ if __name__ == "__main__":
 
     document = document_from_dict(raw)
     print(f"Rebuilt GameDocument for {document.header.game_id}: "
-          f"{len(document.plays)} plays, teams {list(document.signals.keys())}")
+          f"{len(document.plays)} plays, {document.header.away_team} @ {document.header.home_team}")
 
     # ------- Step 1: Anchors -------
     anchors = _select_anchors(document)
