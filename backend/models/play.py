@@ -48,15 +48,6 @@ def _str(v) -> Optional[str]:
     return None if _na(v) else str(v)
 
 
-def _player_name(gsis_id: Optional[str], fallback: Optional[str]) -> Optional[str]:
-    """Full display name for a gsis id, falling back to the PBP short name.
-
-    PBP carries only initials + last name, so the DB lookup is preferred; the
-    short name is used when the id is missing or has no matching row.
-    """
-    return get_player_full_name(gsis_id) or fallback
-
-
 @dataclass
 class Play:
     # --- Identity / sequencing ---
@@ -201,9 +192,9 @@ class Play:
             fumbled_1_team=_str(g("fumbled_1_team")),
             fumble_recovery_1_team=_str(g("fumble_recovery_1_team")),
 
-            passer=_player_name(_str(g("passer_player_id")), _str(g("passer"))),
-            rusher=_player_name(_str(g("rusher_player_id")), _str(g("rusher"))),
-            receiver=_player_name(_str(g("receiver_player_id")), _str(g("receiver"))),
+            passer=get_player_full_name(_str(g("passer_player_id"))),
+            rusher=get_player_full_name(_str(g("rusher_player_id"))),
+            receiver=get_player_full_name(_str(g("receiver_player_id"))),
 
             description=_str(g("desc")),
         )
