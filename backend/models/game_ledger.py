@@ -51,6 +51,9 @@ except ImportError:
     from play import Play
 
 
+VERSION = "v1"
+
+
 # --- Category definitions -------------------------------------------------
 # Each filter answers: "does this play belong to this category?"
 # `credit_defense` controls who the play's EPA is attributed to in the
@@ -168,6 +171,7 @@ class GameLedger:
                 None if self.epa_vs_score_gap is None
                 else round(self.epa_vs_score_gap, 2)
             ),
+            "version": VERSION,
         }
 
 

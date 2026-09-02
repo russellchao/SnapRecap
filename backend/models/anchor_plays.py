@@ -16,6 +16,9 @@ except ImportError:
     from game_document import GameDocument, GameHeader
 
 
+VERSION = "v1"
+
+
 # ------- Output Dataclasses -------
 
 @dataclass
@@ -68,6 +71,7 @@ class AnchorPlayList:
         for sp in self.anchors:
             row = {"game_id": self.header.game_id}
             row.update({field: getattr(sp.play, field, None) for field in self._DB_ITEM_FIELDS})
+            row["version"] = VERSION
             rows.append(row)
         return rows
 

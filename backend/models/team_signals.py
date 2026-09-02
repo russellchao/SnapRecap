@@ -34,6 +34,9 @@ except ImportError:
     from play import Play, teams_in
 
 
+VERSION = "v1"
+
+
 # --- Signal Output Dataclasses ---
 
 @dataclass
@@ -229,6 +232,7 @@ class TeamSignals:
                 "game_id": self.header.game_id,
                 "team": team,
                 "signals": records[team],
+                "version": VERSION,
             }
             for team in ordered
         ]
