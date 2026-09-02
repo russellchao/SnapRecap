@@ -265,5 +265,7 @@ def answer_question(
         ],
     )
 
+    print(f"Answer stop reason: {response.stop_reason}")
+
     text_blocks = [b.text for b in response.content if b.type == "text"]
     return "".join(text_blocks).strip()
