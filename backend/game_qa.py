@@ -36,8 +36,8 @@ special_teams, red_zone, third_down, explosive_plays, other) — use for "why di
 margin end up X" or category-specific questions.
 - anchor_plays: the handful of individual plays that most shaped the outcome — use for \
 questions about specific moments, plays, or players' individual actions.
-- team_signals: season-context tendency and efficiency stats per team (rates, EPA, \
-personnel/coverage distributions) — use for "how does this compare to their usual" or \
+- team_signals: season-context tendency and efficiency stats per team (conversion \
+rates, EPA, yards per play) — use for "how does this compare to their usual" or \
 tendency-based questions.
 
 Select every component that could plausibly be relevant. If the question is unrelated to \
@@ -108,21 +108,12 @@ ANCHOR_PLAY_FIELDS = [
     "no_huddle",
     "qb_dropback",
     "qb_scramble",
-    "offense_personnel_package",
-    "offense_formation",
-    "defenders_in_box",
-    "number_of_pass_rushers",
-    "defense_coverage_type",
-    "defense_man_zone_type",
     "pass_location",
     "pass_length",
     "air_yards",
     "yards_after_catch",
     "run_location",
     "run_gap",
-    "route",
-    "time_to_throw",
-    "was_pressure",
     "yards_gained",
     "success",
     "first_down",
@@ -191,13 +182,12 @@ def _shape_anchor_plays(anchor_play_rows: list[dict]) -> dict:
 
 
 def _shape_team_signals(team_signal_rows: dict) -> dict:
-    """Shape {team: db_row} into {team: {offense, defense}}, dropping
+    """Shape {team: db_row} into {team: signal_record}, dropping the
     game_id/team columns that don't belong in the phrasing payload.
     """
     return {
         "team_signals": {
-            team: {"offense": row["offense"], "defense": row["defense"]}
-            for team, row in team_signal_rows.items()
+            team: row["signals"] for team, row in team_signal_rows.items()
         }
     }
 
@@ -274,6 +264,8 @@ def answer_question(
             }
         ],
     )
+
+    print(f"Answer stop reason: {response.stop_reason}")
 
     text_blocks = [b.text for b in response.content if b.type == "text"]
     return "".join(text_blocks).strip()

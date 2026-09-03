@@ -1,7 +1,7 @@
 """
-This file downloads player data from nflreadpy using its load_player() function and populates the data to the Supabase DB. 
+This file only gets ran manually by the developer as needed, typically right before the start of a season.
 
-This file gets ran once per day via a CRON job (and, of course, at the discretion of the developer).
+This file downloads player data from nflreadpy using its load_players() function and populates the data to the Supabase DB.
 
 This file is necessary because the player data contains each player's display name (current and historic), 
 which is essential in preventing player name hallucinations in the recap. The PBP data does not contain players' display names,
@@ -71,18 +71,12 @@ def write_to_db(players):
         print(f"An error occurred while writing player data to the database. Details: {str(e)}")
     finally:
         engine.dispose()
-
-
-def refresh_players():
-    """Download the latest player data and write it to the DB."""
-    player_data = load_player_data()
-    write_to_db(player_data)
-
-
-
+    
 
 
 
 
 if __name__ == "__main__":
-    refresh_players()
+    """Download the latest player data and write it to the DB."""
+    player_data = load_player_data()
+    write_to_db(player_data)

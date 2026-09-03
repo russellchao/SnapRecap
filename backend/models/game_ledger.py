@@ -4,9 +4,10 @@ Aggregation layer for Snap Recap.
 Converts a GameDocument's plays into the fixed margin-ledger categories.
 For each category, plays are summed (not averaged) by EPA per team, then
 the two totals are diffed. This is deliberately separate from the
-per-team rate signals already on GameDocument (third_down.rate, etc.) —
-those answer "how efficient was this team," the ledger answers "how many
-points did this category actually contribute to the final margin."
+per-team rate signals in the team_signals component (third_down.rate,
+etc.) — those answer "how efficient was this team," the ledger answers
+"how many points did this category actually contribute to the final
+margin."
 
 Sign convention: diff = home_ep - away_ep.
   positive -> home team advantage
@@ -50,6 +51,9 @@ except ImportError:
     from play import Play
 
 
+VERSION = "v1"
+
+
 # --- Category definitions -------------------------------------------------
 # Each filter answers: "does this play belong to this category?"
 # `credit_defense` controls who the play's EPA is attributed to in the
@@ -68,9 +72,10 @@ def _is_turnover(play: Play) -> bool:
     return bool(play.interception or play.fumble_lost)
 
 def _is_protection_play(play: Play) -> bool:
-    # Matches sack_rate/pressure_rate's population: dropbacks, not all
-    # pass plays (a screen with no dropback shouldn't count here).
-    return bool(play.qb_dropback and (play.sack or play.was_pressure))
+    # Matches sack_rate's population: dropbacks, not all pass plays
+    # (a screen with no dropback shouldn't count here). Sacks alone —
+    # pressures aren't in the play-by-play data.
+    return bool(play.qb_dropback and play.sack)
 
 def _is_penalty(play: Play) -> bool:
     # epa already reflects the penalty's net effect on posteam correctly
@@ -166,6 +171,7 @@ class GameLedger:
                 None if self.epa_vs_score_gap is None
                 else round(self.epa_vs_score_gap, 2)
             ),
+            "version": VERSION,
         }
 
 

@@ -1,40 +1,29 @@
+import SectionHead from './SectionHead'
 import './RecapSection.css'
 import './TeamSignals.css'
 
+const ABOUT = (
+    <p>
+        A side-by-side look at how each team actually played — third-down conversions, red zone
+        trips, turnovers, and other tendencies — beyond what the box score shows.
+    </p>
+);
+
 const SIGNAL_LABELS = {
-    // Offense
     third_down: "3rd Down",
     fourth_down: "4th Down",
     red_zone_td: "Red Zone TD",
     success_rate: "Success Rate",
     explosive_rate: "Explosive Rate",
-    sack_rate: "Sacks Allowed",
-    epa_per_play: "EPA / Play",
     epa_per_pass: "EPA / Pass",
     epa_per_rush: "EPA / Rush",
-    yards_per_play: "Yards / Play",
+    yards_per_pass: "Yards / Pass",
     yards_per_rush: "Yards / Rush",
     cpoe: "CPOE",
-    personnel: "Personnel",
-    // Defense
-    third_down_allowed: "3rd Down Allowed",
-    red_zone_td_allowed: "Red Zone TD Allowed",
-    success_rate_allowed: "Success Rate Allowed",
-    explosive_rate_allowed: "Explosive Rate Allowed",
-    epa_per_play_allowed: "EPA / Play Allowed",
-    epa_per_pass_allowed: "EPA / Pass Allowed",
-    epa_per_rush_allowed: "EPA / Rush Allowed",
-    yards_per_play_allowed: "Yards / Play Allowed",
-    yards_per_rush_allowed: "Yards / Rush Allowed",
-    pressure_rate: "Pressure Rate",
-    sacks: "Sack Rate",
-    blitz_rate: "Blitz Rate",
-    avg_box_defenders: "Box Defenders",
-    coverage: "Coverage",
-    man_zone: "Man / Zone",
+    sacks_forced: "Sacks Forced",
 };
 
-// Turn a raw backend key ("blitz_rate") into a display label.
+// Turn a raw backend key ("sacks_forced") into a display label.
 function prettifyKey(key) {
     return (key ?? "")
         .split('_')
@@ -43,10 +32,9 @@ function prettifyKey(key) {
 }
 
 /*
-    Signals arrive in three shapes (see backend/models/signals.py):
-      RateSignal   -> { attempts, successes, rate }
-      MeanSignal   -> { n, mean }
-      distribution -> { label: share, ... }
+    Signals arrive in two shapes (see backend/models/signals.py):
+      RateSignal -> { attempts, successes, rate }
+      MeanSignal -> { n, mean }
 
     Each collapses into one short chip value. A null rate/mean means the signal
     had no qualifying plays, so the chip is dropped entirely rather than shown
@@ -66,14 +54,10 @@ function formatSignal(value) {
         return value.mean.toFixed(2);
     }
 
-    // Distribution: only the most-used option is worth a chip.
-    const entries = Object.entries(value);
-    if (!entries.length) return null;
-    const [label, share] = entries.reduce((best, entry) => (entry[1] > best[1] ? entry : best));
-    return `${label} · ${(share * 100).toFixed(0)}%`;
+    return null;
 }
 
-function SignalGroup({ label, signals }) {
+function SignalChips({ signals }) {
     const chips = Object.entries(signals ?? {})
         .map(([name, value]) => [name, formatSignal(value)])
         .filter(([, text]) => text != null);
@@ -81,7 +65,6 @@ function SignalGroup({ label, signals }) {
 
     return (
         <div className="signal-group">
-            <div className="signal-group-label">{label}</div>
             <div className="signal-chips">
                 {chips.map(([name, text]) => (
                     <span className="chip" key={name}>
@@ -103,10 +86,7 @@ export default function TeamSignals({ signals, awayName, homeName, awayAbbr, hom
 
     return (
         <section className="recap-section team-signals" id="team-signals" style={colors}>
-            <div className="section-head">
-                <h2>Team Signals</h2>
-                <span className="meta">Situational tendencies, both sides</span>
-            </div>
+            <SectionHead title="Team Signals" about={ABOUT} />
 
             <div className="signals-grid">
                 {columns.map((column) => (
@@ -115,8 +95,7 @@ export default function TeamSignals({ signals, awayName, homeName, awayAbbr, hom
                             <span className="signals-dot" />
                             <h3>{column.name}</h3>
                         </div>
-                        <SignalGroup label="Offense" signals={column.signals.offense} />
-                        <SignalGroup label="Defense" signals={column.signals.defense} />
+                        <SignalChips signals={column.signals.signals} />
                     </div>
                 ))}
             </div>

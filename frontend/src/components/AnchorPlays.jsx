@@ -1,5 +1,14 @@
+import SectionHead from './SectionHead'
 import './RecapSection.css'
 import './AnchorPlays.css'
+
+const ABOUT = (
+    <p>
+        The handful of plays that swung the game the most, ranked by how much they moved each
+        team's chances of winning. Later plays count for more, since a big play in the fourth
+        quarter or OT matters more than one in the first.
+    </p>
+);
 
 const PERIOD_SECONDS = 900;
 const DOWN_NAMES = ["1st", "2nd", "3rd", "4th"];
@@ -59,10 +68,7 @@ export default function AnchorPlays({ plays, homeAbbr, colors }) {
 
     return (
         <section className="recap-section anchor-plays" id="anchor-plays" style={colors}>
-            <div className="section-head">
-                <h2>Anchor Plays</h2>
-                <span className="meta">Ranked by |WPA|</span>
-            </div>
+            <SectionHead title="Anchor Plays" about={ABOUT} />
 
             <div className="anchor-scroll">
                 {anchors.map((play) => {

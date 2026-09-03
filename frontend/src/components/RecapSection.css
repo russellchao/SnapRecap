@@ -62,6 +62,51 @@
     margin: 0;
 }
 
+/* "About" toggle, pinned to the right end of the heading strip. */
+.recap-section .section-about-btn {
+    flex-shrink: 0;
+    font-family: var(--sans);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--rc-ink-faint);
+    background: transparent;
+    border: 1px solid var(--rc-panel-line);
+    border-radius: 999px;
+    padding: 5px 14px;
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.recap-section .section-about-btn:hover,
+.recap-section .section-about-btn[aria-expanded="true"] {
+    color: var(--rc-accent);
+    border-color: var(--rc-accent-dim);
+}
+
+/* The explainer the button opens: an inset note above the section's content,
+   marked with the page accent so it reads as commentary, not data. */
+.recap-section .section-about {
+    background: var(--rc-bg);
+    border: 1px solid var(--rc-panel-line);
+    border-left: 3px solid var(--rc-accent-dim);
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin-bottom: 24px;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--rc-ink-dim);
+}
+
+.recap-section .section-about p {
+    margin: 0;
+}
+
+.recap-section .section-about p + p {
+    margin-top: 10px;
+}
+
 .recap-section .section-head .meta {
     font-size: 15px;
     color: var(--rc-ink-faint);
@@ -79,7 +124,15 @@
         gap: 4px;
     }
 
+    .recap-section .section-head:has(.section-about-btn) {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+
     .recap-section .section-head h2 {
         font-size: 23px;
     }
+
+    .recap-section .section-about { font-size: 14px; }
 }

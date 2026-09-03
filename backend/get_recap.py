@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 from pathlib import Path
 
-from models import game_document, game_ledger, anchor_plays
+from models import game_document, game_ledger, anchor_plays, team_signals
 from get_data import get_raw_data, preprocess_data
 
 
@@ -16,20 +16,16 @@ supabase = client.create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_K
 # ------ Helper function to build the GameDocument object ------
 
 def build_game_doc(game_id: str, season: str, week: str, away_team: str, home_team: str, away_score: int, home_score: int):
-    # Get the PBP and Participation data for the requested game
+    # Get the PBP data for the requested game
     pbp_data = get_raw_data.get_pbp_data(int(season), game_id)
     if not isinstance(pbp_data, pd.DataFrame):
         print(f"Error: PBP data for {game_id} is not available.")
         return pbp_data
-    participation_data = get_raw_data.get_participation_data(int(season), game_id)
-    if not isinstance(participation_data, pd.DataFrame):
-        print(f"Error: Participation data for {game_id} is not available.")
-        return participation_data
-    print("Successfully downloaded raw PBP and Participation Data")
+    print("Successfully downloaded raw PBP Data")
 
     # Preprocess the data
-    merged_df = preprocess_data.clean_and_merge(pbp_data, participation_data)
-    print("Successfully cleaned and merged PBP and Participation Data")
+    cleaned_df = preprocess_data.clean(pbp_data)
+    print("Successfully cleaned PBP Data")
 
     # Build the GameDocument object
     header = game_document.GameHeader(
@@ -41,7 +37,7 @@ def build_game_doc(game_id: str, season: str, week: str, away_team: str, home_te
         away_score=away_score,
         home_score=home_score,
     )
-    plays = game_document.plays_from_frame(merged_df)
+    plays = game_document.plays_from_frame(cleaned_df)
     game_doc = game_document.GameDocument.build(plays, header)
     print("Successfully built GameDocument")
 
@@ -66,38 +62,22 @@ def build_recap(
     if not game_ledgers_exist:
         _ledger_obj = game_ledger.build_ledger(game_doc)
         _game_ledger = _ledger_obj.to_dict()
-        supabase.table("game_ledgers").insert(_game_ledger).execute()
-        print(f"Inserted game ledger for {game_id} into the DB")
+        supabase.table("game_ledgers").upsert(_game_ledger).execute()
+        print(f"Upserted game ledger for {game_id} into the DB")
 
     if not anchor_plays_exist:
         recap_selection = anchor_plays.AnchorPlayList.build(game_doc)
         _anchor_plays = recap_selection.to_db_item()
-        supabase.table("anchor_plays").insert(_anchor_plays).execute()
-        print(f"Inserted anchor plays for {game_id} into the DB")
+        supabase.table("anchor_plays").upsert(_anchor_plays).execute()
+        print(f"Upserted anchor plays for {game_id} into the DB")
 
     if not team_signals_exist:
-        game_doc_dict = game_doc.to_dict()
-        away_team_signals = game_doc_dict.get("signals", {}).get(away_team, {})
-        home_team_signals = game_doc_dict.get("signals", {}).get(home_team, {})
-        away_signals_db_row = {
-            "game_id": game_id,
-            "team": away_team,
-            "offense": away_team_signals.get("offense"),
-            "defense": away_team_signals.get("defense")
-        }
-        home_signals_db_row = {
-            "game_id": game_id,
-            "team": home_team,
-            "offense": home_team_signals.get("offense"),
-            "defense": home_team_signals.get("defense")
-        }
-        supabase.table("team_signals").insert(away_signals_db_row).execute()
-        supabase.table("team_signals").insert(home_signals_db_row).execute()
-        print(f"Inserted home and away team signals for {game_id} into the DB")
-        _team_signals = {
-            away_team: away_signals_db_row,
-            home_team: home_signals_db_row
-        }
+        signals_obj = team_signals.TeamSignals.build(game_doc)
+        signals_db_rows = signals_obj.to_db_item()
+        supabase.table("team_signals").upsert(signals_db_rows).execute()
+        print(f"Upserted home and away team signals for {game_id} into the DB")
+        # Keyed by team, matching the shape the cache-hit path returns.
+        _team_signals = {row["team"]: row for row in signals_db_rows}
 
     return _game_ledger, _anchor_plays, _team_signals
 
@@ -123,8 +103,11 @@ def get_recap(game_id: str, season: str, week: str, away_team: str, home_team: s
         game_ledger_rows = response.data or []
         if game_ledger_rows:
             _game_ledger = game_ledger_rows[0]
-            game_ledgers_exist = True
-            print(f"Found cached game ledger for {game_id}")
+            if _game_ledger["version"] != game_ledger.VERSION:
+                print(f"Version mismatch for cached game ledger for {game_id}, it will be rebuilt")
+            else:
+                game_ledgers_exist = True
+                print(f"Found cached game ledger for {game_id} with updated version {game_ledger.VERSION}")
         else:
             print(f"No game ledger found for {game_id}, it will be built")
     except Exception as e:
@@ -141,8 +124,11 @@ def get_recap(game_id: str, season: str, week: str, away_team: str, home_team: s
         anchor_plays_rows = response.data or []
         if anchor_plays_rows:
             _anchor_plays = anchor_plays_rows
-            anchor_plays_exist = True
-            print(f"Found cached anchor plays for {game_id}")
+            if False in [row["version"] == anchor_plays.VERSION for row in _anchor_plays]:
+                print(f"Version mismatch for cached anchor plays for {game_id}, they will be rebuilt")
+            else:
+                anchor_plays_exist = True
+                print(f"Found cached anchor plays for {game_id} with updated version {anchor_plays.VERSION}")
         else:
             print(f"No anchor plays found for {game_id}, they will be built")
     except Exception as e:
@@ -159,8 +145,11 @@ def get_recap(game_id: str, season: str, week: str, away_team: str, home_team: s
         # One row per team, so both the away and home rows have to be present to count as cached.
         if len(team_signals_rows) >= 2:
             _team_signals = {row["team"]: row for row in team_signals_rows}
-            team_signals_exist = True
-            print(f"Found cached team signals for {game_id}")
+            if False in [row["version"] == team_signals.VERSION for row in team_signals_rows]:
+                print(f"Version mismatch for cached team signals for {game_id}, they will be rebuilt")
+            else:
+                team_signals_exist = True
+                print(f"Found cached team signals for {game_id} with updated version {team_signals.VERSION}")
         else:
             print(f"No team signals found for {game_id}, they will be built")
     except Exception as e:

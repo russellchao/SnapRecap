@@ -4,9 +4,19 @@ Anchor Play Selection layer: this layer's job is picking the plays that mattered
 
 from dataclasses import dataclass, field, asdict
 import json
+import sys
+import os
 
-from play import Play
-from game_document import GameDocument, GameHeader, TeamSignals
+try:
+    from .play import Play
+    from .game_document import GameDocument, GameHeader
+except ImportError:
+    sys.path.insert(0, os.path.dirname(__file__))
+    from play import Play
+    from game_document import GameDocument, GameHeader
+
+
+VERSION = "v1"
 
 
 # ------- Output Dataclasses -------
@@ -45,11 +55,9 @@ class AnchorPlayList:
         "down", "ydstogo", "yardline_100", "goal_to_go", "score_differential",
         "posteam_timeouts_remaining", "defteam_timeouts_remaining", "drive",
         "fixed_drive_result", "play_type", "is_special", "shotgun", "no_huddle",
-        "qb_dropback", "qb_scramble", "offense_personnel_package",
-        "offense_formation", "defenders_in_box", "number_of_pass_rushers",
-        "defense_coverage_type", "defense_man_zone_type", "pass_location",
+        "qb_dropback", "qb_scramble", "pass_location",
         "pass_length", "air_yards", "yards_after_catch", "run_location",
-        "run_gap", "route", "time_to_throw", "was_pressure", "yards_gained",
+        "run_gap", "yards_gained",
         "success", "first_down", "third_down_converted", "third_down_failed",
         "fourth_down_converted", "fourth_down_failed", "complete_pass",
         "touchdown", "sack", "qb_hit", "interception", "fumble_lost",
@@ -63,6 +71,7 @@ class AnchorPlayList:
         for sp in self.anchors:
             row = {"game_id": self.header.game_id}
             row.update({field: getattr(sp.play, field, None) for field in self._DB_ITEM_FIELDS})
+            row["version"] = VERSION
             rows.append(row)
         return rows
 
@@ -134,31 +143,10 @@ if __name__ == "__main__":
     # `asdict` flattens every nested dataclass into a plain dict, so loading a
     # saved document means rebuilding those types from the dicts.
 
-    def _signal_from_dict(value: dict):
-        """Rebuild one signal value, recovering the type `asdict` erased.
-
-        RateSignal, MeanSignal, and distribution dicts (personnel/coverage/
-        man_zone, already plain str -> float) are told apart by their keys.
-        """
-        from signals import RateSignal, MeanSignal
-        keys = set(value.keys())
-        if keys == {"attempts", "successes", "rate"}:
-            return RateSignal(**value)
-        if keys == {"n", "mean"}:
-            return MeanSignal(**value)
-        return value  # distribution dict (or empty {})
-
-    def _team_signals_from_dict(value: dict) -> TeamSignals:
-        return TeamSignals(
-            offense={name: _signal_from_dict(v) for name, v in value["offense"].items()},
-            defense={name: _signal_from_dict(v) for name, v in value["defense"].items()},
-        )
-
     def document_from_dict(raw: dict) -> GameDocument:
         """Rebuild a GameDocument from its `to_dict()` / JSON form."""
         return GameDocument(
             header=GameHeader(**raw["header"]),
-            signals={team: _team_signals_from_dict(ts) for team, ts in raw["signals"].items()},
             plays=[Play(**p) for p in raw["plays"]],
         )
 
@@ -169,7 +157,7 @@ if __name__ == "__main__":
 
     document = document_from_dict(raw)
     print(f"Rebuilt GameDocument for {document.header.game_id}: "
-          f"{len(document.plays)} plays, teams {list(document.signals.keys())}")
+          f"{len(document.plays)} plays, {document.header.away_team} @ {document.header.home_team}")
 
     # ------- Step 1: Anchors -------
     anchors = _select_anchors(document)

@@ -1,8 +1,22 @@
 -------- Text file to draft prompts for Claude Code --------
 
+8/26/2026
+
 Can you please edit Recap.jsx and Recap.css such that it looks like the recap_page_mockup file? Several things to note:
 
 - The Margin Ledger can be obtained from gameLedger.categories. Each category in the ledger contains the home and away team's total EP from plays in that category, and the difference between them. If the difference is negative, the away team had the advantage in that category, and vice versa.
 - The Anchor Plays can be obtained from anchorPlays, which is an array of objects. Each object represents a play. While each play contains a lot of information, it is only necessary that you show the info as described in the boxes. If "qtr" is >= 5, then the quarter should be displayed as OT. 
 - The Team Signals can be obtained from teamSignals, which has an object for both teams. Each object contains two arrays for offensive and defensive signals. For now, instead of splitting by Efficiency, Negative, and Situational signals like the mockup, just split by the provided offensive and defensive signals.
 - When implementing the text box for the "Ask about this game" section, don't worry about implementing the question suggestion boxes. Just implement the text box with the placeholder and the ask button that doesn't do anything yet. 
+
+
+8/27/2026
+
+Can you please add an "About" button at the top right of GameLedger, AnchorPlays, and TeamSignals? When the user presses the "About" button, it should display a banner with the following texts, respectively: 
+
+"Breaks down where the final score actually came from, using EPA (expected points added) to value every play. Each play's value gets sorted into a category — explosive plays, turnovers, red zone trips, and more — so you can see which parts of the game decided the outcome, not just who scored when.
+While ({winning team} won by {point margin} || the game ended in a tie), the EPA margins act as if {team with overall EPA advantage} won by {absolute value of EPA rounded down to nearest integer}."
+
+"The handful of plays that swung the game the most, ranked by how much they moved each team's chances of winning. Later plays count for more, since a big play in the fourth quarter or OT matters more than one in the first."
+
+"A side-by-side look at how each team actually played — third-down conversions, red zone trips, turnovers, and other tendencies — beyond what the box score shows."
