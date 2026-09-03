@@ -34,7 +34,7 @@ except ImportError:
     from play import Play, teams_in
 
 
-VERSION = "v1"
+VERSION = "v2"
 
 
 # --- Signal Output Dataclasses ---
@@ -95,7 +95,28 @@ def _by_drive(plays: List[Play]) -> Dict[int, List[Play]]:
             drives.setdefault(p.drive, []).append(p)
     return drives
 
+def _seconds_from_mmss(value: Optional[str]) -> Optional[int]:
+    """Parse nflfastR's 'M:SS' drive_time_of_possession into seconds."""
+    if not value:
+        return None
+    try:
+        minutes, seconds = value.split(":")
+        return int(minutes) * 60 + int(seconds)
+    except (ValueError, AttributeError):
+        return None
+
+# Points awarded for a drive ending in the given fixed_drive_result.
+# Deliberately coarse (ignores PAT/2pt/defensive-TD nuance) to match the
+# existing red_zone_touchdowns treatment of fixed_drive_result as a label.
+_DRIVE_RESULT_POINTS = {
+    "Touchdown": 7,
+    "Field goal": 3,
+}
+
+
 # --- Signal Reductions ---
+
+# --- Situational Efficiency ---
 
 def third_down_conversion(plays: List[Play]) -> RateSignal:
     """Third-down conversion rate."""
@@ -120,6 +141,24 @@ def red_zone_touchdowns(plays: List[Play]) -> RateSignal:
             tds += 1
     return RateSignal.from_counts(tds, trips)
 
+def points_per_trip_inside_40(plays: List[Play]) -> MeanSignal:
+    """Points scored per drive that reached inside the 40 (yardline_100 <= 40)."""
+    points = []
+    for drive_plays in _by_drive(plays).values():
+        if not any(p.yardline_100 is not None and p.yardline_100 <= 40 for p in drive_plays):
+            continue
+        result = next((p.fixed_drive_result for p in drive_plays if p.fixed_drive_result), None)
+        points.append(_DRIVE_RESULT_POINTS.get(result, 0))
+    return MeanSignal.of(points)
+
+def early_down_success_rate(plays: List[Play]) -> RateSignal:
+    """Success rate on 1st/2nd down only."""
+    attempts = [p for p in plays if p.down in (1, 2) and p.success is not None]
+    successes = sum(1 for p in attempts if p.success)
+    return RateSignal.from_counts(successes, len(attempts))
+
+# --- Overall Play Efficiency ---
+
 def success_rate(plays: List[Play]) -> RateSignal:
     """Success rate over scrimmage plays (EPA-positive by down/distance)."""
     scr = [p for p in plays if p.success is not None]
@@ -135,11 +174,13 @@ def explosive_play_rate(plays: List[Play]) -> RateSignal:
     )
     return RateSignal.from_counts(successes, len(scr))
 
-def sack_rate(plays: List[Play]) -> RateSignal:
-    """Sacks per dropback over the given view (pass rush on a defteam filter)."""
-    dropbacks = [p for p in plays if p.qb_dropback]
-    sacks = sum(1 for p in dropbacks if p.sack)
-    return RateSignal.from_counts(sacks, len(dropbacks))
+def negative_play_rate(plays: List[Play]) -> RateSignal:
+    """Rate of scrimmage plays with negative EPA."""
+    scr = [p for p in plays if p.epa is not None]
+    negatives = sum(1 for p in scr if p.epa < 0)
+    return RateSignal.from_counts(negatives, len(scr))
+
+# --- Passing / Rushing ---
 
 def epa_per_play(plays: List[Play]) -> MeanSignal:
     """Mean EPA over plays where EPA is defined."""
@@ -152,6 +193,121 @@ def yards_per_play(plays: List[Play]) -> MeanSignal:
 def cpoe(plays: List[Play]) -> MeanSignal:
     """Mean completion % over expected (pass attempts only)."""
     return MeanSignal.of(p.cpoe for p in plays if p.cpoe is not None)
+
+# --- Disruption / Havoc ---
+
+def sack_rate(plays: List[Play]) -> RateSignal:
+    """Sacks per dropback over the given view (pass rush on a defteam filter)."""
+    dropbacks = [p for p in plays if p.qb_dropback]
+    sacks = sum(1 for p in dropbacks if p.sack)
+    return RateSignal.from_counts(sacks, len(dropbacks))
+
+def tfl_rate(plays: List[Play]) -> RateSignal:
+    """Tackle-for-loss rate per defensive scrimmage play faced."""
+    scr = [p for p in plays if p.is_pass or p.is_rush]
+    tfls = sum(1 for p in scr if p.tackled_for_loss)
+    return RateSignal.from_counts(tfls, len(scr))
+
+def forced_fumble_rate(plays: List[Play]) -> RateSignal:
+    """Forced-fumble rate per defensive scrimmage play faced."""
+    scr = [p for p in plays if p.is_pass or p.is_rush]
+    forced = sum(1 for p in scr if p.fumble_forced)
+    return RateSignal.from_counts(forced, len(scr))
+
+def takeaway_rate(plays: List[Play]) -> RateSignal:
+    """Takeaway rate: opponent turnovers forced per defensive scrimmage play faced."""
+    scr = [p for p in plays if p.is_pass or p.is_rush]
+    takeaways = sum(1 for p in scr if p.interception or p.fumble_lost)
+    return RateSignal.from_counts(takeaways, len(scr))
+
+# --- Discipline / Field Position ---
+
+def penalty_rate(plays: List[Play], team: str) -> RateSignal:
+    """Rate of plays with a penalty charged to `team`, regardless of side of ball.
+
+    `plays` is expected to be the full, unfiltered game play list. Since
+    both teams appear in every play (one on offense, one on defense),
+    len(plays) doubles as the number of plays `team` was on the field
+    for either way — so this covers offensive penalties (false start,
+    holding) and defensive penalties (DPI, offside) in one rate.
+    """
+    charged = sum(1 for p in plays if p.penalty and p.penalty_team == team)
+    return RateSignal.from_counts(charged, len(plays))
+
+def penalty_yards_per_drive(plays: List[Play], team: str) -> MeanSignal:
+    """Mean penalty yards charged to `team` per drive, either side of the ball.
+
+    `plays` is expected to be the full, unfiltered game play list, so
+    drives are the game's actual drives (both teams' possessions) —
+    a defensive penalty during the opponent's drive still counts against
+    `team` on that drive.
+    """
+    yards_by_drive = []
+    for drive_plays in _by_drive(plays).values():
+        drive_yards = sum(
+            p.penalty_yards
+            for p in drive_plays
+            if p.penalty and p.penalty_team == team and p.penalty_yards is not None
+        )
+        yards_by_drive.append(drive_yards)
+    return MeanSignal.of(yards_by_drive)
+
+def starting_field_position(plays: List[Play]) -> MeanSignal:
+    """Average starting yardline_100 of drives within this play population.
+
+    Called with a defense-filtered view, this reads as the average field
+    position the opponent's offense started with against this team's
+    defense — i.e. the field position this team's defense/special teams
+    surrendered.
+    """
+    starts = [
+        drive_plays[0].yardline_100
+        for drive_plays in _by_drive(plays).values()
+        if drive_plays[0].yardline_100 is not None
+    ]
+    return MeanSignal.of(starts)
+
+# --- Pace ---
+
+def seconds_per_play(plays: List[Play]) -> MeanSignal:
+    """Mean seconds-per-play, averaged across this team's offensive drives.
+
+    Each drive contributes one value (its time of possession divided by
+    its play count); the mean is unweighted across drives, so a 3-play
+    drive counts the same as a 12-play drive. drive_time_of_possession
+    and drive_play_count are drive-level values repeated on every row of
+    the drive, so only the first play of each drive is read.
+    """
+    per_drive = []
+    for drive_plays in _by_drive(plays).values():
+        first = drive_plays[0]
+        total_seconds = _seconds_from_mmss(first.drive_time_of_possession)
+        play_count = first.drive_play_count
+        if total_seconds is not None and play_count:
+            per_drive.append(total_seconds / play_count)
+    return MeanSignal.of(per_drive)
+
+# --- NGS – Passing ---
+
+def aggressiveness(plays: List[Play]) -> MeanSignal:
+    pass
+
+def avg_intended_air_yards(plays: List[Play]) -> MeanSignal:
+    pass
+
+def air_yards_differential(plays: List[Play]) -> MeanSignal:
+    pass
+
+def time_to_throw(plays: List[Play]) -> MeanSignal:
+    pass
+
+# --- NGS – Rushing/Recieving ---
+
+def rush_yards_over_expected(plays: List[Play]) -> MeanSignal:
+    pass
+
+def yac_over_expected(plays: List[Play]) -> MeanSignal:
+    pass
 
 
 # --- Per-Team Signal Record ---
@@ -178,14 +334,31 @@ def team_signal_record(plays: List[Play], team: str) -> Dict[str, object]:
         "third_down": third_down_conversion(off),
         "fourth_down": fourth_down_conversion(off),
         "red_zone_td": red_zone_touchdowns(off),
+        "points_per_trip_inside_40": points_per_trip_inside_40(scrimmage),
+        "early_down_success_rate": early_down_success_rate(scrimmage),
+
         "success_rate": success_rate(scrimmage),
         "explosive_rate": explosive_play_rate(scrimmage),
+        "negative_play_rate": negative_play_rate(scrimmage),
+
         "epa_per_pass": epa_per_play(passes),
         "epa_per_rush": epa_per_play(rushes),
         "yards_per_pass": yards_per_play(passes),
         "yards_per_rush": yards_per_play(rushes),
         "cpoe": cpoe(passes),
+
         "sacks_forced": sack_rate(defense),
+        "tfl_rate": tfl_rate(defense),
+        "forced_fumble_rate": forced_fumble_rate(defense),
+        "takeaway_rate": takeaway_rate(defense),
+
+        "penalty_rate": penalty_rate(plays, team),
+        "penalty_yards_per_drive": penalty_yards_per_drive(plays, team),
+        "starting_field_position": starting_field_position(defense),
+
+        "seconds_per_play": seconds_per_play(scrimmage),
+
+        #NOTE: Will hold off of NGS signals for now
     }
 
 
