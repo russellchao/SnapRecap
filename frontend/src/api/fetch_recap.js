@@ -20,7 +20,7 @@ export function fetchRecap(season, week, away_team, home_team, away_score, home_
     const pending = inFlight.get(url);
     if (pending) return pending;
 
-    console.log(`Fetching recap from ${url}`);
+    console.log(`Fetching recap for ${away_team} at ${home_team}, week ${week}, season ${season}...`);
 
     const request = axios.get(url)
         .then((response) => ({ status: response.status, data: response.data }))
