@@ -89,7 +89,7 @@ if __name__ == "__main__":
         raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
 
     # Read the preprocessed CSV into a DataFrame
-    csv_file = "../test_data/preprocessed_data.csv"    
+    csv_file = "../test_data/pbp_data.csv"    
     df = pd.read_csv(csv_file)
 
     # Obtain the GameHeader attributes obtained from the preprocessed CSV
