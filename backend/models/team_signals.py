@@ -255,16 +255,22 @@ def penalty_yards_per_drive(plays: List[Play], team: str) -> MeanSignal:
 def starting_field_position(plays: List[Play]) -> MeanSignal:
     """Average starting yardline_100 of drives within this play population.
 
-    Called with a defense-filtered view, this reads as the average field
-    position the opponent's offense started with against this team's
-    defense — i.e. the field position this team's defense/special teams
-    surrendered.
+    Called with an offense-filtered view, this reads as the average field
+    position this team's own offense started its drives with — yards from
+    the opponent's end zone, so a lower value is better field position.
+
+    The drive's first row is often the kickoff or punt that set it up
+    (nflfastR files that play under the receiving team's drive number and
+    posteam), whose yardline_100 is the kicking spot, not where the
+    offense took over. So the start is read off the first non-special
+    play instead; a drive with no scrimmage play at all contributes
+    nothing.
     """
-    starts = [
-        drive_plays[0].yardline_100
-        for drive_plays in _by_drive(plays).values()
-        if drive_plays[0].yardline_100 is not None
-    ]
+    starts = []
+    for drive_plays in _by_drive(plays).values():
+        first = next((p for p in drive_plays if not p.is_special), None)
+        if first is not None and first.yardline_100 is not None:
+            starts.append(first.yardline_100)
     return MeanSignal.of(starts)
 
 # --- Pace ---
@@ -332,7 +338,7 @@ def team_signal_record(team: str, plays: List[Play]) -> Dict[str, object]:
 
         "penalty_rate": penalty_rate(plays, team),
         "penalty_yards_per_drive": penalty_yards_per_drive(plays, team),
-        "starting_field_position": starting_field_position(defense),
+        "starting_field_position": starting_field_position(off),
 
         "seconds_per_play": seconds_per_play(scrimmage),
     }
