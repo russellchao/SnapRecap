@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from pathlib import Path
 
 from models import game_document, game_ledger, anchor_plays, team_signals
-from get_data import get_raw_data, preprocess_data
+from get_data import get_pbp_data
 
 
 load_dotenv(Path(__file__).resolve().parent / ".env")
@@ -16,15 +16,13 @@ supabase = client.create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_K
 # ------ Helper function to build the GameDocument object ------
 
 def build_game_doc(game_id: str, season: str, week: str, away_team: str, home_team: str, away_score: int, home_score: int):
-    # Get the PBP data for the requested game
-    pbp_data = get_raw_data.get_pbp_data(int(season), game_id)
+    # Download and clean the PBP data for the requested game
+    pbp_data = get_pbp_data.get_pbp_data(int(season), game_id)
     if not isinstance(pbp_data, pd.DataFrame):
         print(f"Error: PBP data for {game_id} is not available.")
         return pbp_data
     print("Successfully downloaded raw PBP Data")
-
-    # Preprocess the data
-    cleaned_df = preprocess_data.clean(pbp_data)
+    cleaned_df = get_pbp_data.clean(pbp_data)
     print("Successfully cleaned PBP Data")
 
     # Build the GameDocument object

@@ -287,32 +287,10 @@ def seconds_per_play(plays: List[Play]) -> MeanSignal:
             per_drive.append(total_seconds / play_count)
     return MeanSignal.of(per_drive)
 
-# --- NGS – Passing ---
-
-def aggressiveness(plays: List[Play]) -> MeanSignal:
-    pass
-
-def avg_intended_air_yards(plays: List[Play]) -> MeanSignal:
-    pass
-
-def air_yards_differential(plays: List[Play]) -> MeanSignal:
-    pass
-
-def time_to_throw(plays: List[Play]) -> MeanSignal:
-    pass
-
-# --- NGS – Rushing/Recieving ---
-
-def rush_yards_over_expected(plays: List[Play]) -> MeanSignal:
-    pass
-
-def yac_over_expected(plays: List[Play]) -> MeanSignal:
-    pass
-
 
 # --- Per-Team Signal Record ---
 
-def team_signal_record(plays: List[Play], team: str) -> Dict[str, object]:
+def team_signal_record(team: str, plays: List[Play]) -> Dict[str, object]:
     """Per-team signal record — the locked output shape.
 
     A flat dict of {signal_name: signal_value}, each value its own
@@ -357,8 +335,6 @@ def team_signal_record(plays: List[Play], team: str) -> Dict[str, object]:
         "starting_field_position": starting_field_position(defense),
 
         "seconds_per_play": seconds_per_play(scrimmage),
-
-        #NOTE: Will hold off of NGS signals for now
     }
 
 
@@ -378,7 +354,7 @@ class TeamSignals:
         record set matches what actually appears in the play-by-play.
         """
         signals = {
-            team: team_signal_record(document.plays, team)
+            team: team_signal_record(team, document.plays)
             for team in teams_in(document.plays)
         }
         return cls(header=document.header, signals=signals)
@@ -417,20 +393,20 @@ if __name__ == "__main__":
     # NOTE: For testing purposes only
     # Test building the team signals from the Game Document JSON file in the test data
 
+    # Build the GameDocument from the JSON file
     def document_from_dict(raw: dict) -> GameDocument:
         """(Test Helper Function) Rebuild a GameDocument from its `to_dict()` / JSON form."""
         return GameDocument(
             header=GameHeader(**raw["header"]),
             plays=[Play(**p) for p in raw["plays"]],
         )
-
     game_doc_json = "../test_data/game_document.json"
     with open(game_doc_json) as f:
         raw = json.load(f)
-
     document = document_from_dict(raw)
     print(f"Rebuilt GameDocument for {document.header.game_id}: {len(document.plays)} plays")
 
+    # Build the team signals using the GameDocument
     team_signals = TeamSignals.build(document)
     print(f"\nSignal records built for: {list(team_signals.signals.keys())}\n")
     for team, record in team_signals.signals.items():

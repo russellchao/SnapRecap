@@ -9,104 +9,6 @@
     "home_score": 24
   },
   "signals": {
-    "BUF": {
-      "third_down": {
-        "attempts": 14,
-        "successes": 7,
-        "rate": 0.5
-      },
-      "fourth_down": {
-        "attempts": 2,
-        "successes": 2,
-        "rate": 1.0
-      },
-      "red_zone_td": {
-        "attempts": 3,
-        "successes": 3,
-        "rate": 1.0
-      },
-      "points_per_trip_inside_40": {
-        "n": 5,
-        "mean": 5.4
-      },
-      "early_down_success_rate": {
-        "attempts": 45,
-        "successes": 20,
-        "rate": 0.4444444444444444
-      },
-      "success_rate": {
-        "attempts": 61,
-        "successes": 29,
-        "rate": 0.47540983606557374
-      },
-      "explosive_rate": {
-        "attempts": 61,
-        "successes": 5,
-        "rate": 0.08196721311475409
-      },
-      "negative_play_rate": {
-        "attempts": 61,
-        "successes": 32,
-        "rate": 0.5245901639344263
-      },
-      "epa_per_pass": {
-        "n": 39,
-        "mean": 0.24080957428115468
-      },
-      "epa_per_rush": {
-        "n": 22,
-        "mean": 0.19437134474918077
-      },
-      "yards_per_pass": {
-        "n": 39,
-        "mean": 7.076923076923077
-      },
-      "yards_per_rush": {
-        "n": 22,
-        "mean": 3.0
-      },
-      "cpoe": {
-        "n": 35,
-        "mean": 11.296945469720024
-      },
-      "sacks_forced": {
-        "attempts": 33,
-        "successes": 1,
-        "rate": 0.030303030303030304
-      },
-      "tfl_rate": {
-        "attempts": 55,
-        "successes": 2,
-        "rate": 0.03636363636363636
-      },
-      "forced_fumble_rate": {
-        "attempts": 55,
-        "successes": 0,
-        "rate": 0.0
-      },
-      "takeaway_rate": {
-        "attempts": 55,
-        "successes": 2,
-        "rate": 0.03636363636363636
-      },
-      "penalty_rate": {
-        "attempts": 163,
-        "successes": 7,
-        "rate": 0.04294478527607362
-      },
-      "penalty_yards_per_drive": {
-        "n": 20,
-        "mean": 1.95
-      },
-      "starting_field_position": {
-        "n": 10,
-        "mean": 48.5
-      },
-      "seconds_per_play": {
-        "n": 8,
-        "mean": 32.22733585858586
-      }
-    },
     "JAX": {
       "third_down": {
         "attempts": 9,
@@ -203,6 +105,104 @@
       "seconds_per_play": {
         "n": 10,
         "mean": 25.401190476190475
+      }
+    },
+    "BUF": {
+      "third_down": {
+        "attempts": 14,
+        "successes": 7,
+        "rate": 0.5
+      },
+      "fourth_down": {
+        "attempts": 2,
+        "successes": 2,
+        "rate": 1.0
+      },
+      "red_zone_td": {
+        "attempts": 3,
+        "successes": 3,
+        "rate": 1.0
+      },
+      "points_per_trip_inside_40": {
+        "n": 5,
+        "mean": 5.4
+      },
+      "early_down_success_rate": {
+        "attempts": 45,
+        "successes": 20,
+        "rate": 0.4444444444444444
+      },
+      "success_rate": {
+        "attempts": 61,
+        "successes": 29,
+        "rate": 0.47540983606557374
+      },
+      "explosive_rate": {
+        "attempts": 61,
+        "successes": 5,
+        "rate": 0.08196721311475409
+      },
+      "negative_play_rate": {
+        "attempts": 61,
+        "successes": 32,
+        "rate": 0.5245901639344263
+      },
+      "epa_per_pass": {
+        "n": 39,
+        "mean": 0.24080957428115468
+      },
+      "epa_per_rush": {
+        "n": 22,
+        "mean": 0.19437134474918077
+      },
+      "yards_per_pass": {
+        "n": 39,
+        "mean": 7.076923076923077
+      },
+      "yards_per_rush": {
+        "n": 22,
+        "mean": 3.0
+      },
+      "cpoe": {
+        "n": 35,
+        "mean": 11.296945469720024
+      },
+      "sacks_forced": {
+        "attempts": 33,
+        "successes": 1,
+        "rate": 0.030303030303030304
+      },
+      "tfl_rate": {
+        "attempts": 55,
+        "successes": 2,
+        "rate": 0.03636363636363636
+      },
+      "forced_fumble_rate": {
+        "attempts": 55,
+        "successes": 0,
+        "rate": 0.0
+      },
+      "takeaway_rate": {
+        "attempts": 55,
+        "successes": 2,
+        "rate": 0.03636363636363636
+      },
+      "penalty_rate": {
+        "attempts": 163,
+        "successes": 7,
+        "rate": 0.04294478527607362
+      },
+      "penalty_yards_per_drive": {
+        "n": 20,
+        "mean": 1.95
+      },
+      "starting_field_position": {
+        "n": 10,
+        "mean": 48.5
+      },
+      "seconds_per_play": {
+        "n": 8,
+        "mean": 32.22733585858586
       }
     }
   }
