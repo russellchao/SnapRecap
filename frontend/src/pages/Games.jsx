@@ -175,18 +175,15 @@ export default function Games() {
       <br /><br /><br />
 
       <section id="games-list">
-        <div>
-          {gamesList.length > 0 ? (
-            gamesList.map((game) => (
-              <div key={game.espn_id}>
-                <Gamecard game={game} onViewRecap={handleViewRecap} />
-                <br />
-              </div>
-            ))
-          ) : (
-            <p>No games to display.</p>
-          )}
-        </div>
+        {gamesList.length > 0 ? (
+          <div className="games-grid">
+            {gamesList.map((game) => (
+              <Gamecard key={game.espn_id} game={game} onViewRecap={handleViewRecap} />
+            ))}
+          </div>
+        ) : (
+          <p>No games to display.</p>
+        )}
       </section>
 
       <br /><br /><br /><br /><br /><br />
