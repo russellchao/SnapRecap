@@ -255,7 +255,7 @@ def answer_question(
 
     response = client.messages.create(
         model=MODEL,
-        max_tokens=400,
+        max_tokens=1000,
         system=_ANSWER_SYSTEM_PROMPT,
         messages=[
             {
