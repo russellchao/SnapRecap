@@ -16,7 +16,7 @@ except ImportError:
     from game_document import GameDocument, GameHeader
 
 
-VERSION = "v1"
+VERSION = "v2"
 
 
 # ------- Output Dataclasses -------
@@ -78,7 +78,7 @@ class AnchorPlayList:
 
 # ------- Configuration -------
 
-MAX_ANCHORS = 5
+MAX_ANCHORS = 10
 
 # Convex recency weighting: leverage stays compressed for most of the game and
 # spikes late. Regulation runs W_MIN -> W_MAX; OT is treated as strictly higher
