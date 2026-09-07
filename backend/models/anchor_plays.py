@@ -16,7 +16,7 @@ except ImportError:
     from game_document import GameDocument, GameHeader
 
 
-VERSION = "v2"
+VERSION = "v3"
 
 
 # ------- Output Dataclasses -------
@@ -80,6 +80,20 @@ class AnchorPlayList:
 
 MAX_ANCHORS = 10
 
+# Eligibility gate: the minimum raw |wpa| -- unweighted by recency -- a play must
+# have swung win probability by, on its own terms, to count as anchor-worthy at
+# all. Deliberately measured on raw WPA rather than the recency-weighted
+# _priority() score: weighting the gate would make it double as a "did this happen
+# late" filter, scoring an identical swing far lower in Q1 than in the final
+# minute. Recency still controls ranking; it no longer controls eligibility.
+# This makes the anchor count variable: a game with only a handful of genuine
+# swings returns fewer than MAX_ANCHORS rather than padding the list out with noise.
+# NOTE: this value is a starting point, not a settled one. Tune it empirically
+# against both ends of the range -- a blowout, where few plays should clear it,
+# and a close/comeback game, where most of the cap should fill -- before
+# treating it as final.
+MIN_WPA = 0.05
+
 # Convex recency weighting: leverage stays compressed for most of the game and
 # spikes late. Regulation runs W_MIN -> W_MAX; OT is treated as strictly higher
 # leverage than any regulation play and runs W_MAX -> W_OT_MAX.
@@ -115,8 +129,8 @@ def _priority(play: Play) -> float:
 
 # ------- Anchor play selection -------
 
-def _select_anchors(document: GameDocument, max_anchors: int = MAX_ANCHORS) -> list[AnchorPlay]:
-    """Top-`max_anchors` plays by composite priority, one candidate per drive. Ungated by garbage time, by design."""
+def _drive_candidates(document: GameDocument) -> list[Play]:
+    """Each drive's single biggest swing, sorted by composite priority."""
     swings = [p for p in document.plays if p.wpa is not None]
 
     by_drive: dict[int, Play] = {}
@@ -126,8 +140,19 @@ def _select_anchors(document: GameDocument, max_anchors: int = MAX_ANCHORS) -> l
         if current is None or _priority(p) > _priority(current):
             by_drive[key] = p
 
-    candidates = sorted(by_drive.values(), key=_priority, reverse=True)
-    top = candidates[:max_anchors]
+    return sorted(by_drive.values(), key=_priority, reverse=True)
+
+
+def _select_anchors(document: GameDocument, max_anchors: int = MAX_ANCHORS) -> list[AnchorPlay]:
+    """Up to `max_anchors` plays by composite priority, one candidate per drive.
+    Candidates whose raw |wpa| is below MIN_WPA are dropped first, so the list is
+    variable-length and may come back shorter than `max_anchors` -- that is the
+    intended behavior, not a shortfall to pad. Whatever clears the gate is still
+    ranked by the recency-weighted _priority() score. Ungated by garbage time,
+    by design."""
+    candidates = _drive_candidates(document)
+    significant = [p for p in candidates if abs(p.wpa) >= MIN_WPA]
+    top = significant[:max_anchors]
 
     return [AnchorPlay(play=p, anchor_wpa=p.wpa) for p in top]
 
@@ -160,8 +185,12 @@ if __name__ == "__main__":
           f"{len(document.plays)} plays, {document.header.away_team} @ {document.header.home_team}")
 
     # ------- Step 1: Anchors -------
+    candidates = _drive_candidates(document)
+    below_floor = [p for p in candidates if abs(p.wpa) < MIN_WPA]
     anchors = _select_anchors(document)
-    print(f"\n{len(anchors)} anchor play(s) selected (cap {MAX_ANCHORS}):\n")
+    print(f"\n{len(candidates)} drive candidate(s): {len(below_floor)} below the "
+          f"MIN_WPA floor ({MIN_WPA}), {len(anchors)} anchor(s) selected "
+          f"(cap {MAX_ANCHORS}):\n")
     for sp in anchors:
         p = sp.play
         print(f"  WPA {sp.anchor_wpa:+.3f}  priority {_priority(p):.3f}  "
