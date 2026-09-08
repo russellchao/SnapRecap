@@ -2,7 +2,7 @@
 Anchor Play Selection layer: this layer's job is picking the plays that mattered most.
 """
 
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass, field, asdict, replace
 import json
 import sys
 import os
@@ -80,19 +80,27 @@ class AnchorPlayList:
 
 MAX_ANCHORS = 10
 
-# Eligibility gate: the minimum raw |wpa| -- unweighted by recency -- a play must
-# have swung win probability by, on its own terms, to count as anchor-worthy at
-# all. Deliberately measured on raw WPA rather than the recency-weighted
-# _priority() score: weighting the gate would make it double as a "did this happen
-# late" filter, scoring an identical swing far lower in Q1 than in the final
-# minute. Recency still controls ranking; it no longer controls eligibility.
-# This makes the anchor count variable: a game with only a handful of genuine
-# swings returns fewer than MAX_ANCHORS rather than padding the list out with noise.
-# NOTE: this value is a starting point, not a settled one. Tune it empirically
-# against both ends of the range -- a blowout, where few plays should clear it,
-# and a close/comeback game, where most of the cap should fill -- before
-# treating it as final.
-MIN_WPA = 0.05
+# Elimination epsilon: the |wpa| below which a play is treated as having done
+# nothing on its own terms. This is NOT a significance threshold and is a
+# different kind of number from the inclusion floors it replaces -- those asked
+# "was this play important enough to include?", this asks only "did this play do
+# anything at all?", so it needs to clear measurement noise and nothing more.
+# It is also only ever reached after every consequence test below has passed,
+# meaning it can never eliminate a score, turnover, decided down, or explosive
+# gain no matter how small the WP swing.
+# NOTE: tunable, not settled. Tune it empirically against both ends of the range
+# -- a blowout, where much of the game should read as inert, and a close/comeback
+# game, where little should -- before treating it as final.
+INERT_WPA_EPSILON = 0.02
+
+# Clock-killing plays. nflverse encodes kneel-downs and spikes as `play_type`
+# values; there is no qb_kneel/qb_spike field on Play (those raw PBP columns are
+# not carried over in Play.from_row), so play_type is the field to read.
+INERT_PLAY_TYPES = {"qb_kneel", "qb_spike"}
+
+# Yardage at or above which a gain is explosive enough to be consequential
+# on its own, independent of what it did to win probability.
+EXPLOSIVE_YARDS = 15
 
 # Convex recency weighting: leverage stays compressed for most of the game and
 # spikes late. Regulation runs W_MIN -> W_MAX; OT is treated as strictly higher
@@ -127,6 +135,48 @@ def _priority(play: Play) -> float:
     return abs(play.wpa) * _recency_weight(play.qtr, play.game_seconds_remaining)
 
 
+# ------- Elimination -------
+
+def _is_inert(play: Play) -> bool:
+    """True when a play did nothing worth anchoring on.
+
+    Elimination-first: a play is inert only if it clears *every* consequence
+    test -- no score, no turnover, no down decided, no explosive gain -- and is
+    then either a clock-killing kneel/spike or moved win probability by less
+    than INERT_WPA_EPSILON. Any single consequence keeps the play eligible
+    regardless of its WPA, so a pick-six or fumble-return touchdown survives
+    even when it lands in a game that was already decided.
+
+    Boolean flags come through as None wherever the PBP feed left them unset;
+    that is read as "not flagged" rather than as an unknown that would block
+    elimination.
+    """
+    if play.touchdown:
+        return False
+
+    # Play carries no made-field-goal flag -- only field_goal_attempt; nflverse's
+    # field_goal_result is not carried over in Play.from_row -- so every attempt
+    # is treated as a scoring play. That is the conservative direction: it keeps
+    # missed kicks eligible rather than risking the elimination of made ones.
+    if play.field_goal_attempt:
+        return False
+
+    if play.interception or play.fumble_lost:
+        return False
+
+    if (play.third_down_converted or play.third_down_failed
+            or play.fourth_down_converted or play.fourth_down_failed):
+        return False
+
+    if play.yards_gained is not None and play.yards_gained >= EXPLOSIVE_YARDS:
+        return False
+
+    if play.play_type in INERT_PLAY_TYPES:
+        return True
+
+    return play.wpa is not None and abs(play.wpa) < INERT_WPA_EPSILON
+
+
 # ------- Anchor play selection -------
 
 def _drive_candidates(document: GameDocument) -> list[Play]:
@@ -145,14 +195,18 @@ def _drive_candidates(document: GameDocument) -> list[Play]:
 
 def _select_anchors(document: GameDocument, max_anchors: int = MAX_ANCHORS) -> list[AnchorPlay]:
     """Up to `max_anchors` plays by composite priority, one candidate per drive.
-    Candidates whose raw |wpa| is below MIN_WPA are dropped first, so the list is
-    variable-length and may come back shorter than `max_anchors` -- that is the
-    intended behavior, not a shortfall to pad. Whatever clears the gate is still
-    ranked by the recency-weighted _priority() score. Ungated by garbage time,
-    by design."""
+
+    Elimination-first: rather than admitting plays that clear a significance
+    bar, this drops the ones _is_inert() proves did nothing and anchors on
+    whatever is left. The list is therefore variable-length and may come back
+    shorter than `max_anchors` -- that is the intended behavior when a game
+    genuinely lacked that many live plays, not a shortfall to pad. Survivors are
+    still ranked by the recency-weighted _priority() score. Ungated by garbage
+    time, by design.
+    """
     candidates = _drive_candidates(document)
-    significant = [p for p in candidates if abs(p.wpa) >= MIN_WPA]
-    top = significant[:max_anchors]
+    live = [p for p in candidates if not _is_inert(p)]
+    top = live[:max_anchors]
 
     return [AnchorPlay(play=p, anchor_wpa=p.wpa) for p in top]
 
@@ -186,15 +240,40 @@ if __name__ == "__main__":
 
     # ------- Step 1: Anchors -------
     candidates = _drive_candidates(document)
-    below_floor = [p for p in candidates if abs(p.wpa) < MIN_WPA]
+    inert = [p for p in candidates if _is_inert(p)]
     anchors = _select_anchors(document)
-    print(f"\n{len(candidates)} drive candidate(s): {len(below_floor)} below the "
-          f"MIN_WPA floor ({MIN_WPA}), {len(anchors)} anchor(s) selected "
-          f"(cap {MAX_ANCHORS}):\n")
+    print(f"\n{len(candidates)} drive candidate(s): {len(inert)} eliminated as inert, "
+          f"{len(anchors)} anchor(s) selected (cap {MAX_ANCHORS}):\n")
     for sp in anchors:
         p = sp.play
         print(f"  WPA {sp.anchor_wpa:+.3f}  priority {_priority(p):.3f}  "
               f"q{p.qtr} {(p.description or '')[:80]}")
+
+    # ------- Step 1a: defensive-score survival -------
+    # A pick-six or fumble-return TD must survive elimination on the strength of
+    # the score alone, however little win probability it moved.
+    defensive_tds = [p for p in document.plays
+                     if p.touchdown and (p.interception or p.fumble_lost)]
+    if defensive_tds:
+        for p in defensive_tds:
+            assert not _is_inert(p), f"defensive TD wrongly eliminated: {p.description}"
+        print(f"\n{len(defensive_tds)} defensive TD(s) in this game, all surviving "
+              f"elimination regardless of WPA:")
+        for p in defensive_tds:
+            print(f"  WPA {p.wpa:+.3f}  {(p.description or '')[:80]}")
+    else:
+        # This game's data has none, so the guarantee is demonstrated on a
+        # synthetic play instead: a real play rewritten as a zero-WPA pick-six.
+        base = next(p for p in document.plays if p.wpa is not None)
+        pick_six = replace(
+            base, touchdown=True, interception=True, fumble_lost=False, wpa=0.0,
+            yards_gained=0, third_down_converted=False, third_down_failed=False,
+            fourth_down_converted=False, fourth_down_failed=False,
+        )
+        assert not _is_inert(pick_six), "zero-WPA pick-six was eliminated as inert"
+        print("\nNo defensive TD in this game's data. Checked synthetically instead: "
+              "a pick-six with wpa=0.0 survives elimination\n(_is_inert -> False), "
+              "so the score alone keeps it eligible.")
 
     # ------- Step 2: Full build and save to a JSON-serializable dict for inspection -------
     anchor_list = AnchorPlayList.build(document)
