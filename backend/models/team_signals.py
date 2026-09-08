@@ -34,7 +34,7 @@ except ImportError:
     from play import Play, teams_in
 
 
-VERSION = "v2"
+VERSION = "v5"
 
 
 # --- Signal Output Dataclasses ---
@@ -165,20 +165,13 @@ def success_rate(plays: List[Play]) -> RateSignal:
     successes = sum(1 for p in scr if p.success)
     return RateSignal.from_counts(successes, len(scr))
 
-def explosive_play_rate(plays: List[Play]) -> RateSignal:
-    """Explosive-play rate (rush >= 10, pass >= 20 yards)."""
+def explosive_play_count(plays: List[Play]) -> int:
+    """Explosive-play count (rush >= 10, pass >= 20 yards)."""
     scr = [p for p in plays if (p.is_pass or p.is_rush) and p.yards_gained is not None]
-    successes = sum(
+    return sum(
         1 for p in scr
         if (p.is_pass and p.yards_gained >= 20) or (p.is_rush and p.yards_gained >= 10)
     )
-    return RateSignal.from_counts(successes, len(scr))
-
-def negative_play_rate(plays: List[Play]) -> RateSignal:
-    """Rate of scrimmage plays with negative EPA."""
-    scr = [p for p in plays if p.epa is not None]
-    negatives = sum(1 for p in scr if p.epa < 0)
-    return RateSignal.from_counts(negatives, len(scr))
 
 # --- Passing / Rushing ---
 
@@ -196,43 +189,29 @@ def cpoe(plays: List[Play]) -> MeanSignal:
 
 # --- Disruption / Havoc ---
 
-def sack_rate(plays: List[Play]) -> RateSignal:
-    """Sacks per dropback over the given view (pass rush on a defteam filter)."""
-    dropbacks = [p for p in plays if p.qb_dropback]
-    sacks = sum(1 for p in dropbacks if p.sack)
-    return RateSignal.from_counts(sacks, len(dropbacks))
+def sacks_forced(plays: List[Play]) -> int:
+    """Sack count on the given defensive view (too infrequent for a rate to read as meaningful)."""
+    return sum(1 for p in plays if p.sack)
 
-def tfl_rate(plays: List[Play]) -> RateSignal:
-    """Tackle-for-loss rate per defensive scrimmage play faced."""
+def tfl_count(plays: List[Play]) -> int:
+    """Tackle-for-loss count on the given defensive view."""
     scr = [p for p in plays if p.is_pass or p.is_rush]
-    tfls = sum(1 for p in scr if p.tackled_for_loss)
-    return RateSignal.from_counts(tfls, len(scr))
+    return sum(1 for p in scr if p.tackled_for_loss)
 
-def forced_fumble_rate(plays: List[Play]) -> RateSignal:
-    """Forced-fumble rate per defensive scrimmage play faced."""
-    scr = [p for p in plays if p.is_pass or p.is_rush]
-    forced = sum(1 for p in scr if p.fumble_forced)
-    return RateSignal.from_counts(forced, len(scr))
+def forced_fumble_count(plays: List[Play]) -> int:
+    """Forced-fumble count on the given defensive view. Special team plays included."""
+    return sum(1 for p in plays if p.fumble_forced)
 
-def takeaway_rate(plays: List[Play]) -> RateSignal:
-    """Takeaway rate: opponent turnovers forced per defensive scrimmage play faced."""
-    scr = [p for p in plays if p.is_pass or p.is_rush]
-    takeaways = sum(1 for p in scr if p.interception or p.fumble_lost)
-    return RateSignal.from_counts(takeaways, len(scr))
+def takeaway_count(plays: List[Play]) -> int:
+    """Takeaway count: opponent turnovers forced on the given defensive view. Special team plays included."""
+    return sum(1 for p in plays if p.interception or p.fumble_lost)
 
 # --- Discipline / Field Position ---
 
-def penalty_rate(plays: List[Play], team: str) -> RateSignal:
-    """Rate of plays with a penalty charged to `team`, regardless of side of ball.
-
-    `plays` is expected to be the full, unfiltered game play list. Since
-    both teams appear in every play (one on offense, one on defense),
-    len(plays) doubles as the number of plays `team` was on the field
-    for either way — so this covers offensive penalties (false start,
-    holding) and defensive penalties (DPI, offside) in one rate.
-    """
+def penalty_count(plays: List[Play], team: str) -> int:
+    """Penalty count: number of penalties charged to `team` on the given view."""
     charged = sum(1 for p in plays if p.penalty and p.penalty_team == team)
-    return RateSignal.from_counts(charged, len(plays))
+    return charged
 
 def penalty_yards_per_drive(plays: List[Play], team: str) -> MeanSignal:
     """Mean penalty yards charged to `team` per drive, either side of the ball.
@@ -322,8 +301,7 @@ def team_signal_record(team: str, plays: List[Play]) -> Dict[str, object]:
         "early_down_success_rate": early_down_success_rate(scrimmage),
 
         "success_rate": success_rate(scrimmage),
-        "explosive_rate": explosive_play_rate(scrimmage),
-        "negative_play_rate": negative_play_rate(scrimmage),
+        "explosive_count": explosive_play_count(scrimmage),
 
         "epa_per_pass": epa_per_play(passes),
         "epa_per_rush": epa_per_play(rushes),
@@ -331,12 +309,12 @@ def team_signal_record(team: str, plays: List[Play]) -> Dict[str, object]:
         "yards_per_rush": yards_per_play(rushes),
         "cpoe": cpoe(passes),
 
-        "sacks_forced": sack_rate(defense),
-        "tfl_rate": tfl_rate(defense),
-        "forced_fumble_rate": forced_fumble_rate(defense),
-        "takeaway_rate": takeaway_rate(defense),
+        "sacks_forced": sacks_forced(defense),
+        "tfl": tfl_count(defense),
+        "forced_fumbles": forced_fumble_count(defense),
+        "takeaways": takeaway_count(defense),
 
-        "penalty_rate": penalty_rate(plays, team),
+        "penalty_rate": penalty_count(plays, team),
         "penalty_yards_per_drive": penalty_yards_per_drive(plays, team),
         "starting_field_position": starting_field_position(off),
 

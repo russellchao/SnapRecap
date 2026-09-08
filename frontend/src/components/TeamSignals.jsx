@@ -16,18 +16,17 @@ const SIGNAL_LABELS = {
     points_per_trip_inside_40: "Pts / Trip Inside 40",
     early_down_success_rate: "Early Down Success",
     success_rate: "Success Rate",
-    explosive_rate: "Explosive Rate",
-    negative_play_rate: "Negative Play Rate",
+    explosive_count: "Explosive Plays",
     epa_per_pass: "EPA / Pass",
     epa_per_rush: "EPA / Rush",
     yards_per_pass: "Yards / Pass",
     yards_per_rush: "Yards / Rush",
     cpoe: "CPOE",
     sacks_forced: "Sacks Forced",
-    tfl_rate: "TFL Rate",
-    forced_fumble_rate: "Forced Fumbles",
-    takeaway_rate: "Takeaway Rate",
-    penalty_rate: "Penalty Rate",
+    tfl: "Tackles For Loss",
+    forced_fumbles: "Forced Fumbles",
+    takeaways: "Takeaways",
+    penalty_rate: "Penalties",
     penalty_yards_per_drive: "Penalty Yds / Drive",
     starting_field_position: "Avg Starting FP",
     seconds_per_play: "Seconds / Play",
@@ -53,7 +52,7 @@ const SIGNAL_CATEGORIES = [
     },
     {
         label: "Overall Play Efficiency",
-        signals: ["success_rate", "explosive_rate", "negative_play_rate"],
+        signals: ["success_rate", "explosive_count"],
     },
     {
         label: "Passing / Rushing",
@@ -61,7 +60,7 @@ const SIGNAL_CATEGORIES = [
     },
     {
         label: "Disruption / Havoc",
-        signals: ["sacks_forced", "tfl_rate", "forced_fumble_rate", "takeaway_rate"],
+        signals: ["sacks_forced", "tfl", "forced_fumbles", "takeaways"],
     },
     {
         label: "Discipline / Field Position",
@@ -84,17 +83,22 @@ function prettifyKey(key) {
 }
 
 /*
-    Signals arrive in two shapes (see backend/models/team_signals.py):
+    Signals arrive in three shapes (see backend/models/team_signals.py):
       RateSignal -> { attempts, successes, rate }
       MeanSignal -> { n, mean }
+      count      -> a bare whole number (the disruption/penalty tallies, which
+                    are too infrequent for a rate to read as meaningful)
 
-    Each collapses into one short chip value. A null rate/mean means the signal
-    had no qualifying plays, so the chip is dropped entirely rather than shown
-    as an empty stat.
+    Each collapses into one short chip value. A count keeps its integer form —
+    "2", not "2.00" — and a zero count is a real result, so it still gets a
+    chip. A null rate/mean means the signal had no qualifying plays, so that
+    chip is dropped entirely rather than shown as an empty stat.
 */
 function formatSignal(value) {
     if (value == null) return null;
-    if (typeof value === "number") return value.toFixed(2);
+    if (typeof value === "number") {
+        return Number.isInteger(value) ? String(value) : value.toFixed(2);
+    }
     if (typeof value !== "object") return String(value);
 
     if ("rate" in value) {
