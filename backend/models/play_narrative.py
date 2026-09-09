@@ -65,6 +65,27 @@ def _win_probability_label(play: Play) -> str | None:
     return f"{play.posteam} WP {play.wp:.1%}"
 
 
+def _score_label(play: Play) -> str | None:
+    """Post-play score, shown only when this play changed it (touchdowns,
+    field goals, safeties, PATs, ...). Detected by comparing the pre- and
+    post-play score differential rather than flagging by play type, so it
+    catches every scoring play without needing its own list of them.
+    Omitted on every other play so an unchanged score isn't repeated down
+    after down.
+    """
+    if (
+        play.posteam_score_post is None
+        or play.defteam_score_post is None
+        or play.score_differential is None
+        or play.score_differential_post is None
+        or play.posteam is None
+        or play.defteam is None
+        or play.score_differential == play.score_differential_post
+    ):
+        return None
+    return f"{play.posteam} {play.posteam_score_post}-{play.defteam} {play.defteam_score_post}"
+
+
 def synthesize(play: Play) -> str:
     """Wrap `play.description` with a compact game-state prefix.
 
@@ -76,6 +97,7 @@ def synthesize(play: Play) -> str:
         _down_distance_label(play.down, play.ydstogo),
         _field_position_label(play),
         _win_probability_label(play),
+        _score_label(play),
     ]
     prefix = " | ".join(s for s in segments if s is not None)
     description = play.description or ""
