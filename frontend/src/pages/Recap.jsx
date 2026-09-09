@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from 'react'
 import { useLocation, useParams, Link } from 'react-router-dom'
 import { fetchRecap } from '../api/fetch_recap'
 import GameLedger from '../components/GameLedger'
-import AnchorPlays from '../components/AnchorPlays'
 import TeamSignals from '../components/TeamSignals'
 import AskAboutGame from '../components/AskAboutGame'
 import { teamPalette } from '../theme/team_colors'
@@ -37,7 +36,6 @@ export default function Recap() {
     const [loading, setLoading] = useState(false);
 
     const [gameLedger, setGameLedger] = useState(null);
-    const [anchorPlays, setAnchorPlays] = useState(null);
     const [teamSignals, setTeamSignals] = useState(null);
 
 
@@ -54,7 +52,6 @@ export default function Recap() {
                     setRecapStatus(status);
                     console.log("Fetched recap data:", data);
                     setGameLedger(data?.game_ledger ?? null);
-                    setAnchorPlays(data?.anchor_plays ?? null);
                     setTeamSignals(data?.team_signals ?? null);
                 }
             })
@@ -95,7 +92,7 @@ export default function Recap() {
 
     // Any one component is enough to show the recap body; each section renders
     // only if its own data made it back.
-    const hasRecap = [gameLedger, anchorPlays, teamSignals].some((part) => part != null);
+    const hasRecap = [gameLedger, teamSignals].some((part) => part != null);
 
     return (
         <div className="recap">
@@ -158,9 +155,6 @@ export default function Recap() {
                             colors={teamColors}
                         />
                     )}
-                    {anchorPlays?.length > 0 && (
-                        <AnchorPlays plays={anchorPlays} homeAbbr={home_team} colors={teamColors} />
-                    )}
                     {teamSignals && (
                         <TeamSignals
                             signals={teamSignals}
@@ -171,7 +165,7 @@ export default function Recap() {
                             colors={teamColors}
                         />
                     )}
-                    <AskAboutGame ledger={gameLedger} plays={anchorPlays} signals={teamSignals} />
+                    <AskAboutGame ledger={gameLedger} signals={teamSignals} />
                 </div>
             ) : (
                 <p className="recap-placeholder">Recap not available for this game yet.</p>

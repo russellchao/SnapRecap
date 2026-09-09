@@ -7,13 +7,11 @@ Following an NFL game, fans are stuck choosing between a box score that buries w
 ## Overview
 
 SnapRecap turns an NFL game's play-by-play data into a structured, explorable recap. Pick a game,
-and the app breaks it down into three components:
+and the app breaks it down into two components:
 
 - **Game Ledger** — the game's EPA margin decomposed into fixed categories (turnovers, pass
   protection, penalties, special teams, red zone, third down, explosive plays, other), so you can
   see *where* the margin actually came from.
-- **Anchor Plays** — the handful of plays that swung win probability the most, weighted toward late
-  in the game, capped at one per drive.
 - **Team Signals** — per-team efficiency stats (third/fourth down, red zone TD rate,
   success rate, explosive rate, EPA and yards per play/pass/rush, CPOE, sacks forced), each carrying
   its sample size so a 1-for-1 doesn't read like a trend.
@@ -33,13 +31,12 @@ and grounding; the model owns phrasing.
 
 ```
 nflreadpy PBP  →  clean  →  Play records  →  GameDocument  →  ┬→ Game Ledger
- (one season,     (drop      (one per row,   (lossless       ├→ Anchor Plays
-  filtered to      unused     names resolved  intermediate)   └→ Team Signals
-  one game_id)     columns)   from Supabase)                        ↓
-                                                              Supabase cache
+ (one season,     (drop      (one per row,   (lossless       └→ Team Signals
+  filtered to      unused     names resolved  intermediate)         ↓
+  one game_id)     columns)   from Supabase)                  Supabase cache
 ```
 
-`get_recap.py` checks Supabase for each of the three components and builds only what's missing. A
+`get_recap.py` checks Supabase for each of the two components and builds only what's missing. A
 single cache miss pays for the full download + preprocess, so the first request for a game is slow
 and every one after it is fast.
 
@@ -48,8 +45,8 @@ and every one after it is fast.
 | Endpoint | What it does |
 | --- | --- |
 | `GET /health` | `{"status": "ok"}` |
-| `GET /get_recap/{season}/{week}/{away_team}/{home_team}/{away_score}/{home_score}/` | Returns `{game_ledger, anchor_plays, team_signals}`. Also builds any missing components. |
-| `POST /ask_question` | Body: `{question, game_ledger, anchor_plays, team_signals}`. The frontend passes back the components it already holds instead of making the backend refetch them. |
+| `GET /get_recap/{season}/{week}/{away_team}/{home_team}/{away_score}/{home_score}/` | Returns `{game_ledger, team_signals}`. Also builds any missing components. |
+| `POST /ask_question` | Body: `{question, game_ledger, team_signals}`. The frontend passes back the components it already holds instead of making the backend refetch them. |
 
 ## Setup
 
@@ -99,7 +96,6 @@ python preprocess_data.py                # → test_data/preprocessed_data.csv
 cd ../models
 python game_document.py                  # → test_data/game_document.json
 python game_ledger.py                    # → test_data/game_ledger.json
-python anchor_plays.py                   # → test_data/anchor_plays.json
 python team_signals.py                   # → test_data/team_signals.json
 ```
 

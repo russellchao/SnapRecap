@@ -37,13 +37,12 @@ def health():
 def get_recap_endpoint(season: str, week: str, away_team: str, home_team: str, away_score: str, home_score: str):
 
     game_id = f"{season}_{int(week) < 10 and '0' + str(week) or str(week)}_{away_team}_{home_team}"
-    _game_ledger, _anchor_plays, _team_signals = get_recap(
+    _game_ledger, _team_signals = get_recap(
         game_id, season, week, away_team, home_team, int(away_score), int(home_score) 
     )
 
     return {
         "game_ledger": _game_ledger,
-        "anchor_plays": _anchor_plays,
         "team_signals": _team_signals,
     }
 
@@ -53,13 +52,12 @@ def get_recap_endpoint(season: str, week: str, away_team: str, home_team: str, a
 class AskQuestionRequest(BaseModel):
     """Request body for /ask_question.
 
-    The frontend already holds game_ledger, anchor_plays, and team_signals
-    in memory from the /get_recap call that loaded the page, so those are
-    passed straight through rather than re-fetched server-side.
+    The frontend already holds game_ledger and team_signals in memory from
+    the /get_recap call that loaded the page, so those are passed straight
+    through rather than re-fetched server-side.
     """
     question: str
     game_ledger: dict | None = None
-    anchor_plays: list[dict] = []
     team_signals: dict = {}
 
 
@@ -74,7 +72,7 @@ def ask_question_endpoint(body: AskQuestionRequest):
         return {"answer": game_qa.OUT_OF_SCOPE_RESPONSE, "components": []}
 
     payload = game_qa.fetch_qa_payload(
-        components, body.game_ledger, body.anchor_plays, body.team_signals
+        components, body.game_ledger, body.team_signals
     )
     answer = game_qa.answer_question(body.question, payload)
 

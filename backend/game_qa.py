@@ -9,7 +9,7 @@ import anthropic
 MODEL = "claude-sonnet-5"
 PROMPT_VERSION = "v1"
 
-VALID_COMPONENTS = {"ledger", "anchor_plays", "team_signals"}
+VALID_COMPONENTS = {"ledger", "team_signals"}
 
 _ROUTER_TOOL = {
     "name": "select_components",
@@ -34,8 +34,6 @@ Components:
 - ledger: margin decomposition by category (turnovers, pass_protection, penalties, \
 special_teams, red_zone, third_down, explosive_plays, other) — use for "why did the \
 margin end up X" or category-specific questions.
-- anchor_plays: the handful of individual plays that most shaped the outcome — use for \
-questions about specific moments, plays, or players' individual actions.
 - team_signals: season-context tendency and efficiency stats per team (conversion \
 rates, EPA, yards per play) — use for "how does this compare to their usual" or \
 tendency-based questions.
@@ -50,7 +48,7 @@ class RoutingValidationError(Exception):
 
 
 def route_question(question: str, client: anthropic.Anthropic | None = None) -> list[str]:
-    """Return the subset of {ledger, anchor_plays, team_signals} relevant to a question.
+    """Return the subset of {ledger, team_signals} relevant to a question.
 
     Empty list means the question is out of scope; callers should short-circuit to a
     canned response rather than invoking the answer call.
@@ -85,56 +83,6 @@ def route_question(question: str, client: anthropic.Anthropic | None = None) -> 
     return list(raw_components)
 
 
-# On-field descriptive fields only. Excludes selection/value metrics (wpa, epa, qb_epa,
-# cpoe, wp) and redundant post-play score bookkeeping, per the anchor_plays contract.
-ANCHOR_PLAY_FIELDS = [
-    "play_id",
-    "posteam",
-    "defteam",
-    "qtr",
-    "game_seconds_remaining",
-    "down",
-    "ydstogo",
-    "yardline_100",
-    "goal_to_go",
-    "score_differential",
-    "posteam_timeouts_remaining",
-    "defteam_timeouts_remaining",
-    "drive",
-    "fixed_drive_result",
-    "play_type",
-    "is_special",
-    "shotgun",
-    "no_huddle",
-    "qb_dropback",
-    "qb_scramble",
-    "pass_location",
-    "pass_length",
-    "air_yards",
-    "yards_after_catch",
-    "run_location",
-    "run_gap",
-    "yards_gained",
-    "success",
-    "first_down",
-    "third_down_converted",
-    "third_down_failed",
-    "fourth_down_converted",
-    "fourth_down_failed",
-    "complete_pass",
-    "touchdown",
-    "sack",
-    "qb_hit",
-    "interception",
-    "fumble_lost",
-    "penalty",
-    "passer",
-    "rusher",
-    "receiver",
-    "description",
-]
-
-
 def _shape_ledger(ledger_row: dict) -> dict:
     """Shape a game_ledgers DB row into the ledger payload contract.
 
@@ -164,23 +112,6 @@ def _shape_ledger(ledger_row: dict) -> dict:
     return {"categories": categories}
 
 
-def _shape_anchor_plays(anchor_play_rows: list[dict]) -> dict:
-    """Whitelist-filter anchor_plays DB rows into the payload contract.
-
-    Rows come back with extra fields the DB stores for internal use
-    (wpa, game_id) — this filters down to on-field descriptive fields
-    only, per the locked contract. No category label: on-field flags
-    (interception, third_down_converted, is_special, qb_dropback, etc.)
-    already identify what kind of play this was without one.
-    """
-    return {
-        "anchor_plays": [
-            {field: row.get(field) for field in ANCHOR_PLAY_FIELDS}
-            for row in anchor_play_rows
-        ]
-    }
-
-
 def _shape_team_signals(team_signal_rows: dict) -> dict:
     """Shape {team: db_row} into {team: signal_record}, dropping the
     game_id/team columns that don't belong in the phrasing payload.
@@ -193,7 +124,7 @@ def _shape_team_signals(team_signal_rows: dict) -> dict:
 
 
 def fetch_qa_payload(
-        components: list[str], ledger_row: dict, anchor_play_rows: list[dict], team_signal_rows: dict
+        components: list[str], ledger_row: dict, team_signal_rows: dict
     ) -> dict:
     """
     Fetch and shape only the routed components into their payload contracts.
@@ -203,10 +134,6 @@ def fetch_qa_payload(
     if "ledger" in components:
         if ledger_row is not None:
             payload.update(_shape_ledger(ledger_row))
-
-    if "anchor_plays" in components:
-        if anchor_play_rows:
-            payload.update(_shape_anchor_plays(anchor_play_rows))
 
     if "team_signals" in components:
         if team_signal_rows:
@@ -246,8 +173,7 @@ def answer_question(
     """Phrase an answer to a question using only the Python-fetched, routed payload.
 
     payload contains only the components route_question() selected, each already
-    shaped per the ledger/anchor_plays/team_signals contracts (selection metrics like
-    wpa/epa/cpoe/wp excluded upstream).
+    shaped per the ledger/team_signals contracts.
     """
     print(f"Answering question: {question}")
 

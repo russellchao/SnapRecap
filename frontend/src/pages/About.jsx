@@ -38,9 +38,8 @@ export default function About() {
               <h3>The numbers find what mattered</h3>
               <p>
                 Turnovers, explosive plays, red-zone execution, and more — every point
-                of the final margin gets sorted into one of these buckets. Whichever
-                plays and patterns moved the needle most become the anchors of the
-                recap.
+                of the final margin gets sorted into one of these buckets, so you can
+                see which ones actually moved the needle.
               </p>
             </div>
           </li>

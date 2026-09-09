@@ -3,9 +3,9 @@ Game document assembly for Snap Recap.
 
 The GameDocument is the lossless intermediate that bundles every Play
 record behind a small game header. It is the handoff boundary: once
-built, the three recap components (game_ledger, anchor_plays,
-team_signals) and the recap cache work from this object alone and never
-touch the source DataFrame again.
+built, the recap components (game_ledger, team_signals) and the recap
+cache work from this object alone and never touch the source DataFrame
+again.
 
 Selection (surfacing high-leverage plays, per-team signal reduction,
 baseline annotation) happens *downstream* of this object. The document

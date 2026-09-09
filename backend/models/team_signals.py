@@ -1,9 +1,9 @@
 """
 Team signals model for Snap Recap.
 
-The third recap component, alongside game_ledger and anchor_plays: the
-per-team efficiency/tendency record for one game, projected out of a
-GameDocument the same way the other two are.
+The second recap component, alongside game_ledger: the per-team
+efficiency/tendency record for one game, projected out of a
+GameDocument the same way the ledger is.
 
 Two layers live here, bottom to top:
 

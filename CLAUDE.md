@@ -6,15 +6,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 SnapRecap turns an NFL game's play-by-play data into a structured, explorable recap. A React/Vite
 frontend lists games (pulled directly from ESPN's public APIs in the browser) and renders a per-game
-recap page; a FastAPI backend converts nflverse play-by-play into three components — a **game
-ledger** (EPA margin decomposed by category), **anchor plays** (the handful of biggest swings), and
-**team signals** (per-team efficiency/tendency stats) — caches them in Supabase, and serves them.
+recap page; a FastAPI backend converts nflverse play-by-play into two components — a **game
+ledger** (EPA margin decomposed by category) and **team signals** (per-team efficiency/tendency
+stats) — caches them in Supabase, and serves them.
 
 The LLM feature is **Q&A**: the user asks a question on the recap page, Claude routes it to the
 relevant components, and Claude phrases an answer from Python-supplied data only.
 
-`selection.py`, `projection.py`, `serialization.py`, `prompt.py`, `recap.py`, and
-`generate_recap.py` no longer exist; do not resurrect them from stale docs.
+`selection.py`, `projection.py`, `serialization.py`, `prompt.py`, `recap.py`,
+`generate_recap.py`, and `anchor_plays.py` no longer exist; do not resurrect them from stale docs.
+The anchor plays component is gone end to end — no `anchor_plays` module, DB table, API field,
+router component, or frontend section.
 
 `backend/README.md` is **out of date** (it still describes the removed prompt pipeline and
 `generate_recap.py`). Trust this file over it.
@@ -39,7 +41,7 @@ depends on the previous stage's dataclass:
    records **requires DB access**.
 4. **`models/game_document.py`** — `GameDocument` = `GameHeader` + all plays. This is the
    **lossless intermediate** and the handoff boundary: it filters nothing and aggregates nothing;
-   all three components are built from this object, never the source DataFrame.
+   both components are built from this object, never the source DataFrame.
 5. **`models/game_ledger.py`** — `build_ledger(doc)` decomposes the game's EPA margin into fixed
    categories (`turnovers`, `pass_protection`, `penalties`, `special_teams`, `red_zone`,
    `third_down`, `explosive_plays`, `other`). Sign convention is `diff = home_ep - away_ep`. Order
@@ -57,27 +59,21 @@ depends on the previous stage's dataclass:
    (`teams_in`) rather than the header and gives each one a record. `to_db_item()` emits one row
    per team (`game_id`, `team`, `signals`), away row first. (There is no separate `signals.py` —
    it was folded into this module; don't resurrect it from stale docs.)
-7. **`models/anchor_plays.py`** — `AnchorPlayList.build(doc)` ranks plays by `|wpa|` scaled by a
-   convex recency weight (`_recency_weight`: regulation runs 0.5→1.0, OT 1.0→1.3, exponent 3), keeps
-   at most one candidate per drive, and takes the top `MAX_ANCHORS` (5). Deliberately **not** gated
-   by garbage time. `to_db_item()` emits DB rows whitelisted to on-field descriptive fields plus
-   `wpa` (kept for debugging; filtered back out before it reaches the model).
-8. **`get_recap.py`** — the orchestrator and the cache layer. `get_recap(...)` looks each of the
-   three components up in Supabase (`game_ledgers`, `anchor_plays`, `team_signals`) and builds only
+7. **`get_recap.py`** — the orchestrator and the cache layer. `get_recap(...)` looks each of the
+   two components up in Supabase (`game_ledgers`, `team_signals`) and builds only
    what's missing, inserting it as it goes. A lookup *exception* is treated the same as a cache miss
    (rebuild rather than fail the request). `team_signals` is only considered cached when **both**
    team rows are present. Building anything requires a `GameDocument`, so a single miss pays for the
    full download + preprocess.
-9. **`game_qa.py`** — the Q&A layer, and the only place an LLM is called. Two calls, both
+8. **`game_qa.py`** — the Q&A layer, and the only place an LLM is called. Two calls, both
    `claude-sonnet-5`: `route_question()` uses forced tool use (`select_components`) to pick a subset
-   of `{ledger, anchor_plays, team_signals}`, validating the result and raising
+   of `{ledger, team_signals}`, validating the result and raising
    `RoutingValidationError` on anything unexpected — an empty list means out of scope and callers
    short-circuit to `OUT_OF_SCOPE_RESPONSE` without a second call. `fetch_qa_payload()` shapes only
    the routed components through their `_shape_*` contracts, and `answer_question()` phrases 2–4
    sentences from that payload alone. **Python owns retrieval and grounding; the LLM owns phrasing
-   only** — selection/value metrics (`wpa`, `epa`, `qb_epa`, `cpoe`, `wp`) are whitelisted out of
-   the payload by `ANCHOR_PLAY_FIELDS` and never reach the model.
-10. **`get_data/load_players.py`** — full refresh of the `players` table (`gsis_id`,
+   only.**
+9. **`get_data/load_players.py`** — full refresh of the `players` table (`gsis_id`,
     `display_name`, `headshot`) from `nflreadpy.load_players()`, TRUNCATE + append over
     `DATABASE_URL`. **Run manually only** (`python load_players.py` from `backend/get_data/`),
     typically right before the start of a season — it is not exposed as an endpoint and is not on a
@@ -88,9 +84,9 @@ depends on the previous stage's dataclass:
 
 - `GET /health` → `{"status": "ok"}`.
 - `GET /get_recap/{season}/{week}/{away_team}/{home_team}/{away_score}/{home_score}/` — builds the
-  nflverse `game_id` from the path parts and returns `{game_ledger, anchor_plays, team_signals}` via
+  nflverse `game_id` from the path parts and returns `{game_ledger, team_signals}` via
   `get_recap()`.
-- `POST /ask_question` — body is `{question, game_ledger, anchor_plays, team_signals}`. The
+- `POST /ask_question` — body is `{question, game_ledger, team_signals}`. The
   frontend **passes the components it already holds** from the `/get_recap` call rather than having
   the backend refetch them. Routes → shapes → answers; a `RoutingValidationError` becomes a 502.
 
@@ -101,8 +97,8 @@ CORS allows the single `FRONTEND_URL` origin.
 ### Supabase tables
 
 `players` (`gsis_id`, `display_name`, `headshot`), `game_ledgers` (keyed by `game_id`),
-`anchor_plays` (composite `game_id` + `play_id`), `team_signals` (composite `game_id` + `team`,
-one row per team, written from `TeamSignals.to_db_item()`). `players` is written via SQLAlchemy/`DATABASE_URL`; the three recap
+`team_signals` (composite `game_id` + `team`, one row per team, written from
+`TeamSignals.to_db_item()`). `players` is written via SQLAlchemy/`DATABASE_URL`; the two recap
 tables via the `supabase` client (`SUPABASE_URL`/`SUPABASE_KEY`).
 
 ### Frontend (`frontend/`)
@@ -120,8 +116,8 @@ React 19 + Vite + react-router. Routes in [App.jsx](frontend/src/App.jsx): `/gam
 - `pages/Games.jsx` owns `TEAM_ABBR` (full display name → nflverse abbreviation) and navigates to
   the recap route, passing the whole `Game` object via **router state**. A hard refresh on a recap
   URL loses that state, and the page falls back to a "back to games" prompt.
-- `pages/Recap.jsx` fetches the three components and renders `GameLedger`, `AnchorPlays`,
-  `TeamSignals`, and `AskAboutGame`; each section renders only if its own data came back.
+- `pages/Recap.jsx` fetches the two components and renders `GameLedger`, `TeamSignals`, and
+  `AskAboutGame`; each section renders only if its own data came back.
 - `components/SectionHead.jsx` is the shared heading + collapsible "About" banner for recap sections.
 - `theme/team_colors.js` maps nflverse abbreviations to brand colors and returns the
   `--rc-home`/`--rc-away` overrides the sections paint from; it lifts too-dark colors for contrast
@@ -155,9 +151,9 @@ they must be run from inside their own directory:**
 - From `backend/get_data/`: `python get_raw_data.py <season> <week> <away> <home>` → writes
   `pbp_data.csv`; then `python preprocess_data.py` → `preprocessed_data.csv`.
 - From `backend/models/`: `python play.py` (reads `preprocessed_data.csv`),
-  `python game_document.py` → `game_document.json`, then the three component builders, which each
+  `python game_document.py` → `game_document.json`, then the two component builders, which each
   read `game_document.json`: `python game_ledger.py` → `game_ledger.json`,
-  `python anchor_plays.py` → `anchor_plays.json`, `python team_signals.py` → `team_signals.json`.
+  `python team_signals.py` → `team_signals.json`.
 
 Each stage consumes the artifact the previous one wrote, so regenerate them in order after changing
 an upstream layer. `play.py` hits the `players` table, so even the standalone blocks need
@@ -172,7 +168,7 @@ that prop is gone.
 
 `asdict` flattens the nested dataclasses for JSON serialization, so reloading a saved
 `GameDocument` requires rebuilding the dataclass types from dicts — see the `document_from_dict`
-helper in the `__main__` blocks of `anchor_plays.py` and `team_signals.py`.
+helper in the `__main__` block of `team_signals.py`.
 
 ## Environment variables
 
