@@ -1,0 +1,118 @@
+"""
+Play Narrative layer: wraps each play's raw `description` with the
+game-state context (quarter, down/distance, field position, win
+probability) an LLM needs to read it correctly.
+
+This is formatting, not selection -- no significance judgment happens
+here. That decision has already been made by play_selection.py; this
+layer only makes the already-selected data legible to the phrasing LLM.
+"""
+
+from __future__ import annotations
+
+import sys
+import os
+
+try:
+    from .play import Play
+except ImportError:
+    sys.path.insert(0, os.path.dirname(__file__))
+    from play import Play
+
+
+# Quarter number at which regulation ends and overtime periods begin.
+OT_QTR_THRESHOLD = 5
+
+_DOWN_SUFFIX = {1: "st", 2: "nd", 3: "rd"}
+
+
+def _quarter_label(qtr: int | None) -> str | None:
+    """'Q1'-'Q4' in regulation, 'OT'/'2OT'/... beyond it."""
+    if qtr is None:
+        return None
+    if qtr < OT_QTR_THRESHOLD:
+        return f"Q{qtr}"
+    ot_period = qtr - OT_QTR_THRESHOLD + 1
+    return "OT" if ot_period == 1 else f"{ot_period}OT"
+
+
+def _down_distance_label(down: int | None, ydstogo: int | None) -> str | None:
+    """'3rd & 7'; None on downless plays (kickoffs, PATs, etc.)."""
+    if down is None:
+        return None
+    suffix = _DOWN_SUFFIX.get(down, "th")
+    distance = ydstogo if ydstogo is not None else "?"
+    return f"{down}{suffix} & {distance}"
+
+
+def _field_position_label(play: Play) -> str | None:
+    """'{team} {yard}', reading yardline_100 (posteam's distance to the
+    opponent's end zone) into whichever team's territory the ball is
+    actually in."""
+    if play.yardline_100 is None:
+        return None
+    if play.yardline_100 <= 50:
+        team, yard = play.defteam, play.yardline_100
+    else:
+        team, yard = play.posteam, 100 - play.yardline_100
+    return f"{team} {yard}" if team is not None else f"the {yard}"
+
+
+def _win_probability_label(play: Play) -> str | None:
+    """Posteam's pre-play win probability, as a percentage."""
+    if play.wp is None or play.posteam is None:
+        return None
+    return f"{play.posteam} WP {play.wp:.1%}"
+
+
+def synthesize(play: Play) -> str:
+    """Wrap `play.description` with a compact game-state prefix.
+
+    Missing fields drop out of the prefix rather than rendering as a
+    placeholder; a play with no description at all just returns the prefix.
+    """
+    segments = [
+        _quarter_label(play.qtr),
+        _down_distance_label(play.down, play.ydstogo),
+        _field_position_label(play),
+        _win_probability_label(play),
+    ]
+    prefix = " | ".join(s for s in segments if s is not None)
+    description = play.description or ""
+    if not prefix:
+        return description
+    return f"{prefix} | {description}" if description else prefix
+
+
+def narrate_plays(plays: list[Play]) -> list[str]:
+    """Synthesize narrative strings for a list of plays, in order."""
+    return [synthesize(p) for p in plays]
+
+
+if __name__ == "__main__":
+    # NOTE: For testing purposes only
+    # Sanity-check narrative synthesis against the saved game document JSON
+
+    import json
+
+    try:
+        from .game_document import GameDocument, GameHeader
+    except ImportError:
+        sys.path.insert(0, os.path.dirname(__file__))
+        from game_document import GameDocument, GameHeader
+
+    def document_from_dict(raw: dict) -> GameDocument:
+        """Rebuild a GameDocument from its `to_dict()` / JSON form."""
+        return GameDocument(
+            header=GameHeader(**raw["header"]),
+            plays=[Play(**p) for p in raw["plays"]],
+        )
+
+    game_doc_json = "../test_data/game_document.json"
+    with open(game_doc_json) as f:
+        raw = json.load(f)
+    document = document_from_dict(raw)
+
+    print(f"Rebuilt GameDocument for {document.header.game_id}: {len(document.plays)} plays\n")
+    for p in document.plays[:100]:
+        print(synthesize(p))
