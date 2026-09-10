@@ -65,6 +65,38 @@ def _win_probability_label(play: Play) -> str | None:
     return f"{play.posteam} WP {play.wp:.1%}"
 
 
+def _epa_label(play: Play) -> str | None:
+    """Play-level EPA -- the same metric play_selection.py's HIGH_LEVERAGE_EPA
+    threshold checks, shown here so its actual size is visible rather than
+    just its presence above/below that bar."""
+    if play.epa is None:
+        return None
+    return f"EPA {play.epa:+.2f}"
+
+
+def _cpoe_label(play: Play) -> str | None:
+    """Completion % over expected, pass attempts only.
+
+    NOTE: nflverse's cpoe column is already in percentage points (e.g. +8.2
+    for a throw 8.2 points more likely to be completed than expected) -- it
+    is NOT a 0-1 fraction the way wp is, so this does not use the `.1%`
+    formatting _win_probability_label does.
+    """
+    if not play.is_pass or play.cpoe is None:
+        return None
+    return f"CPOE {play.cpoe:+.1f}"
+
+
+def _air_yards_label(play: Play) -> str | None:
+    """Air yards vs. yards after catch, pass attempts only. YAC is omitted
+    on incompletions, since there's no catch to measure it from."""
+    if not play.is_pass or play.air_yards is None:
+        return None
+    if play.yards_after_catch is None:
+        return f"{play.air_yards:.0f} air yds"
+    return f"{play.air_yards:.0f} air + {play.yards_after_catch:.0f} YAC"
+
+
 def _score_label(play: Play) -> str | None:
     """Post-play score, shown only when this play changed it (touchdowns,
     field goals, safeties, PATs, ...). Detected by comparing the pre- and
@@ -97,6 +129,9 @@ def synthesize(play: Play) -> str:
         _down_distance_label(play.down, play.ydstogo),
         _field_position_label(play),
         _win_probability_label(play),
+        _epa_label(play),
+        _cpoe_label(play),
+        _air_yards_label(play),
         _score_label(play),
     ]
     prefix = " | ".join(s for s in segments if s is not None)
@@ -109,6 +144,8 @@ def synthesize(play: Play) -> str:
 def narrate_plays(plays: list[Play]) -> list[str]:
     """Synthesize narrative strings for a list of plays, in order."""
     return [synthesize(p) for p in plays]
+
+
 
 
 if __name__ == "__main__":
