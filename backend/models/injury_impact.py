@@ -1,13 +1,24 @@
 """
-Injury Impact Report layer: finds injury-notice plays and compares each
-team's EPA/play before and after that point in the game.
+Injury Impact Report layer: finds injury-notice plays and compares the
+EPA/play of the team whose offense is affected, before vs. after that
+point in the game.
 
-The efficiency comparison is team-agnostic by design -- both teams are
-tracked around the injury regardless of who is hurt, since figuring out
-which team a hurt player's absence would affect isn't something this
-layer needs to resolve. The injured player's own team is still cheap to
-capture directly from the injury notice text (nflverse embeds it there),
-so it's kept as identifying context.
+nflverse embeds the team abbreviation directly in the injury notice text
+(e.g. "BUF-22-R.Davis was injured during the play."), so no separate
+player-team lookup is needed. Which team's offense to track depends on
+whether the injured player was on offense or defense at the moment of
+injury:
+
+  - On offense (event.team == play.posteam): track their own team's
+    offense -- target is posteam.
+  - On defense (event.team == play.defteam): EPA only measures offense,
+    so a defender's absence shows up in what the opposing offense does
+    with the ball, not in his own team's stat line -- target is still
+    posteam, just the other team's.
+
+Both cases resolve to the same team: play.posteam. There is no third
+case, since a play has exactly two roles and event.team must be one of
+them.
 
 Before/after is a single season-long split at the injury play, not a
 fixed drive window -- simplest option, not yet validated against a
@@ -54,10 +65,11 @@ class TeamEfficiency:
 
 @dataclass
 class InjuryImpact:
-    """One injury event plus both teams' EPA/play before and after it."""
+    """One injury event plus the affected team's EPA/play before and
+    after it (see module docstring for which team that is)."""
     event: InjuryEvent
-    before: list[TeamEfficiency]
-    after: list[TeamEfficiency]
+    before: TeamEfficiency
+    after: TeamEfficiency
 
 
 @dataclass
@@ -95,16 +107,25 @@ def _injury_events(document: GameDocument) -> list[InjuryEvent]:
     return events
 
 
-def _teams_in(document: GameDocument) -> list[str]:
-    """Both team abbreviations in the game, taken from the first play that
-    carries both a posteam and a defteam."""
-    for p in document.plays:
-        if p.posteam and p.defteam:
-            return [p.posteam, p.defteam]
-    return []
+def _target_team(play: Play, event_team: str) -> str:
+    """The team whose offense is affected by this injury: play.posteam,
+    whether the injured player was on offense (it's their own team) or
+    defense (it's the opponent). See module docstring for the derivation.
+
+    Raises if event_team matches neither posteam nor defteam on this play
+    -- that would mean the injury notice's team abbreviation doesn't
+    match either team actually in the game, which is a data problem worth
+    surfacing rather than silently mis-attributing the impact.
+    """
+    if event_team not in (play.posteam, play.defteam):
+        raise ValueError(
+            f"injury event team {event_team!r} matches neither posteam "
+            f"{play.posteam!r} nor defteam {play.defteam!r} on play {play.play_id}"
+        )
+    return play.posteam
 
 
-def _epa_per_play(plays: list[Play], team: str) -> TeamEfficiency:
+def _team_efficiency(plays: list[Play], team: str) -> TeamEfficiency:
     """`team`'s own offensive EPA/play over the given slice of scrimmage
     plays (passes and rushes only -- special teams excluded, same
     convention as team_signals.py)."""
@@ -119,16 +140,16 @@ def _epa_per_play(plays: list[Play], team: str) -> TeamEfficiency:
 
 
 def _impact_for(document: GameDocument, event: InjuryEvent) -> InjuryImpact:
-    """Both teams' EPA/play on all plays before vs. after the injury play,
-    split by the injury play's position in the game."""
-    teams = _teams_in(document)
+    """The affected team's EPA/play on all plays before vs. after the
+    injury play, split by the injury play's position in the game."""
     idx = next(i for i, p in enumerate(document.plays) if p.play_id == event.play.play_id)
+    target = _target_team(event.play, event.team)
     before_plays = document.plays[:idx]
     after_plays = document.plays[idx + 1:]
     return InjuryImpact(
         event=event,
-        before=[_epa_per_play(before_plays, t) for t in teams],
-        after=[_epa_per_play(after_plays, t) for t in teams],
+        before=_team_efficiency(before_plays, target),
+        after=_team_efficiency(after_plays, target),
     )
 
 
@@ -156,10 +177,10 @@ if __name__ == "__main__":
 
     for impact in report.impacts:
         e = impact.event
-        print(f"{e.team}-{e.player} injured, q{e.play.qtr}: {(e.play.description or '')[:100]}")
-        for b, a in zip(impact.before, impact.after):
-            b_str = f"{b.epa_per_play:+.3f}" if b.epa_per_play is not None else "n/a"
-            a_str = f"{a.epa_per_play:+.3f}" if a.epa_per_play is not None else "n/a"
-            print(f"  {b.team}: {b_str} EPA/play before ({b.plays} plays) "
-                  f"-> {a_str} EPA/play after ({a.plays} plays)")
+        b, a = impact.before, impact.after
+        b_str = f"{b.epa_per_play:+.3f}" if b.epa_per_play is not None else "n/a"
+        a_str = f"{a.epa_per_play:+.3f}" if a.epa_per_play is not None else "n/a"
+        print(f"{e.team}-{e.player} injured, q{e.play.qtr}: {(e.play.description or '')[:80]}")
+        print(f"  {b.team} offense: {b_str} EPA/play before ({b.plays} plays) "
+              f"-> {a_str} EPA/play after ({a.plays} plays)")
         print()
