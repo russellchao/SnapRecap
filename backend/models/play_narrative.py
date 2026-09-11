@@ -118,18 +118,22 @@ def _score_label(play: Play) -> str | None:
     return f"{play.posteam} {play.posteam_score_post}-{play.defteam} {play.defteam_score_post}"
 
 
-def synthesize(play: Play) -> str:
+def synthesize(play: Play, include_epa: bool = True) -> str:
     """Wrap `play.description` with a compact game-state prefix.
 
     Missing fields drop out of the prefix rather than rendering as a
     placeholder; a play with no description at all just returns the prefix.
+    include_epa=False drops the EPA segment for consumers phrasing this
+    play for a casual-fan audience (macro_context.py's Game Breakdown
+    payload) where WPA substitutes for it; it has no effect on cpoe/air
+    yards, which are unrelated to that framing question.
     """
     segments = [
         _quarter_label(play.qtr),
         _down_distance_label(play.down, play.ydstogo),
         _field_position_label(play),
         _win_probability_label(play),
-        _epa_label(play),
+        _epa_label(play) if include_epa else None,
         _cpoe_label(play),
         _air_yards_label(play),
         _score_label(play),
