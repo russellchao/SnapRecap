@@ -41,7 +41,10 @@ except ImportError:
 
 
 MODEL = "claude-sonnet-5"
-PROMPT_VERSION = "v1"
+
+LOSERS_MISTAKES_PROMPT_VERSION = "v1"
+WINNERS_BEST_PLAYS_PROMPT_VERSION = "v1"
+INJURY_IMPACT_PROMPT_VERSION = "v1"
 
 NO_INJURIES_RESPONSE = "No notable injuries occurred in this game."
 

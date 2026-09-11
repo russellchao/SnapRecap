@@ -37,13 +37,14 @@ def health():
 def get_recap_endpoint(season: str, week: str, away_team: str, home_team: str, away_score: str, home_score: str):
 
     game_id = f"{season}_{int(week) < 10 and '0' + str(week) or str(week)}_{away_team}_{home_team}"
-    _game_ledger, _team_signals = get_recap(
+    _game_ledger, _team_signals, _macro_contexts = get_recap(
         game_id, season, week, away_team, home_team, int(away_score), int(home_score) 
     )
 
     return {
         "game_ledger": _game_ledger,
         "team_signals": _team_signals,
+        "macro_contexts": _macro_contexts,
     }
 
 
