@@ -11,9 +11,9 @@ export default function About() {
         </h1>
         <p className="about-sub">
           Snap Recap reads every play of a finished NFL game — win-probability swings,
-          efficiency by situation, the plays that actually decided it — and turns the
-          parts that mattered into plain sentences. No highlight reel, no play-by-play
-          transcript. Just the explanation.
+          efficiency by situation, the plays that decided it, what changed after an
+          injury — and turns the parts that mattered into plain sentences. No highlight
+          reel, no play-by-play transcript. Just the explanation.
         </p>
       </header>
 
@@ -39,7 +39,9 @@ export default function About() {
               <p>
                 Turnovers, explosive plays, red-zone execution, and more — every point
                 of the final margin gets sorted into one of these buckets, so you can
-                see which ones actually moved the needle.
+                see which ones actually moved the needle. The same measurements pick out
+                the winner's best plays, the losing team's costliest ones, and the
+                moments an injury changed how a team moved the ball.
               </p>
             </div>
           </li>
@@ -48,10 +50,10 @@ export default function About() {
             <div>
               <h3>Then it's put into plain words</h3>
               <p>
-                Those plays and numbers get turned into sentences you can actually
-                read, and any question you ask gets answered using that same
-                information — the write-up never decides on its own what counts as
-                important.
+                Those plays and numbers become short write-ups you can actually read —
+                how the winner won it, where the loser lost it, what the injuries cost —
+                and any question you ask gets answered from that same information. The
+                write-up never decides on its own what counts as important.
               </p>
             </div>
           </li>
@@ -67,6 +69,7 @@ export default function About() {
             <li>Which plays defined the game</li>
             <li>How the final margin breaks down by category</li>
             <li>Which team signals were unusual enough to matter</li>
+            <li>Whether an injury changed how a team moved the ball</li>
             <li>How much confidence a small-sample number deserves</li>
           </ul>
         </div>
@@ -75,7 +78,7 @@ export default function About() {
           <h2>What the writing layer does</h2>
           <ul>
             <li>Turns selected plays and numbers into sentences</li>
-            <li>Explains the pressure, coverage, or personnel behind a play</li>
+            <li>Describes how big a swing was, without guessing at why it happened</li>
             <li>Answers questions about a game, grounded in what's already decided</li>
             <li>Never re-ranks or re-selects what counts as important</li>
           </ul>

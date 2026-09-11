@@ -3,6 +3,7 @@ import { useLocation, useParams, Link } from 'react-router-dom'
 import { fetchRecap } from '../api/fetch_recap'
 import GameLedger from '../components/GameLedger'
 import TeamSignals from '../components/TeamSignals'
+import MacroContexts from '../components/MacroContexts'
 import AskAboutGame from '../components/AskAboutGame'
 import { teamPalette } from '../theme/team_colors'
 import './Recap.css'
@@ -37,6 +38,7 @@ export default function Recap() {
 
     const [gameLedger, setGameLedger] = useState(null);
     const [teamSignals, setTeamSignals] = useState(null);
+    const [macroContexts, setMacroContexts] = useState(null);
 
 
     useEffect(() => {
@@ -53,6 +55,7 @@ export default function Recap() {
                     console.log("Fetched recap data:", data);
                     setGameLedger(data?.game_ledger ?? null);
                     setTeamSignals(data?.team_signals ?? null);
+                    setMacroContexts(data?.macro_contexts ?? null);
                 }
             })
             .finally(() => {
@@ -90,9 +93,14 @@ export default function Recap() {
     const awayWon = awayScore >= homeScore;
     const homeWon = homeScore >= awayScore;
 
+    // Macro contexts come back keyed by context_type, and an empty object is a
+    // real answer (a game with nothing phrased for it yet) — so it counts as no
+    // data rather than as a section to render.
+    const hasMacroContexts = Object.keys(macroContexts ?? {}).length > 0;
+
     // Any one component is enough to show the recap body; each section renders
     // only if its own data made it back.
-    const hasRecap = [gameLedger, teamSignals].some((part) => part != null);
+    const hasRecap = [gameLedger, teamSignals].some((part) => part != null) || hasMacroContexts;
 
     return (
         <div className="recap">
@@ -162,6 +170,18 @@ export default function Recap() {
                             homeName={home.city}
                             awayAbbr={away_team}
                             homeAbbr={home_team}
+                            colors={teamColors}
+                        />
+                    )}
+                    {hasMacroContexts && (
+                        <MacroContexts
+                            contexts={macroContexts}
+                            awayName={away.city}
+                            homeName={home.city}
+                            awayAbbr={away_team}
+                            homeAbbr={home_team}
+                            awayScore={awayScore}
+                            homeScore={homeScore}
                             colors={teamColors}
                         />
                     )}
