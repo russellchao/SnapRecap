@@ -91,8 +91,9 @@ depends on the previous stage's dataclass:
    matches neither `posteam` nor `defteam` **raises** rather than mis-attributing. Before/after is a
    single split at the injury play over scrimmage plays only, not a fixed drive window.
 9. **`models/play_narrative.py`** — `synthesize(play, include_epa=True)` wraps a play's raw
-   `description` with the game-state context (quarter, down/distance, field position, win
-   probability, and optionally EPA) an LLM needs to read it correctly. Formatting, not selection.
+   `description` with the game-state context (quarter, timestamp, down/distance, field position, win
+   probability, and optionally EPA) plus the passer/rusher/receiver full names, whichever are
+   present, that an LLM needs to read it correctly. Formatting, not selection.
    `macro_context.py` is its only consumer, and passes `include_epa=False` for breakdown plays.
 10. **`models/play_selection.py`** — groups a `GameDocument`'s plays by why they matter (drives,
     high-leverage, situational, decisive). **Currently unwired**: nothing imports it, since the

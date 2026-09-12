@@ -1,7 +1,8 @@
 """
 Play Narrative layer: wraps each play's raw `description` with the
 game-state context (quarter, down/distance, field position, win
-probability) an LLM needs to read it correctly.
+probability) and the full names of the players involved that an LLM
+needs to read it correctly.
 
 This is formatting, not selection -- no significance judgment happens
 here. That decision has already been made by play_selection.py; this
@@ -34,6 +35,13 @@ def _quarter_label(qtr: int | None) -> str | None:
         return f"Q{qtr}"
     ot_period = qtr - OT_QTR_THRESHOLD + 1
     return "OT" if ot_period == 1 else f"{ot_period}OT"
+
+
+def _timestamp_label(quarter_seconds_remaining: int | None) -> str | None:
+    if quarter_seconds_remaining is None:
+        return None
+    minutes, seconds = divmod(quarter_seconds_remaining, 60)
+    return f"{minutes:02}:{seconds:02}"
 
 
 def _down_distance_label(down: int | None, ydstogo: int | None) -> str | None:
@@ -118,6 +126,20 @@ def _score_label(play: Play) -> str | None:
     return f"{play.posteam} {play.posteam_score_post}-{play.defteam} {play.defteam_score_post}"
 
 
+def _players_label(play: Play) -> str | None:
+    """Full display names of the passer, rusher, and receiver involved,
+    whichever are present. The raw description only carries initials +
+    last name (e.g. 'J.Allen'), so naming them here keeps the phrasing
+    LLM from guessing at who that is."""
+    roles = [
+        ("Passer", play.passer),
+        ("Rusher", play.rusher),
+        ("Receiver", play.receiver),
+    ]
+    named = [f"{role}: {name}" for role, name in roles if name is not None]
+    return ", ".join(named) if named else None
+
+
 def synthesize(play: Play, include_epa: bool = True) -> str:
     """Wrap `play.description` with a compact game-state prefix.
 
@@ -130,6 +152,7 @@ def synthesize(play: Play, include_epa: bool = True) -> str:
     """
     segments = [
         _quarter_label(play.qtr),
+        _timestamp_label(play.quarter_seconds_remaining) if play.quarter_seconds_remaining is not None else None,
         _down_distance_label(play.down, play.ydstogo),
         _field_position_label(play),
         _win_probability_label(play),
@@ -137,6 +160,7 @@ def synthesize(play: Play, include_epa: bool = True) -> str:
         _cpoe_label(play),
         _air_yards_label(play),
         _score_label(play),
+        _players_label(play),
     ]
     prefix = " | ".join(s for s in segments if s is not None)
     description = play.description or ""

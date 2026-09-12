@@ -42,8 +42,8 @@ except ImportError:
 
 MODEL = "claude-sonnet-5"
 
-LOSERS_MISTAKES_PROMPT_VERSION = "v1"
-WINNERS_BEST_PLAYS_PROMPT_VERSION = "v1"
+LOSERS_MISTAKES_PROMPT_VERSION = "v3"
+WINNERS_BEST_PLAYS_PROMPT_VERSION = "v3"
 INJURY_IMPACT_PROMPT_VERSION = "v1"
 
 NO_INJURIES_RESPONSE = "No notable injuries occurred in this game."
@@ -64,6 +64,23 @@ intent, injuries) unless a field explicitly states it.
 - wpa (win probability added) measures how much a play swung the game, not why it \
 happened -- use it to describe the size of the swing, never as the cause of the play \
 itself.
+- The passer's, rusher's, and receiver's full names are stated explicitly in the data \
+(e.g. "Passer: Josh Allen, Receiver: Stefon Diggs"). Refer to them by those full names, \
+never by the abbreviated names in the play description.
+- Any other player who appears only in the play description itself (e.g. a tackler, \
+kicker, or defender) has no full name in the data. Refer to them as the description \
+does, by first initial and last name (e.g. "M.Milano" for "58-M.Milano"), and never \
+guess at their first name.
+- A score appears in a narrative only on scoring plays, and it is the score AFTER that \
+play -- it already includes the points the play itself produced. Never describe it as \
+the score going into the play.
+- Every play lists its quarter (Q1-Q4, then OT, 2OT, ...) followed by its game clock \
+(MM:SS). The clock is the time REMAINING in that quarter, so it counts down: within the \
+same quarter, a play at 12:04 happened before a play at 05:30.
+- Discuss the plays in the order they happened -- by quarter first, then by clock from \
+most time remaining to least -- not in the order they appear in the data.
+- When you mention a play, explicitly state the quarter and the time remaining when it \
+occurred (e.g. "with 5:30 left in the 2nd quarter").
 - Write 2-4 sentences in plain, casual language for a fan who did not watch the game \
 closely. No headers, no bullet points, no restating the question."""
 
@@ -80,6 +97,23 @@ intent, injuries) unless a field explicitly states it.
 - wpa (win probability added) measures how much a play swung the game, not why it \
 happened -- use it to describe the size of the swing, never as the cause of the play \
 itself.
+- The passer's, rusher's, and receiver's full names are stated explicitly in the data \
+(e.g. "Passer: Josh Allen, Receiver: Stefon Diggs"). Refer to them by those full names, \
+never by the abbreviated names in the play description.
+- Any other player who appears only in the play description itself (e.g. a tackler, \
+kicker, or defender) has no full name in the data. Refer to them as the description \
+does, by first initial and last name (e.g. "M.Milano" for "58-M.Milano"), and never \
+guess at their first name.
+- A score appears in a narrative only on scoring plays, and it is the score AFTER that \
+play -- it already includes the points the play itself produced. Never describe it as \
+the score going into the play.
+- Every play lists its quarter (Q1-Q4, then OT, 2OT, ...) followed by its game clock \
+(MM:SS). The clock is the time REMAINING in that quarter, so it counts down: within the \
+same quarter, a play at 12:04 happened before a play at 05:30.
+- Discuss the plays in the order they happened -- by quarter first, then by clock from \
+most time remaining to least -- not in the order they appear in the data.
+- When you mention a play, explicitly state the quarter and the time remaining when it \
+occurred (e.g. "with 5:30 left in the 2nd quarter").
 - Write 2-4 sentences in plain, casual language for a fan who did not watch the game \
 closely. No headers, no bullet points, no restating the question."""
 
