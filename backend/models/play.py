@@ -57,6 +57,7 @@ class Play:
 
     # --- Game state (the leverage context) ---
     qtr: Optional[int]
+    quarter_seconds_remaining: Optional[int]
     game_seconds_remaining: Optional[int]
     down: Optional[int]                 # None on kickoffs / no-down plays
     ydstogo: Optional[int]
@@ -141,6 +142,7 @@ class Play:
             defteam=_str(g("defteam")),
 
             qtr=_int(g("qtr")),
+            quarter_seconds_remaining=_int(g("quarter_seconds_remaining")),
             game_seconds_remaining=_int(g("game_seconds_remaining")),
             down=_int(g("down")),
             ydstogo=_int(g("ydstogo")),
