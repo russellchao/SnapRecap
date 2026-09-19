@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 
 # Internal Modules
 from get_recap import get_recap
+from get_data.poll_games import poll_games
 import game_qa
 
 
@@ -29,6 +30,19 @@ app.add_middleware(
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+
+# ------ Poll Games endpoint ------
+# Triggered by a scheduler (pg_cron via pg_net, or GitHub Actions) -- not
+# meant to be user-facing, hence the shared-secret check.
+ 
+@app.post("/poll_games")
+def poll_games_endpoint(background_tasks: BackgroundTasks, x_poll_secret: str = Header(...)):
+    if x_poll_secret != os.getenv("POLL_SECRET"):
+        raise HTTPException(status_code=401, detail="Unauthorized")
+ 
+    background_tasks.add_task(poll_games)
+    return {"status": "polling started"}
 
 
 # ------ Get Recap endpoint ------
