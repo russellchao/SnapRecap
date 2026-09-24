@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 
 # Internal Modules
 from get_recap import get_recap
-from get_data.poll_games import poll_games
+from build_pending_recaps import poll_and_recap
 import game_qa
 
 
@@ -41,7 +41,7 @@ def poll_games_endpoint(background_tasks: BackgroundTasks, x_poll_secret: str = 
     if x_poll_secret != os.getenv("POLL_SECRET"):
         raise HTTPException(status_code=401, detail="Unauthorized")
  
-    background_tasks.add_task(poll_games)
+    background_tasks.add_task(poll_and_recap)
     return {"status": "polling started"}
 
 

@@ -58,4 +58,21 @@ def check_pbp_release(season: int) -> bool:
         {"season": season, "last_updated_at": updated_at}, on_conflict="season"
     ).execute()
     print(f"pbp release for {season} changed ({last_seen} -> {updated_at}); cache cleared")
+    
     return True
+
+
+
+if __name__ == "__main__":
+    import sys
+
+    if len(sys.argv) != 2:
+        print("Usage: python check_pbp_release.py <season>")
+        sys.exit(1)
+
+    season = int(sys.argv[1])
+    changed = check_pbp_release(season)
+    if changed:
+        print(f"pbp release for {season} has changed")
+    else:
+        print(f"pbp release for {season} has not changed")
