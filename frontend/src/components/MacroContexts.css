@@ -1,0 +1,89 @@
+/*
+    Macro Context section: the three narrative blocks (winner's best plays,
+    loser's biggest mistakes, injury impact).
+
+    Everything here is prose rather than figures, so the cards carry no chrome
+    of their own beyond an accent edge — the tokens (--rc-*) come from
+    .recap-section in RecapSection.css, and the per-matchup team colors are set
+    inline on the section root by the recap page.
+*/
+
+/*
+    One full-width card per context, stacked. Narratives are read in sequence,
+    not compared side by side the way Team Signals' two columns are, so a full
+    measure keeps the line length steady and the reading order unambiguous.
+*/
+.macro-contexts .macro-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+.macro-contexts .macro-card {
+    /* Each card is painted from one accent, set per side below, so the edge and
+       the tag can't drift apart. */
+    --card-accent: var(--rc-accent);
+    --card-accent-dim: var(--rc-accent-dim);
+
+    background: var(--rc-bg);
+    border: 1px solid var(--rc-panel-line);
+    border-left: 3px solid var(--card-accent);
+    border-radius: 8px;
+    padding: 16px 18px 18px;
+}
+
+.macro-contexts .macro-card.home {
+    --card-accent: var(--rc-home);
+    --card-accent-dim: var(--rc-home-dim);
+}
+
+.macro-contexts .macro-card.away {
+    --card-accent: var(--rc-away);
+    --card-accent-dim: var(--rc-away-dim);
+}
+
+.macro-contexts .macro-card-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.macro-contexts .macro-card-head h3 {
+    font-family: var(--sans);
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--card-accent);
+    margin: 0;
+}
+
+/* "Winner" / "Loser" — the card's role, kept quiet so the heading stays the
+   thing you read first. */
+.macro-contexts .macro-tag {
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--rc-ink-faint);
+    border: 1px solid var(--card-accent-dim);
+    border-radius: 999px;
+    padding: 3px 10px;
+}
+
+.macro-contexts .macro-text {
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--rc-ink);
+    /* Phrased text comes back plain; keep whatever line breaks the model wrote. */
+    white-space: pre-wrap;
+    margin: 0;
+}
+
+@media (max-width: 640px) {
+    .macro-contexts .macro-card { padding: 14px 14px 16px; }
+    .macro-contexts .macro-card-head h3 { font-size: 16px; }
+    .macro-contexts .macro-text { font-size: 15px; }
+}

@@ -4,7 +4,7 @@
     Each recap section paints itself from the `--rc-home` / `--rc-away` custom
     properties declared in components/RecapSection.css. `teamPalette()` returns an
     override for those tokens, built from the two teams actually playing, so the
-    ledger bars, anchor cards, and signal chips read in each team's own colors.
+    ledger bars and signal chips read in each team's own colors.
 
     Two problems have to be solved before a brand color can be used as-is:
 

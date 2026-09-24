@@ -1,6 +1,6 @@
 /*
-    Shared chrome for the recap page's sections (Game Ledger, Anchor Plays,
-    Team Signals, and the Q&A card): the card frame they all sit in, the palette
+    Shared chrome for the recap page's sections (Game Ledger, Team Signals,
+    and the Q&A card): the card frame they all sit in, the palette
     they draw from, and the heading strip above each one.
 
     Imported by every recap component, so the tokens are available to each of
@@ -12,7 +12,6 @@
 .recap-section {
     /* Surfaces track the game header in Recap.css — same gradient, same border,
        so a section reads as another panel of the same page. */
-    --rc-panel: #1a1d26;        /* raised panel inside a section (anchor cards) */
     --rc-panel-line: #2a2e39;   /* borders and dividers — the header's border */
     --rc-bg: #12141b;           /* inset surface (chips, the Q&A input) */
     --rc-line: #22252e;         /* unfilled bar track */

@@ -3,7 +3,7 @@ import { fetchQa } from '../api/fetch_qa'
 import './RecapSection.css'
 import './AskAboutGame.css'
 
-export default function AskAboutGame({ ledger, plays, signals }) {
+export default function AskAboutGame({ ledger, signals }) {
     const [question, setQuestion] = useState("");
     const [asking, setAsking] = useState(false);
 
@@ -25,7 +25,7 @@ export default function AskAboutGame({ ledger, plays, signals }) {
         setAnswer(null);
         setError(null);
 
-        fetchQa(trimmed, ledger, plays, signals)
+        fetchQa(trimmed, ledger, signals)
             .then(({ status, data }) => {
                 if (status === 200 && data?.answer) {
                     console.log("Received answer:", data.answer)

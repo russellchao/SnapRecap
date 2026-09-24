@@ -2,8 +2,8 @@ import { useEffect, useMemo, useState } from 'react'
 import { useLocation, useParams, Link } from 'react-router-dom'
 import { fetchRecap } from '../api/fetch_recap'
 import GameLedger from '../components/GameLedger'
-import AnchorPlays from '../components/AnchorPlays'
 import TeamSignals from '../components/TeamSignals'
+import MacroContexts from '../components/MacroContexts'
 import AskAboutGame from '../components/AskAboutGame'
 import { teamPalette } from '../theme/team_colors'
 import './Recap.css'
@@ -37,8 +37,8 @@ export default function Recap() {
     const [loading, setLoading] = useState(false);
 
     const [gameLedger, setGameLedger] = useState(null);
-    const [anchorPlays, setAnchorPlays] = useState(null);
     const [teamSignals, setTeamSignals] = useState(null);
+    const [macroContexts, setMacroContexts] = useState(null);
 
 
     useEffect(() => {
@@ -54,8 +54,8 @@ export default function Recap() {
                     setRecapStatus(status);
                     console.log("Fetched recap data:", data);
                     setGameLedger(data?.game_ledger ?? null);
-                    setAnchorPlays(data?.anchor_plays ?? null);
                     setTeamSignals(data?.team_signals ?? null);
+                    setMacroContexts(data?.macro_contexts ?? null);
                 }
             })
             .finally(() => {
@@ -93,9 +93,14 @@ export default function Recap() {
     const awayWon = awayScore >= homeScore;
     const homeWon = homeScore >= awayScore;
 
+    // Macro contexts come back keyed by context_type, and an empty object is a
+    // real answer (a game with nothing phrased for it yet) — so it counts as no
+    // data rather than as a section to render.
+    const hasMacroContexts = Object.keys(macroContexts ?? {}).length > 0;
+
     // Any one component is enough to show the recap body; each section renders
     // only if its own data made it back.
-    const hasRecap = [gameLedger, anchorPlays, teamSignals].some((part) => part != null);
+    const hasRecap = [gameLedger, teamSignals].some((part) => part != null) || hasMacroContexts;
 
     return (
         <div className="recap">
@@ -158,9 +163,6 @@ export default function Recap() {
                             colors={teamColors}
                         />
                     )}
-                    {anchorPlays?.length > 0 && (
-                        <AnchorPlays plays={anchorPlays} homeAbbr={home_team} colors={teamColors} />
-                    )}
                     {teamSignals && (
                         <TeamSignals
                             signals={teamSignals}
@@ -171,7 +173,19 @@ export default function Recap() {
                             colors={teamColors}
                         />
                     )}
-                    <AskAboutGame ledger={gameLedger} plays={anchorPlays} signals={teamSignals} />
+                    {hasMacroContexts && (
+                        <MacroContexts
+                            contexts={macroContexts}
+                            awayName={away.city}
+                            homeName={home.city}
+                            awayAbbr={away_team}
+                            homeAbbr={home_team}
+                            awayScore={awayScore}
+                            homeScore={homeScore}
+                            colors={teamColors}
+                        />
+                    )}
+                    <AskAboutGame ledger={gameLedger} signals={teamSignals} />
                 </div>
             ) : (
                 <p className="recap-placeholder">Recap not available for this game yet.</p>

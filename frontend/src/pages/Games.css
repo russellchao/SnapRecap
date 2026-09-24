@@ -69,3 +69,44 @@
     color: var(--text-h);
     background-color: var(--bg);
 }
+/* Four game cards per row, stepping down as the viewport narrows.
+
+   Flex rather than grid: a grid always lays down all four columns, so a
+   partial row (a lone Super Bowl) would sit in column one. Flex lines only
+   hold the items they have, so justify-content centers a short row.
+
+   #root is capped at 1126px, which only leaves ~260px per card at four
+   across, so the grid breaks out of it and centers itself on the viewport
+   to give each card real room. */
+.games-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+    gap: 32px 20px;
+
+    /* 4rem of slack absorbs the scrollbar, which 100vw counts but can't use. */
+    width: min(1500px, calc(100vw - 4rem));
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Fixed basis, no grow: cards stay a uniform width instead of stretching to
+   fill a short row. Four across, minus the three 20px gaps between them. */
+.games-grid > * {
+    flex: 0 0 calc((100% - 3 * 20px) / 4);
+    min-width: 0;
+}
+
+@media (max-width: 1024px) {
+    .games-grid > * {
+        flex-basis: calc((100% - 20px) / 2);
+    }
+}
+
+@media (max-width: 620px) {
+    .games-grid > * {
+        flex-basis: 100%;
+    }
+}

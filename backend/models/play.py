@@ -57,6 +57,7 @@ class Play:
 
     # --- Game state (the leverage context) ---
     qtr: Optional[int]
+    quarter_seconds_remaining: Optional[int]
     game_seconds_remaining: Optional[int]
     down: Optional[int]                 # None on kickoffs / no-down plays
     ydstogo: Optional[int]
@@ -68,6 +69,8 @@ class Play:
     defteam_timeouts_remaining: Optional[int]
     drive: Optional[int]
     fixed_drive_result: Optional[str]
+    drive_time_of_possession: Optional[str]
+    drive_play_count: Optional[int]
 
     # --- Play classification ---
     play_type: Optional[str]
@@ -108,7 +111,11 @@ class Play:
     qb_hit: Optional[bool]
     interception: Optional[bool]
     fumble_lost: Optional[bool]
+    fumble_forced: Optional[bool]
+    tackled_for_loss: Optional[bool]
     penalty: Optional[bool]
+    penalty_team: Optional[str]
+    penalty_yards: Optional[int]
 
     # --- Outcome (post-play score state) ---
     posteam_score_post: Optional[int]      # posteam score at end of play
@@ -135,6 +142,7 @@ class Play:
             defteam=_str(g("defteam")),
 
             qtr=_int(g("qtr")),
+            quarter_seconds_remaining=_int(g("quarter_seconds_remaining")),
             game_seconds_remaining=_int(g("game_seconds_remaining")),
             down=_int(g("down")),
             ydstogo=_int(g("ydstogo")),
@@ -146,6 +154,8 @@ class Play:
             defteam_timeouts_remaining=_int(g("defteam_timeouts_remaining")),
             drive=_int(g("drive")),
             fixed_drive_result=_str(g("fixed_drive_result")),
+            drive_time_of_possession=_str(g("drive_time_of_possession")),
+            drive_play_count=_int(g("drive_play_count")),
 
             play_type=_str(g("play_type")),
             is_pass=_bool(g("pass")),
@@ -183,7 +193,11 @@ class Play:
             qb_hit=_bool(g("qb_hit")),
             interception=_bool(g("interception")),
             fumble_lost=_bool(g("fumble_lost")),
+            fumble_forced=_bool(g("fumble_forced")),
+            tackled_for_loss=_bool(g("tackled_for_loss")),
             penalty=_bool(g("penalty")),
+            penalty_team=_str(g("penalty_team")),
+            penalty_yards=_int(g("penalty_yards")),
 
             posteam_score_post=_int(g("posteam_score_post")),
             defteam_score_post=_int(g("defteam_score_post")),

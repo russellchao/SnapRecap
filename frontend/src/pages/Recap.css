@@ -235,8 +235,7 @@
 
 /* --- Recap body ---
    Column the recap sections sit in. Each section's own look lives with its
-   component in src/components (GameLedger, AnchorPlays, TeamSignals,
-   AskAboutGame); the shared card frame, palette, and heading strip come from
+   component in src/components (GameLedger, TeamSignals, AskAboutGame); the shared card frame, palette, and heading strip come from
    components/RecapSection.css. */
 
 .recap-body {

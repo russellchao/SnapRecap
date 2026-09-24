@@ -54,6 +54,17 @@
     margin-bottom: 0;
 }
 
+/* Category heading — quieter than the team name above it, so the chips stay
+   what the eye lands on. */
+.team-signals .signal-group-label {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 11.5px;
+    font-weight: 600;
+    margin: 0 0 10px;
+    color: var(--rc-ink-dim);
+}
+
 .team-signals .signal-chips {
     display: flex;
     flex-wrap: wrap;

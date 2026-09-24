@@ -1,5 +1,7 @@
 -------- Text file to draft prompts for Claude Code --------
 
+------------------------------------------------------------
+
 8/26/2026
 
 Can you please edit Recap.jsx and Recap.css such that it looks like the recap_page_mockup file? Several things to note:
@@ -9,6 +11,7 @@ Can you please edit Recap.jsx and Recap.css such that it looks like the recap_pa
 - The Team Signals can be obtained from teamSignals, which has an object for both teams. Each object contains two arrays for offensive and defensive signals. For now, instead of splitting by Efficiency, Negative, and Situational signals like the mockup, just split by the provided offensive and defensive signals.
 - When implementing the text box for the "Ask about this game" section, don't worry about implementing the question suggestion boxes. Just implement the text box with the placeholder and the ask button that doesn't do anything yet. 
 
+------------------------------------------------------------
 
 8/27/2026
 
@@ -20,3 +23,25 @@ While ({winning team} won by {point margin} || the game ended in a tie), the EPA
 "The handful of plays that swung the game the most, ranked by how much they moved each team's chances of winning. Later plays count for more, since a big play in the fourth quarter or OT matters more than one in the first."
 
 "A side-by-side look at how each team actually played — third-down conversions, red zone trips, turnovers, and other tendencies — beyond what the box score shows."
+
+------------------------------------------------------------
+
+9/12/2026
+
+Please modify play_narrative.py such that it includes the passer, rusher, and reciever in the synthesis if any of them aren't null. 
+
+Also, in macro_context.py, please update only the loser's mistakes and winner's best plays prompts such that the following:
+    1. It states the passer, rusher, or receiver explicitly in the synthesis provided for any given play (reflects the change in play_narrative.py).
+    2. For scoring plays, the score in the synthesis was the score AFTER the play occured.
+
+------------------------------------------------------------
+
+9/12/2026
+
+Without updating the versions, please modify the winner and loser prompt such that it doesn't say "each play's narrative". Just mention that the passer's rusher's and receiver's name will be stated explicitly. Also, for players they are referring to only in the play description itself (that's not passer/rusher/receiver), only refer to them as is, by first initial and last name.
+
+------------------------------------------------------------
+
+9/12/2026
+
+This time, updating the version from v2 to v3, can you please update the winner and loser prompt such that it orders the plays based on their quarter and timestamp? After adding "quarter_seconds_remaining" to the Play dataclass, I added the formatted timestamp to the play synthesis.

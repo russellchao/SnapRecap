@@ -69,19 +69,23 @@ export default function Gamecard({ game, onViewRecap }) {
             </div>
 
             <div className="gamecard-footer">
-                <button
+                <span className="gamecard-date">{game.start_date}</span>
+                <span>
+                    <button
                     className={`espn-btn`}
                     onClick={() => window.open(`https://www.espn.com/nfl/game/_/gameId/${game.espn_id}`, '_blank')}
                 >
-                    ESPN →
+                    ESPN Page →
                 </button>
-                <span className="gamecard-date">{game.start_date}</span>
+                <> </>
                 <button
                     className={`view-recap-btn`}
                     onClick={() => onViewRecap?.(game)}
                 >
                     VIEW RECAP →
                 </button>
+                </span>
+                
             </div>
         </div>
     );

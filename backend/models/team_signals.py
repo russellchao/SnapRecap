@@ -1,9 +1,9 @@
 """
 Team signals model for Snap Recap.
 
-The third recap component, alongside game_ledger and anchor_plays: the
-per-team efficiency/tendency record for one game, projected out of a
-GameDocument the same way the other two are.
+The second recap component, alongside game_ledger: the per-team
+efficiency/tendency record for one game, projected out of a
+GameDocument the same way the ledger is.
 
 Two layers live here, bottom to top:
 
@@ -34,7 +34,7 @@ except ImportError:
     from play import Play, teams_in
 
 
-VERSION = "v1"
+VERSION = "v5"
 
 
 # --- Signal Output Dataclasses ---
@@ -95,7 +95,28 @@ def _by_drive(plays: List[Play]) -> Dict[int, List[Play]]:
             drives.setdefault(p.drive, []).append(p)
     return drives
 
+def _seconds_from_mmss(value: Optional[str]) -> Optional[int]:
+    """Parse nflfastR's 'M:SS' drive_time_of_possession into seconds."""
+    if not value:
+        return None
+    try:
+        minutes, seconds = value.split(":")
+        return int(minutes) * 60 + int(seconds)
+    except (ValueError, AttributeError):
+        return None
+
+# Points awarded for a drive ending in the given fixed_drive_result.
+# Deliberately coarse (ignores PAT/2pt/defensive-TD nuance) to match the
+# existing red_zone_touchdowns treatment of fixed_drive_result as a label.
+_DRIVE_RESULT_POINTS = {
+    "Touchdown": 7,
+    "Field goal": 3,
+}
+
+
 # --- Signal Reductions ---
+
+# --- Situational Efficiency ---
 
 def third_down_conversion(plays: List[Play]) -> RateSignal:
     """Third-down conversion rate."""
@@ -120,26 +141,39 @@ def red_zone_touchdowns(plays: List[Play]) -> RateSignal:
             tds += 1
     return RateSignal.from_counts(tds, trips)
 
+def points_per_trip_inside_40(plays: List[Play]) -> MeanSignal:
+    """Points scored per drive that reached inside the 40 (yardline_100 <= 40)."""
+    points = []
+    for drive_plays in _by_drive(plays).values():
+        if not any(p.yardline_100 is not None and p.yardline_100 <= 40 for p in drive_plays):
+            continue
+        result = next((p.fixed_drive_result for p in drive_plays if p.fixed_drive_result), None)
+        points.append(_DRIVE_RESULT_POINTS.get(result, 0))
+    return MeanSignal.of(points)
+
+def early_down_success_rate(plays: List[Play]) -> RateSignal:
+    """Success rate on 1st/2nd down only."""
+    attempts = [p for p in plays if p.down in (1, 2) and p.success is not None]
+    successes = sum(1 for p in attempts if p.success)
+    return RateSignal.from_counts(successes, len(attempts))
+
+# --- Overall Play Efficiency ---
+
 def success_rate(plays: List[Play]) -> RateSignal:
     """Success rate over scrimmage plays (EPA-positive by down/distance)."""
     scr = [p for p in plays if p.success is not None]
     successes = sum(1 for p in scr if p.success)
     return RateSignal.from_counts(successes, len(scr))
 
-def explosive_play_rate(plays: List[Play]) -> RateSignal:
-    """Explosive-play rate (rush >= 10, pass >= 20 yards)."""
+def explosive_play_count(plays: List[Play]) -> int:
+    """Explosive-play count (rush >= 10, pass >= 20 yards)."""
     scr = [p for p in plays if (p.is_pass or p.is_rush) and p.yards_gained is not None]
-    successes = sum(
+    return sum(
         1 for p in scr
         if (p.is_pass and p.yards_gained >= 20) or (p.is_rush and p.yards_gained >= 10)
     )
-    return RateSignal.from_counts(successes, len(scr))
 
-def sack_rate(plays: List[Play]) -> RateSignal:
-    """Sacks per dropback over the given view (pass rush on a defteam filter)."""
-    dropbacks = [p for p in plays if p.qb_dropback]
-    sacks = sum(1 for p in dropbacks if p.sack)
-    return RateSignal.from_counts(sacks, len(dropbacks))
+# --- Passing / Rushing ---
 
 def epa_per_play(plays: List[Play]) -> MeanSignal:
     """Mean EPA over plays where EPA is defined."""
@@ -153,10 +187,95 @@ def cpoe(plays: List[Play]) -> MeanSignal:
     """Mean completion % over expected (pass attempts only)."""
     return MeanSignal.of(p.cpoe for p in plays if p.cpoe is not None)
 
+# --- Disruption / Havoc ---
+
+def sacks_forced(plays: List[Play]) -> int:
+    """Sack count on the given defensive view (too infrequent for a rate to read as meaningful)."""
+    return sum(1 for p in plays if p.sack)
+
+def tfl_count(plays: List[Play]) -> int:
+    """Tackle-for-loss count on the given defensive view."""
+    scr = [p for p in plays if p.is_pass or p.is_rush]
+    return sum(1 for p in scr if p.tackled_for_loss)
+
+def forced_fumble_count(plays: List[Play]) -> int:
+    """Forced-fumble count on the given defensive view. Special team plays included."""
+    return sum(1 for p in plays if p.fumble_forced)
+
+def takeaway_count(plays: List[Play]) -> int:
+    """Takeaway count: opponent turnovers forced on the given defensive view. Special team plays included."""
+    return sum(1 for p in plays if p.interception or p.fumble_lost)
+
+# --- Discipline / Field Position ---
+
+def penalty_count(plays: List[Play], team: str) -> int:
+    """Penalty count: number of penalties charged to `team` on the given view."""
+    charged = sum(1 for p in plays if p.penalty and p.penalty_team == team)
+    return charged
+
+def penalty_yards_per_drive(plays: List[Play], team: str) -> MeanSignal:
+    """Mean penalty yards charged to `team` per drive, either side of the ball.
+
+    `plays` is expected to be the full, unfiltered game play list, so
+    drives are the game's actual drives (both teams' possessions) —
+    a defensive penalty during the opponent's drive still counts against
+    `team` on that drive.
+    """
+    yards_by_drive = []
+    for drive_plays in _by_drive(plays).values():
+        drive_yards = sum(
+            p.penalty_yards
+            for p in drive_plays
+            if p.penalty and p.penalty_team == team and p.penalty_yards is not None
+        )
+        yards_by_drive.append(drive_yards)
+    return MeanSignal.of(yards_by_drive)
+
+def starting_field_position(plays: List[Play]) -> MeanSignal:
+    """Average starting yardline_100 of drives within this play population.
+
+    Called with an offense-filtered view, this reads as the average field
+    position this team's own offense started its drives with — yards from
+    the opponent's end zone, so a lower value is better field position.
+
+    The drive's first row is often the kickoff or punt that set it up
+    (nflfastR files that play under the receiving team's drive number and
+    posteam), whose yardline_100 is the kicking spot, not where the
+    offense took over. So the start is read off the first non-special
+    play instead; a drive with no scrimmage play at all contributes
+    nothing.
+    """
+    starts = []
+    for drive_plays in _by_drive(plays).values():
+        first = next((p for p in drive_plays if not p.is_special), None)
+        if first is not None and first.yardline_100 is not None:
+            starts.append(first.yardline_100)
+    return MeanSignal.of(starts)
+
+# --- Pace ---
+
+def seconds_per_play(plays: List[Play]) -> MeanSignal:
+    """Mean seconds-per-play, averaged across this team's offensive drives.
+
+    Each drive contributes one value (its time of possession divided by
+    its play count); the mean is unweighted across drives, so a 3-play
+    drive counts the same as a 12-play drive. drive_time_of_possession
+    and drive_play_count are drive-level values repeated on every row of
+    the drive, so only the first play of each drive is read.
+    """
+    per_drive = []
+    for drive_plays in _by_drive(plays).values():
+        first = drive_plays[0]
+        total_seconds = _seconds_from_mmss(first.drive_time_of_possession)
+        play_count = first.drive_play_count
+        if total_seconds is not None and play_count:
+            per_drive.append(total_seconds / play_count)
+    return MeanSignal.of(per_drive)
+
 
 # --- Per-Team Signal Record ---
 
-def team_signal_record(plays: List[Play], team: str) -> Dict[str, object]:
+def team_signal_record(team: str, plays: List[Play]) -> Dict[str, object]:
     """Per-team signal record — the locked output shape.
 
     A flat dict of {signal_name: signal_value}, each value its own
@@ -178,14 +297,28 @@ def team_signal_record(plays: List[Play], team: str) -> Dict[str, object]:
         "third_down": third_down_conversion(off),
         "fourth_down": fourth_down_conversion(off),
         "red_zone_td": red_zone_touchdowns(off),
+        "points_per_trip_inside_40": points_per_trip_inside_40(scrimmage),
+        "early_down_success_rate": early_down_success_rate(scrimmage),
+
         "success_rate": success_rate(scrimmage),
-        "explosive_rate": explosive_play_rate(scrimmage),
+        "explosive_count": explosive_play_count(scrimmage),
+
         "epa_per_pass": epa_per_play(passes),
         "epa_per_rush": epa_per_play(rushes),
         "yards_per_pass": yards_per_play(passes),
         "yards_per_rush": yards_per_play(rushes),
         "cpoe": cpoe(passes),
-        "sacks_forced": sack_rate(defense),
+
+        "sacks_forced": sacks_forced(defense),
+        "tfl": tfl_count(defense),
+        "forced_fumbles": forced_fumble_count(defense),
+        "takeaways": takeaway_count(defense),
+
+        "penalty_rate": penalty_count(plays, team),
+        "penalty_yards_per_drive": penalty_yards_per_drive(plays, team),
+        "starting_field_position": starting_field_position(off),
+
+        "seconds_per_play": seconds_per_play(scrimmage),
     }
 
 
@@ -205,7 +338,7 @@ class TeamSignals:
         record set matches what actually appears in the play-by-play.
         """
         signals = {
-            team: team_signal_record(document.plays, team)
+            team: team_signal_record(team, document.plays)
             for team in teams_in(document.plays)
         }
         return cls(header=document.header, signals=signals)
@@ -244,20 +377,20 @@ if __name__ == "__main__":
     # NOTE: For testing purposes only
     # Test building the team signals from the Game Document JSON file in the test data
 
+    # Build the GameDocument from the JSON file
     def document_from_dict(raw: dict) -> GameDocument:
         """(Test Helper Function) Rebuild a GameDocument from its `to_dict()` / JSON form."""
         return GameDocument(
             header=GameHeader(**raw["header"]),
             plays=[Play(**p) for p in raw["plays"]],
         )
-
     game_doc_json = "../test_data/game_document.json"
     with open(game_doc_json) as f:
         raw = json.load(f)
-
     document = document_from_dict(raw)
     print(f"Rebuilt GameDocument for {document.header.game_id}: {len(document.plays)} plays")
 
+    # Build the team signals using the GameDocument
     team_signals = TeamSignals.build(document)
     print(f"\nSignal records built for: {list(team_signals.signals.keys())}\n")
     for team, record in team_signals.signals.items():

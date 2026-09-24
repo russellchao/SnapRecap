@@ -12,7 +12,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 */
 const inFlight = new Map();
 
-export function fetchQa(question, game_ledger, anchor_plays, team_signals) {
+export function fetchQa(question, game_ledger, team_signals) {
     const url = `${API_BASE_URL}/ask_question`;
 
     const pending = inFlight.get(question);
@@ -25,7 +25,6 @@ export function fetchQa(question, game_ledger, anchor_plays, team_signals) {
     const body = {
         question,
         game_ledger: game_ledger ?? null,
-        anchor_plays: anchor_plays ?? [],
         team_signals: team_signals ?? {},
     };
 

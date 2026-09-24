@@ -13,15 +13,66 @@ const SIGNAL_LABELS = {
     third_down: "3rd Down",
     fourth_down: "4th Down",
     red_zone_td: "Red Zone TD",
+    points_per_trip_inside_40: "Pts / Trip Inside 40",
+    early_down_success_rate: "Early Down Success",
     success_rate: "Success Rate",
-    explosive_rate: "Explosive Rate",
+    explosive_count: "Explosive Plays",
     epa_per_pass: "EPA / Pass",
     epa_per_rush: "EPA / Rush",
     yards_per_pass: "Yards / Pass",
     yards_per_rush: "Yards / Rush",
     cpoe: "CPOE",
     sacks_forced: "Sacks Forced",
+    tfl: "Tackles For Loss",
+    forced_fumbles: "Forced Fumbles",
+    takeaways: "Takeaways",
+    penalty_rate: "Penalties",
+    penalty_yards_per_drive: "Penalty Yds / Drive",
+    starting_field_position: "Avg Starting FP",
+    seconds_per_play: "Seconds / Play",
 };
+
+/*
+    The backend record is flat ({signal_name: value}); the grouping lives here.
+    Categories and their membership mirror the section headings the reductions
+    are written under in backend/models/team_signals.py, and are rendered in
+    this order. Any signal the backend adds that isn't listed here still shows,
+    under "Other" at the end, so a new signal is never silently dropped.
+*/
+const SIGNAL_CATEGORIES = [
+    {
+        label: "Situational Efficiency",
+        signals: [
+            "third_down",
+            "fourth_down",
+            "red_zone_td",
+            "points_per_trip_inside_40",
+            "early_down_success_rate",
+        ],
+    },
+    {
+        label: "Overall Play Efficiency",
+        signals: ["success_rate", "explosive_count"],
+    },
+    {
+        label: "Passing / Rushing",
+        signals: ["epa_per_pass", "epa_per_rush", "yards_per_pass", "yards_per_rush", "cpoe"],
+    },
+    {
+        label: "Disruption / Havoc",
+        signals: ["sacks_forced", "tfl", "forced_fumbles", "takeaways"],
+    },
+    {
+        label: "Discipline / Field Position",
+        signals: ["penalty_rate", "penalty_yards_per_drive", "starting_field_position"],
+    },
+    {
+        label: "Pace",
+        signals: ["seconds_per_play"],
+    },
+];
+
+const CATEGORIZED_SIGNALS = new Set(SIGNAL_CATEGORIES.flatMap((category) => category.signals));
 
 // Turn a raw backend key ("sacks_forced") into a display label.
 function prettifyKey(key) {
@@ -32,17 +83,22 @@ function prettifyKey(key) {
 }
 
 /*
-    Signals arrive in two shapes (see backend/models/signals.py):
+    Signals arrive in three shapes (see backend/models/team_signals.py):
       RateSignal -> { attempts, successes, rate }
       MeanSignal -> { n, mean }
+      count      -> a bare whole number (the disruption/penalty tallies, which
+                    are too infrequent for a rate to read as meaningful)
 
-    Each collapses into one short chip value. A null rate/mean means the signal
-    had no qualifying plays, so the chip is dropped entirely rather than shown
-    as an empty stat.
+    Each collapses into one short chip value. A count keeps its integer form —
+    "2", not "2.00" — and a zero count is a real result, so it still gets a
+    chip. A null rate/mean means the signal had no qualifying plays, so that
+    chip is dropped entirely rather than shown as an empty stat.
 */
 function formatSignal(value) {
     if (value == null) return null;
-    if (typeof value === "number") return value.toFixed(2);
+    if (typeof value === "number") {
+        return Number.isInteger(value) ? String(value) : value.toFixed(2);
+    }
     if (typeof value !== "object") return String(value);
 
     if ("rate" in value) {
@@ -57,14 +113,36 @@ function formatSignal(value) {
     return null;
 }
 
-function SignalChips({ signals }) {
-    const chips = Object.entries(signals ?? {})
-        .map(([name, value]) => [name, formatSignal(value)])
-        .filter(([, text]) => text != null);
+/*
+    Field position arrives as yardline_100 — yards from the opponent's end
+    zone — so it reads as a yard line rather than a bare number: rounded down
+    to a whole yard, then named from the side of the field it falls on
+    (69.9 -> "OWN 31", 45.2 -> "OPP 45", midfield -> just "50").
+*/
+function formatFieldPosition(value) {
+    const mean = typeof value === "number" ? value : value?.mean;
+    if (mean == null) return null;
+
+    const yardsToOpponentEndZone = Math.floor(mean);
+    if (yardsToOpponentEndZone === 50) return "50";
+    if (yardsToOpponentEndZone > 50) return `OWN ${100 - yardsToOpponentEndZone}`;
+    return `OPP ${yardsToOpponentEndZone}`;
+}
+
+// Signals whose chip value doesn't read well as a plain number.
+const SIGNAL_FORMATTERS = {
+    starting_field_position: formatFieldPosition,
+};
+
+// One category: its heading plus a chip per signal that came back with a
+// value. Returns null when the record has none of this category's signals
+// (an older cached row, say), so no bare heading is left behind.
+function SignalGroup({ label, chips }) {
     if (!chips.length) return null;
 
     return (
         <div className="signal-group">
+            <h4 className="signal-group-label">{label}</h4>
             <div className="signal-chips">
                 {chips.map(([name, text]) => (
                     <span className="chip" key={name}>
@@ -75,6 +153,28 @@ function SignalChips({ signals }) {
             </div>
         </div>
     );
+}
+
+function SignalChips({ signals }) {
+    const record = signals ?? {};
+    const chipFor = (name) => [name, (SIGNAL_FORMATTERS[name] ?? formatSignal)(record[name])];
+    const shown = ([, text]) => text != null;
+
+    const groups = SIGNAL_CATEGORIES.map((category) => ({
+        label: category.label,
+        chips: category.signals.filter((name) => name in record).map(chipFor).filter(shown),
+    }));
+
+    // Anything the backend sends that this file doesn't know about yet.
+    const uncategorized = Object.keys(record)
+        .filter((name) => !CATEGORIZED_SIGNALS.has(name))
+        .map(chipFor)
+        .filter(shown);
+    if (uncategorized.length) groups.push({ label: "Other", chips: uncategorized });
+
+    return groups.map((group) => (
+        <SignalGroup key={group.label} label={group.label} chips={group.chips} />
+    ));
 }
 
 export default function TeamSignals({ signals, awayName, homeName, awayAbbr, homeAbbr, colors }) {
