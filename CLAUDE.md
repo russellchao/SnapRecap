@@ -9,7 +9,10 @@ frontend lists games (pulled directly from ESPN's public APIs in the browser) an
 recap page; a FastAPI backend converts nflverse play-by-play into three components — a **game
 ledger** (EPA margin decomposed by category), **team signals** (per-team efficiency/tendency
 stats), and **macro contexts** (three short phrased narratives) — caches them in Supabase, and
-serves them.
+serves them. Those components are built two ways: lazily, on the first `/get_recap` request for a
+game, and ahead of time by a scheduled tick (`build_pending_recaps.poll_and_recap()`, exposed as
+`POST /poll_games`) that tracks finished games and builds their recaps as soon as nflverse
+publishes the plays.
 
 An LLM is called in exactly two places, and both keep the same boundary: **Python owns retrieval
 and grounding; the LLM owns phrasing only.**
@@ -126,9 +129,48 @@ depends on the previous stage's dataclass:
     scheduler. Exists because PBP data carries only initials + last name; display names are
     what keep player names out of hallucination territory.
 
+#### Scheduled ingest (the poll → recap tick)
+
+Three modules that run on a clock rather than on a request. They are the only writers of the
+`games` and `pbp_release_state` tables, and the only path that builds a recap nobody asked for yet.
+
+14. **`get_data/poll_games.py`** — `poll_games()` fetches ESPN's **scoreboard** endpoint and upserts
+    one `games` row per trackable event (`game_id`, `season`, `week`, teams, scores, `status` of
+    `final`/`in_progress`). It **never writes `recap_generated`** — that column belongs to
+    `build_pending_recaps.py`, and the split is what keeps a re-poll from un-marking a built recap.
+    Two things it owns: its own copy of `TEAM_ABBR` (deliberately duplicated from
+    `pages/Games.jsx` so backend and frontend agree on abbreviations without coupling), and
+    `POSTSEASON_WEEK`, the inverse of the frontend's mapping — ESPN postseason weeks 1/2/3/5 are
+    nflverse 19/20/21/22, and ESPN's week 4 is the Pro Bowl. Preseason and unmapped team names are
+    skipped, not guessed at. Its `__main__` block is a **different fetch for the same rows**: it
+    takes ESPN's `<season> <week> <season_type>` and reads the `/nfl/schedule` CDN endpoint (grouped
+    by date under `content.schedule`, flattened before use) so a past week can be backfilled; both
+    paths funnel through `_build_game_row()`, so the rows they write are identical.
+15. **`get_data/check_pbp_release.py`** — `check_pbp_release(season)` compares the GitHub
+    `updated_at` of nflverse-data's `play_by_play_<season>.parquet` asset against the timestamp in
+    `pbp_release_state`, returning whether it moved. This is the gate on the whole tick: a game
+    going final does **not** mean its plays are published, so without it the job would burn a
+    download per tick and cache a half-empty recap. It is **not a dry run** — on a change it calls
+    `nfl.clear_cache()` (otherwise `load_pbp()` serves the stale local parquet) and upserts the new
+    timestamp, so a manual run consumes the change and the next tick sees none.
+16. **`build_pending_recaps.py`** — `poll_and_recap()` is the one tick: `poll_games()`, then
+    `check_pbp_release(nfl.get_current_season())`, and only on a change
+    `_build_recaps_for_eligible_games()`, which runs `get_recap()` for every `games` row that is
+    `status = 'final'` and `recap_generated = false`, then flips the flag. Failures are isolated per
+    game and **left unflagged on purpose**: an exception is caught and logged, and a build that
+    returns no game ledger is skipped, so either way the game is retried on the next tick rather
+    than failing the batch or being marked done. It imports `get_recap` and `get_data.*` as
+    top-level/package paths, so it runs from `backend/`, not from `get_data/`.
+
 ### FastAPI app (`backend/main.py`)
 
 - `GET /health` → `{"status": "ok"}`.
+- `POST /poll_games` — the scheduled tick's trigger (pg_cron via pg_net, GitHub Actions, etc.), not
+  a user-facing route: it requires an `X-Poll-Secret` header matching `POLL_SECRET` and 401s
+  otherwise. It hands `poll_and_recap` to FastAPI's `BackgroundTasks` and returns
+  `{"status": "polling started"}` immediately — a tick can build many recaps, far longer than a
+  request should stay open, so **nothing about the outcome is in the response**; failures surface in
+  the logs and in rows that stay `recap_generated = false`.
 - `GET /get_recap/{season}/{week}/{away_team}/{home_team}/{away_score}/{home_score}/` — builds the
   nflverse `game_id` from the path parts and returns `{game_ledger, team_signals, macro_contexts}`
   via `get_recap()`. `macro_contexts` is keyed by `context_type` and each value is the **whole DB
@@ -150,11 +192,20 @@ CORS allows the single `FRONTEND_URL` origin.
 | `game_ledgers` | `game_id` | `GameLedger.to_dict()` |
 | `team_signals` | `game_id` + `team` (one row per team) | `TeamSignals.to_db_item()` |
 | `macro_contexts` | `game_id` + `context_type` | `_upsert_macro_context()` in `get_recap.py` |
+| `games` | `game_id` | `poll_games.py` (every column but `recap_generated`), `build_pending_recaps.py` (`recap_generated` only) |
+| `pbp_release_state` | `season` | `check_pbp_release.py` |
 
 A `macro_contexts` row is `{game_id, context_type, content: {"text": ...}, version}`, with
 `context_type` one of `winners_best_plays`, `losers_biggest_mistakes`, `injury_impact`. A tied game
 legitimately has neither breakdown row. Every table but `players` is written via the `supabase`
-client (`SUPABASE_URL`/`SUPABASE_KEY`) and carries a `version` column the cache checks on read.
+client (`SUPABASE_URL`/`SUPABASE_KEY`); the three component caches each carry a `version` column the
+cache checks on read.
+
+The two scheduler tables are not caches and carry no `version`. A `games` row is
+`{game_id, season, week, away_team, home_team, away_score, home_score, status, recap_generated}` —
+`status` is `final` or `in_progress`, and `recap_generated` is the work queue: **final + false** is
+the eligibility condition the recap job selects on. `pbp_release_state` is one row per season,
+`{season, last_updated_at}`, holding the nflverse release asset's `updated_at` as of the last check.
 
 ### Frontend (`frontend/`)
 
@@ -197,11 +248,20 @@ The import style differs by entry point — **the working directory matters**:
   (`main.py` imports `get_recap` and `game_qa` as top-level modules, so it must run
   from `backend/`, *not* the repo root.)
 - **Player refresh** (from `backend/get_data/`): `python load_players.py` — manual, on demand.
+- **Poll + recap tick** (from `backend/`): `python build_pending_recaps.py` — runs one full tick by
+  hand, the same thing `POST /poll_games` schedules.
+- **Game backfill** (from `backend/get_data/`): `python poll_games.py <season> <week> <season_type>`
+  — ESPN's week and season type (2 = regular, 3 = postseason), not nflverse's.
+- **Release check** (from `backend/get_data/`): `python check_pbp_release.py <season>` — remember it
+  records what it sees, so it consumes the change for the next tick.
 - **Frontend** (from `frontend/`): `npm install`, then `npm run dev` / `npm run build` /
   `npm run lint`.
 
-Python deps are in the repo-root [requirements.txt](requirements.txt) (fastapi, uvicorn, nflreadpy,
-pandas, pyarrow, anthropic, python-dotenv, sqlalchemy, psycopg2-binary, supabase).
+Python deps are in [backend/requirements.txt](backend/requirements.txt) (fastapi, uvicorn,
+nflreadpy, pandas, pyarrow, anthropic, python-dotenv, sqlalchemy, psycopg2-binary, supabase) —
+they moved out of the repo root, so `pip install -r requirements.txt` from the root no longer
+resolves. **`requests` is missing from that file** even though `poll_games.py` and
+`check_pbp_release.py` import it; it currently arrives transitively.
 
 ## Testing each layer
 
@@ -239,10 +299,11 @@ helper in the `__main__` block of `team_signals.py`.
 
 ## Environment variables
 
-- Backend (`backend/.env`, loaded with `python-dotenv`; `play.py`, `get_recap.py`, and
-  `load_players.py` resolve the path relative to `__file__` so they work from any working
-  directory):
+- Backend (`backend/.env`, loaded with `python-dotenv`; `play.py`, `get_recap.py`,
+  `load_players.py`, `poll_games.py`, `check_pbp_release.py`, and `build_pending_recaps.py` resolve
+  the path relative to `__file__` so they work from any working directory):
   `FRONTEND_URL` (CORS origin), `DATABASE_URL` (Postgres/Supabase, for the `players` table),
-  `SUPABASE_URL` + `SUPABASE_KEY` (recap component cache), `ANTHROPIC_API_KEY` (macro contexts
-  and Q&A).
+  `SUPABASE_URL` + `SUPABASE_KEY` (recap component cache plus the `games` and
+  `pbp_release_state` tables), `ANTHROPIC_API_KEY` (macro contexts and Q&A), `POLL_SECRET` (the
+  shared secret `POST /poll_games` checks against its `X-Poll-Secret` header).
 - Frontend (`frontend/.env`): `VITE_API_BASE_URL`.
