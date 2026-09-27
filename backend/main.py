@@ -33,8 +33,8 @@ def health():
 
 
 # ------ Poll Games endpoint ------
-# Triggered by a scheduler (pg_cron via pg_net, or GitHub Actions) -- not
-# meant to be user-facing, hence the shared-secret check.
+# Triggered by a cron scheduler in Supabase (pg_cron via pg_net) -- 
+# not meant to be user-facing, hence the shared-secret check.
  
 @app.post("/poll_games")
 def poll_games_endpoint(background_tasks: BackgroundTasks, x_poll_secret: str = Header(...)):
