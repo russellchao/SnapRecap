@@ -1,5 +1,9 @@
 # Snap Recap
 
+## Public URL
+
+[Snap Recap](https://snaprecap.vercel.app/)
+
 ## Problem Statement
 
 Following an NFL game, fans are stuck choosing between a box score that buries what actually mattered in undifferentiated stats, or a traditional recap that narrates the scoring sequence without explaining why the game unfolded that way. Neither format lets a fan ask the questions they actually have — why a team's offense stalled, what turned the game, which matchup broke down — and get an answer grounded in what happened on the field. Snap Recap fills this gap with an interactive experience that surfaces the game's most significant moments and lets fans query them directly, turning passive recap-reading into an actual investigation of the game.
