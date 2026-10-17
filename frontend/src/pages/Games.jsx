@@ -128,12 +128,13 @@ export default function Games() {
           </select>
         </div>
 
+        {/*
         <p></p>
 
         <div className="field">
           <label htmlFor="team-select">Team</label>
           <select name="teams" id="team-select" value={teamId} onChange={(e) => setTeamId(e.target.value)}>
-            {/* values for each team are set to their respective ESPN IDs */}
+            // values for each team are set to their respective ESPN IDs
             <option value="">-</option>
           <option value="22">Arizona Cardinals</option>
           <option value="1">Atlanta Falcons</option>
@@ -169,6 +170,7 @@ export default function Games() {
             <option value="28">Washington Commanders</option>
           </select>
         </div>
+        */}
       </section>
 
       <br /><br /><br />
